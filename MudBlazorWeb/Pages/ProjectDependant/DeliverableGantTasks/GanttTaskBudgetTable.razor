@@ -1,0 +1,120 @@
+﻿
+
+<MudDataGrid T="BudgetItemNewGanttTaskResponse"
+             MultiSelection="false"
+             Items="@Model.OrderedBudgetItemGanttTasks"
+             Hideable="true"
+             Dense=true
+             Bordered=true
+             Hover=true
+             Outlined=true
+             Striped=true>
+    <Columns>
+        <PropertyColumn Property="x => x.Name" Title="item Name" CellStyle="width:400px">
+            <CellTemplate Context="row">
+                @if (row.Item.BudgetItemId == Guid.Empty)
+                {
+                    <Autocomplete TValue="BudgetItemResponse" @bind-Value="row.Item.BudgetItem"
+                                  ValidateAsync="ValidateAsync"
+                                  Clearable="false"
+                                  Change="@(()=>SelectedItemChanged(row.Item))"
+                                  SearchFunc="@SearchFromNonSelectedItems" ToStringFunc="@(e=> e==null?null : $"{e.Name} ")" />
+                }
+                else
+                {
+                    <Autocomplete TValue="BudgetItemResponse" @bind-Value="row.Item.BudgetItem"
+                                  ValidateAsync="ValidateAsync"
+                                  Clearable="false"
+                                  Change="@(()=>SelectedItemChanged(row.Item))"
+                                  SearchFunc="@SearchFromSelectedItems" ToStringFunc="@(e=> e==null?null : $"{e.Name} ")" />
+                }
+
+
+            </CellTemplate>
+
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.BasicResponseName" Title="Sub Item" CellStyle="width:400px">
+            <CellTemplate Context="row">
+                @if (row.Item.BudgetItem != null)
+                {
+                    if (row.Item.BudgetItem.HasSubItems)
+                    {
+                        <Select @bind-Value="@row.Item.SelectedEngineeringItemsBudget"
+                                    TValue="BasicResponse"
+                                    Items="@(GetBasicResponses(row.Item))"
+                                    Property="@(p => p.Name)"
+                                    Change="@(()=>SelectedBasicItemChanged(row.Item))"
+                                    For="() => row.Item.SelectedEngineeringItemsBudget"
+                                    ValidateAsync="ValidateAsync"
+                                    Clearable="false">
+                            </Select>
+
+                    }
+                    else
+                    {
+                        @($"No sub items to Select")
+                    }
+
+                }
+                
+
+            </CellTemplate>
+
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.BudgetUSD" Title="Item Budget, USD" />
+        <PropertyColumn Property="x => x.BudgetAssignedUSD" Title="Assigned, USD">
+            <CellTemplate Context="row">
+                @if (row.Item.BudgetItem != null)
+                {
+                    <DoubleNumericField @bind-Value="@row.Item.BudgetAssignedUSD"
+                                        ValidateAsync="ValidateAsync"
+                                      
+                                        For="@(() => row.Item.BudgetAssignedUSD)"></DoubleNumericField>
+                }
+
+            </CellTemplate>
+
+        </PropertyColumn>
+
+
+
+        <PropertyColumn Property="x => x.PendingToAssign" Title="Pending to Assign, USD">
+            <CellTemplate Context="row">
+                @if (row.Item.BudgetItem != null)
+                {
+                    @row.Item.PendingToAssign
+                    <ValidationMessage For="() => row.Item.PendingToAssign" style="color:red; font-size:x-small;" />
+                }
+
+            </CellTemplate>
+
+        </PropertyColumn>
+        <TemplateColumn CellClass="d-flex justify-end " T="BudgetItemNewGanttTaskResponse">
+            <CellTemplate Context="template">
+                @if (template.Item.BudgetItem != null)
+                {
+                    <MudStack Row=true Spacing="2" AlignItems="AlignItems.Baseline" Justify="Justify.SpaceBetween">
+                        @*  @if (template.Item.BudgetItem != null && template.Item.BudgetItem.HasSubItems)
+                        {
+                            <IconButton ToolTip="@($"Select Items from {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Checklist" Variant=Variant.Outlined
+                                        Color="Color.Surface" OnClick="@(() => SelectItems(template.Item))" />
+                        } *@
+
+                        <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined
+                                    Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                    </MudStack>
+
+                }
+
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="BudgetItemNewGanttTaskResponse" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+
+}

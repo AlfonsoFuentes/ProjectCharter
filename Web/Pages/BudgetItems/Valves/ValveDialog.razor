@@ -1,0 +1,263 @@
+﻿@using Web.Pages.ItemsTemplates.Valves
+
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+  
+            @if (loaded)
+            {
+                <MudGrid>
+                    <MudItem xs="12" sm="6">
+                        <MudGrid>
+                            <MudItem xs="12" sm="12">
+                                <TextField @bind-Value="@Model.Name"
+                                           Label="Name"
+                                           Lines="3"
+                                           ValidateAsync="ValidateAsync"
+                                           For="()=>Model.Name">
+                                </TextField>
+                            </MudItem>
+                        </MudGrid>
+                        <MudGrid>
+                            <MudItem xs="12" sm="6">
+                                <DoubleNumericField Label="Budget, $USD"
+                                                    ValidateAsync="ValidateAsync"
+                                                    @bind-Value="Model.BudgetUSD"
+                                                    For="()=>Model.BudgetUSD" />
+                            </MudItem>
+                            <MudItem xs="12" sm="6">
+                                @if (Model.ShowDetails)
+                                {
+                                    <Field Label="Tag">@Model.Tag</Field>
+                                    <ValidationMessage For="() => Model.Tag" style="color:red; font-size:x-small;" />
+                                }
+                                else if (Model.ShowProvisionalTag || Model.IsExisting)
+                                {
+                                    <TextField @bind-Value="@Model.ProvisionalTag"
+                                               Label="Tag"
+                                               ValidateAsync="ValidateAsync"
+                                               For="()=>Model.ProvisionalTag">
+                                    </TextField>
+                                    <ValidationMessage For="() => Model.Tag" style="color:red; font-size:x-small;" />
+                                }
+                            </MudItem>
+                        </MudGrid>
+                        @if (Model.ShowDetails)
+                        {
+                            <MudGrid>
+                                <MudItem xs="12" sm="4">
+
+                                    <SelectIconButton @bind-Value="Model.Template.Brand"
+                                                      TValue="BrandResponse"
+                                                      Label="Brand"
+                                                      ValidateAsync="ValidateAsync"
+                                                      For="()=>Model.Template.Brand"
+                                                      Items="BrandsResponseList.Items"
+                                                      Clearable="true"
+                                                      Icon="@Icons.Material.Filled.Add"
+                                                      Change="OnChangeTemplate"
+                                                      ButtonClick="AddBrand"
+                                                      ToolTip="Add new Brand"
+                                                      Property="@(p=>p.Name)">
+
+                                    </SelectIconButton>
+                                </MudItem>
+                                <MudItem xs="12" sm="4">
+                                    <Select @bind-Value="Model.Template.Type"
+                                            Items="@ValveTypesEnum.List"
+                                            Label="Valve Type"
+                                            Property="@(p=>p.Name)"
+                                            For="()=>Model.Template.Type"
+                                            Change="ChangValveType"
+                                            ValidateAsync="ValidateAsync"
+                                            Clearable="false">
+                                    </Select>
+
+
+
+                                </MudItem>
+                                <MudItem xs="12" sm="4">
+
+                                    <Select @bind-Value="Model.Template.Diameter"
+                                            Items="@NominalDiameterEnum.List"
+                                            Label="Diameter"
+                                            Change="ChangeDiameter"
+                                            Property="@(p=>p.Name)"
+                                            For="()=>Model.Template.Diameter"
+                                            ValidateAsync="ValidateAsync"
+                                            Clearable="false">
+                                    </Select>
+
+                                </MudItem>
+
+                            </MudGrid>
+                            <MudGrid>
+                                <MudItem xs="12" sm="4">
+                                    <TextField @bind-Value="@Model.Template.Model"
+                                               Label="Model"
+                                               ValidateAsync="@(()=>ValidateAsync())"
+                                               Change="OnChangeTemplate"
+                                               For="()=>Model.Template.Model">
+                                    </TextField>
+                                </MudItem>
+                                <MudItem xs="12" sm="4">
+                                    <TextField @bind-Value="@Model.TagLetter"
+                                               Label="Tag Letter"
+                                               ValidateAsync="ValidateAsync"
+                                               For="()=>Model.TagLetter">
+                                    </TextField>
+                                </MudItem>
+
+                                <MudItem xs="12" sm="4">
+                                    <TextField @bind-Value="@Model.TagNumber"
+                                               Label="Tag Number"
+                                               ValidateAsync="ValidateAsync"
+                                               For="()=>Model.TagNumber">
+                                    </TextField>
+
+
+                                </MudItem>
+                            </MudGrid>
+                            <MudGrid>
+                                <MudItem xs="12" sm="4">
+
+                                    <Select @bind-Value="Model.Template.Material"
+                                            Items="@MaterialEnum.List"
+                                            Label="Material"
+                                            Property="@(p=>p.Name)"
+                                            For="()=>Model.Template.Material"
+                                            ValidateAsync="ValidateAsync"
+                                            Change="OnChangeTemplate"
+                                            Clearable="false">
+                                    </Select>
+
+                                </MudItem>
+                                <MudItem xs="12" sm="12" md="4">
+
+                                    <Select @bind-Value="Model.Template.ActuatorType"
+                                            Items="@ActuatorTypeEnum.List"
+                                            Label="Actuator"
+                                            Change="ChangeActuator"
+                                            Property="@(p=>p.Name)"
+                                            For="()=>Model.Template.ActuatorType"
+                                            ValidateAsync="ValidateAsync"
+                                            Clearable="false">
+                                    </Select>
+
+                                </MudItem>
+                                <MudItem xs="12" sm="4">
+                                    <Select @bind-Value="Model.Template.PositionerType"
+                                            Items="@PositionerTypeEnum.List"
+                                            Label="Positioner"
+                                            Change="ChangePositioner"
+                                            Property="@(p=>p.Name)"
+                                            For="()=>Model.Template.PositionerType"
+                                            ValidateAsync="ValidateAsync"
+                                            Clearable="false">
+                                    </Select>
+
+                                </MudItem>
+                            </MudGrid>
+                            <MudGrid>
+
+
+                                <MudItem xs="12" sm="4">
+                                    <Select @bind-Value="Model.Template.SignalType"
+                                            Items="@(Model.Template.PositionerType.Id==PositionerTypeEnum.ON_OFF.Id?
+                                            SignalTypeEnum.ListForValvesONOFF:SignalTypeEnum.ListForValvesProportional)"
+                                            Label="Signal Type"
+                                            Disable=@(Model.Template.ActuatorType==ActuatorTypeEnum.Hand)
+                                            Property="@(p=>p.Name)"
+                                            For="()=>Model.Template.SignalType"
+                                            ValidateAsync="ValidateAsync"
+                                            Change="OnChangeTemplate"
+                                            Clearable="false">
+                                    </Select>
+                                </MudItem>
+                                <MudItem xs="12" sm="4">
+                                    <Select @bind-Value="Model.Template.FailType"
+                                            Items="@FailTypeEnum.List"
+                                            Disable=@(Model.Template.ActuatorType.Id!=ActuatorTypeEnum.Simple_effect.Id)
+                                            Label="Fail Type"
+                                            Property="@(p=>p.Name)"
+                                            For="()=>Model.Template.FailType"
+                                            ValidateAsync="ValidateAsync"
+                                            Change="OnChangeTemplate"
+                                            Clearable="false">
+                                    </Select>
+                                </MudItem>
+                                <MudItem xs="12" sm="12" md="4">
+                                    <Select @bind-Value="Model.Template.ConnectionType"
+                                            Items="@ConnectionTypeEnum.List"
+                                            Label="Connection Type"
+                                            Property="@(p=>p.Name)"
+                                            For="()=>Model.Template.ConnectionType"
+                                            Change="ChangeConnectionType"
+                                            ValidateAsync="ValidateAsync"
+                                            Clearable="false">
+                                    </Select>
+                                </MudItem>
+
+                            </MudGrid>
+                            <MudGrid>
+                                <MudItem xs="12" sm="4">
+                                    <Switch Label="Has FeedBack to PLC" @bind-Value=@Model.Template.HasFeedBack ValidateAsync="ValidateAsync"></Switch>
+                                </MudItem>
+                            </MudGrid>
+                            <MudGrid>
+                                <MudItem xs="12" sm="12">
+                                    <NozzleBudgetaryTable EditConnection=false EditDiameter=false @bind-Items=@Model.Nozzles Validate="ValidateAsync" Change="OnChangeTemplate"></NozzleBudgetaryTable>
+                                    <ValidationMessage For="() => Model.Nozzles" style="color:red; font-size:x-small;" />
+                                </MudItem>
+                            </MudGrid>
+                        }
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudGrid>
+                            <MudItem xs="12" sm="12">
+                                <MudStack>
+                                    <Switch Label="Is Existing?" @bind-Value=Model.IsExisting></Switch>
+                                    @if (!Model.IsExisting)
+                                    {
+                                        <Switch Label="Show Details?" @bind-Value=Model.ShowDetails Change="OnChageDetails"></Switch>
+
+                                        @if (!Model.ShowDetails)
+                                        {
+                                            <Switch Label="Show Provisional Tag?" @bind-Value=@Model.ShowProvisionalTag></Switch>
+                                        }
+                                    }
+
+                                </MudStack>
+                            </MudItem>
+                        </MudGrid>
+
+                        @if (Model.ShowDetails)
+                        {
+                            <MudGrid>
+                                <MudItem xs="12" sm="12">
+                                    <ValveTemplateTable UpdateForm=GetValveResponse ByParameter=true Items="@ValveTemplateResponseList.Items" SendToForm="GetFromTamplateList"></ValveTemplateTable>
+                                </MudItem>
+                            </MudGrid>
+
+                        }
+                    </MudItem>
+                </MudGrid>
+
+
+            }
+
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=@(!Validated||!IsEdit) ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

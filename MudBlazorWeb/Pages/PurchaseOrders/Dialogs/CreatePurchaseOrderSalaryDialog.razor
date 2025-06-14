@@ -1,0 +1,66 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <MudGrid>
+                <MudItem sm="6" xs="12">
+                    <TextField Label="Name"
+                               Lines="2"
+                               @bind-Value=@Model.Name
+                               Placeholder="Define name"
+                               For="() => Model.Name"
+                               ValidateAsync="ValidateAsync"></TextField>
+
+                </MudItem>
+                <MudItem sm="3" xs="12">
+                    <Field Label="Project number:">@Model.ProjectAccount</Field>
+                </MudItem>
+                <MudItem sm="3" xs="12">
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem sm="3" xs="12">
+                    <DoubleNumericField ValidateAsync="ValidateAsync"
+                                        @bind-Value="@Model.ValueUSD"
+                                        For="() => Model.ValueUSD"
+                                        Label="Value, USD" />
+
+
+                </MudItem>
+                <MudItem sm="3" xs="12">
+                    <DatePicker @bind-Value="@Model.SalaryDate"
+                                ValidateAsync="ValidateAsync"
+                                Label="Salary Date"
+                                For="@(() => Model.SalaryDate)"></DatePicker>
+
+
+
+                </MudItem>
+                <MudItem sm="3" xs="12">
+                    <TextField Label="PO number"
+                               @bind-Value=@Model.PONumber
+                               Placeholder="Define PO Number"
+                               For="() => Model.PONumber"
+                               ValidateAsync="ValidateAsync"></TextField>
+
+                </MudItem>
+
+            </MudGrid>
+
+
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+
+@code {
+
+}

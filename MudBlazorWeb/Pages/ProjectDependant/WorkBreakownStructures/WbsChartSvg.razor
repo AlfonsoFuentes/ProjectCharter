@@ -1,0 +1,52 @@
+﻿@inject IJSRuntime JSRuntime
+<script>
+    // Función para obtener el ancho de la pantalla
+    window.getScreenWidth = () => {
+        return window.innerWidth;
+    };
+
+    // Función para configurar un listener de cambio de tamaño
+    window.setupResizeListener = (dotNetHelper) => {
+        const handleResize = () => {
+            dotNetHelper.invokeMethodAsync('UpdateScreenWidth', window.innerWidth);
+        };
+        window.addEventListener('resize', handleResize);
+
+        // Devolver una función para limpiar el listener
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    };
+</script>
+<MudCard>
+    <MudCardContent>
+      
+        @if (loaded)
+        {
+            <CascadingValue Value="this">
+                <!-- Contenedor principal -->
+                <div style="width: 100%; overflow-y: auto; overflow-x: auto; position: relative; border: 1px solid #ccc;">
+                    <svg width="@(GetSvgWidtht())" height="@(GetSvgHeight())" style="border: 1px solid #eee;">
+                        <g>
+                            @{
+                                int initialY = 50; // Posición inicial vertical fija para todos los deliverables
+                                var xPositions = GetXPositions(); // Calcular las posiciones X de los deliverables
+
+                                for (int i = 0; i < Response.Deliverables.Count; i++)
+                                {
+                                    <DeliverableNode Node="@Response.Deliverables[i]" X="@xPositions[i]" Y="@initialY" />
+                                }
+                            }
+                        </g>
+                    </svg>
+                </div>
+            </CascadingValue>
+        }
+    </MudCardContent>
+</MudCard>
+
+
+
+@code {
+
+}

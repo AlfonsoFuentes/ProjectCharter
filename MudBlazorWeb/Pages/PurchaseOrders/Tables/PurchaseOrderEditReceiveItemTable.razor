@@ -1,0 +1,84 @@
+﻿<MudDataGrid T="PurchaseOrderItemReceivedResponse" Items="@OrderedItems" ReadOnly="@_readOnly" EditMode="@(_isCellEditMode ? DataGridEditMode.Cell : DataGridEditMode.Form)"
+             EditTrigger="@(_editTriggerRowClick ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)"
+             StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+             Bordered="true" Dense="true">
+    <Columns>
+        <PropertyColumn Property="x => x.NomenclatoreName" T="PurchaseOrderItemReceivedResponse"
+                        Title="@($"Budget Item")" TProperty="string" Sortable="false" Filterable="false">
+         
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.ItemName" T="PurchaseOrderItemReceivedResponse"
+                        Title="@($"PO Item Name")" TProperty="string" Sortable="false" Filterable="false">
+     
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.ValueReceivedCurrency" T="PurchaseOrderItemReceivedResponse"
+                        Title="@($"Receiving ${PurchaseOrderCurrency.Name}")" TProperty="double" Sortable="false" Filterable="false">
+            <EditTemplate Context="Context">
+                <DoubleNumericField For="() => Context.Item.ValueReceivedCurrency"
+                                    @bind-Value="@Context.Item.ValueReceivedCurrency"
+                                    ValidateAsync="ValidateAsync"></DoubleNumericField>
+            </EditTemplate>
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.ValueReceivedCurrency).ToCurrencyCulture()</b>
+              
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.CurrencyDate" T="PurchaseOrderItemReceivedResponse"
+                        Title="@($"Received date")" TProperty="DateTime?" Sortable="false" Filterable="false">
+            <EditTemplate Context="Context">
+                <DatePicker For="() => Context.Item.CurrencyDate"
+                            Change="()=>ChangeDate(Context.Item)"
+                            @bind-Value="@Context.Item.CurrencyDate"
+                            ValidateAsync="ValidateAsync"></DatePicker>
+
+            </EditTemplate>
+
+        </PropertyColumn>
+        <PropertyColumn Hidden=@(PurchaseOrderCurrency.Id==CurrencyEnum.USD.Id) Property="x => x.USDCOP.ToCurrencyCulture()" T="PurchaseOrderItemReceivedResponse"
+                        Title="@($"TRM $USD/COP")" TProperty="string" Sortable="false" Filterable="false">
+         
+        </PropertyColumn>
+        <PropertyColumn Hidden=@(PurchaseOrderCurrency.Id!=CurrencyEnum.EUR.Id) Property="x => x.USDEUR.ToCurrencyCulture()" T="PurchaseOrderItemReceivedResponse"
+                        Title="@($"TRM $USD/EUR")" TProperty="string" Sortable="false" Filterable="false">
+        
+
+        </PropertyColumn>
+        <PropertyColumn Hidden=@(PurchaseOrderCurrency.Id==CurrencyEnum.USD.Id) Property="x => x.ValueReceivedUSD.ToCurrencyCulture()" T="PurchaseOrderItemReceivedResponse"
+                        Title="@($"Received $USD")" TProperty="string" Sortable="false" Filterable="false">
+           
+            <FooterTemplate>
+
+                <b>@Items.Sum(x => x.ValueReceivedUSD).ToCurrencyCulture()</b>
+
+            </FooterTemplate>
+        </PropertyColumn>
+
+
+    </Columns>
+</MudDataGrid>
+
+
+@code {
+    private bool _readOnly = false;
+    private bool _isCellEditMode = true;
+    private List<string> _events = new();
+    private bool _editTriggerRowClick = false;
+    void StartedEditingItem(PurchaseOrderItemReceivedResponse item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(PurchaseOrderItemReceivedResponse item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CommittedItemChanges(PurchaseOrderItemReceivedResponse item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+
+}
+

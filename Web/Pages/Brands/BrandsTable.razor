@@ -1,0 +1,39 @@
+﻿@page "/Brands"
+
+
+<TableTemplate TValue="BrandResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="Brands List">
+    <ColumnsTemplate>
+        <SelectColumn T="BrandResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" SortBy="@_sortBy"/>
+        <TemplateColumn CellClass="d-flex justify-end" T="BrandResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined  OnClick="@(()=>Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Remove" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+    private bool _sortNameByLength = true;
+
+    private Func<BrandResponse, object> _sortBy => x =>
+       {
+           if (_sortNameByLength)
+               return x.Name.Length;
+           else
+               return x.Name;
+       };
+
+    
+}

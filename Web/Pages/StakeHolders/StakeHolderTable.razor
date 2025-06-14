@@ -1,0 +1,49 @@
+﻿@page "/StakeHolders"
+
+ <TableTemplate TValue="StakeHolderResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="StakeHolders List">
+    <ColumnsTemplate>
+             <SelectColumn T="StakeHolderResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" Sortable="true" T="StakeHolderResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Area" Title="Area" Sortable="true" T="StakeHolderResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Email" Title="Email" Sortable="true" T="StakeHolderResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.PhoneNumber" Title="Cell phone" Sortable="false" T="StakeHolderResponse" TProperty="string" />
+        
+       <TemplateColumn CellClass="d-flex justify-end" T="StakeHolderResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined  OnClick="@(()=>Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>  
+
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+
+
+
+    void RowClicked(DataGridRowClickEventArgs<StakeHolderResponse> args)
+    {
+
+    }
+
+    void RowRightClicked(DataGridRowClickEventArgs<StakeHolderResponse> args)
+    {
+
+    }
+
+    void SelectedItemsChanged(HashSet<StakeHolderResponse> items)
+    {
+        SelecteItems = items;
+    }
+}

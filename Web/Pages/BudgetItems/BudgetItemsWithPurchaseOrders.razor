@@ -1,0 +1,86 @@
+﻿<MudCard Style="width:100%">
+    <MudCardContent>
+        <MudDataGrid T="BudgetItemWithPurchaseOrdersResponse"
+                     MultiSelection="false"
+                     Items="@FilteredItems"
+                     Hideable="false"
+                     Dense=true
+                     Bordered=true
+                     Hover=true
+                     Outlined=true
+                     Filterable=false
+                     RowsPerPage="PageSize"
+                     Striped=true>
+            <ToolBarContent>
+                <MudStack Row=true Spacing="2">
+
+
+                    <IconButton Size=@Size.Small ToolTip="Export to excel" Icon="@Icons.Material.Filled.TableView" Variant=Variant.Outlined OnClick="ExportExcel"></IconButton>
+                    <IconButton Size=@Size.Small ToolTip="Export to pdf" Icon="@Icons.Material.Filled.PictureAsPdf" Variant=Variant.Outlined OnClick="ExportPdf"></IconButton>
+
+
+                </MudStack>
+                <MudSpacer />
+                <TextField @bind-Value="@NameFilter" Change=OnNameFilterChanged Placeholder="Search" Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></TextField>
+            </ToolBarContent>
+            <Columns>
+                <HierarchyColumn T="BudgetItemWithPurchaseOrdersResponse" InitiallyExpandedFunc="x=>x.PurchaseOrders.Count>0" />
+                <PropertyColumn Property="x => x.Nomenclatore" Title="#" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="true" Filterable="false"/>
+                <PropertyColumn Property="x => x.Tag" Title="Tag" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="true" Filterable="false" />
+                <PropertyColumn Property="x => x.Name" Title="Name" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="true" Filterable="false" />
+                <PropertyColumn Property="x => x.BudgetUSD.ToCurrencyCulture()" Title="Budget, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="false" Filterable="false">
+                    <FooterTemplate>
+                        <Field><strong>@FilteredItems.Sum(x => x.BudgetUSD).ToCurrencyCulture()</strong></Field>
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.AssignedUSD.ToCurrencyCulture()" Title="Assigned, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="true" Filterable="false">
+                    <FooterTemplate>
+                        <Field><strong>@FilteredItems.Sum(x => x.AssignedUSD).ToCurrencyCulture()</strong></Field>
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.ActualUSD.ToCurrencyCulture()" Title="Actual, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string"
+                    Hideable="false" Sortable="true" Filterable="false">
+                    <FooterTemplate>
+                        <Field><strong>@FilteredItems.Sum(x => x.ActualUSD).ToCurrencyCulture()</strong></Field>
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.CommitmentUSD.ToCurrencyCulture()" Title="Commitment, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" 
+                    Hideable="false" Sortable="false" Filterable="false">
+                    <FooterTemplate>
+                        <Field><strong>@FilteredItems.Sum(x => x.CommitmentUSD).ToCurrencyCulture()</strong></Field>
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.PotentialUSD.ToCurrencyCulture()" Title="Potential, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="false" Filterable="false">
+                    <FooterTemplate>
+                        <Field><strong>@FilteredItems.Sum(x => x.PotentialUSD).ToCurrencyCulture()</strong></Field>
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.ToCommitUSD.ToCurrencyCulture()" Title="To Commit, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="false" Filterable="false">
+                    <FooterTemplate>
+                        <Field><strong>@FilteredItems.Sum(x => x.ToCommitUSD).ToCurrencyCulture()</strong></Field>
+                    </FooterTemplate>
+                </PropertyColumn>
+                <TemplateColumn CellClass="d-flex justify-end" T="BudgetItemWithPurchaseOrdersResponse">
+                    <CellTemplate Context="template">
+                        <MudStack Row=true Spacing="2">
+                            <IconButton ToolTip="@($"Add Purchaseorder in {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.AddBox" Variant=Variant.Outlined OnClick="@(()=>AddPurchaseorder(template.Item))" />
+
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <ChildRowContent>
+                <PurchaseOrdersTable HideAccount=true ShowPrint=false Items="@context.Item.PurchaseOrders" ShowToolbar=false GetAll="GetAll"></PurchaseOrdersTable>
+
+            </ChildRowContent>
+
+            <PagerContent>
+                <MudDataGridPager T="BudgetItemWithPurchaseOrdersResponse" />
+            </PagerContent>
+        </MudDataGrid>
+    </MudCardContent>
+</MudCard>
+@code {
+    int PageSize => FilteredItems.Count <= 25 ? 25 : FilteredItems.Count <= 50 ? 50 : 100;
+}

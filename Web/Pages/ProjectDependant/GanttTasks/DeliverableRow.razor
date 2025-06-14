@@ -1,0 +1,93 @@
+﻿
+@* <tr class="data-row" @onclick="() => OnClickDeliverable.InvokeAsync(Deliverable)">
+    <!-- Expand Icon -->
+    <td class="col-expand">
+        <span>
+            @if (Deliverable.IsExpanded)
+            {
+                <IconButton Icon="@Icons.Material.Rounded.ArrowDropDown" ToolTip="Down" OnClick="() => OnToggleTask(Deliverable)"></IconButton>
+
+            }
+            else
+            {
+                <IconButton Icon="@Icons.Material.Rounded.ArrowRight" ToolTip="Right" OnClick="() => OnToggleTask(Deliverable)"></IconButton>
+
+            }
+        </span>
+    </td>
+
+    <!-- ID -->
+    <td class="col-id"></td>
+
+    <!-- WBS -->
+    <td class="col-wbs">@Deliverable.WBS</td>
+
+    <!-- Name -->
+    <td class="col-name">@Deliverable.Name</td>
+
+    <!-- Start Date -->
+    <td class="col-start-date">@Deliverable.StartDate.ToString("d")</td>
+
+    <!-- End Date -->
+    <td class="col-end-date">@Deliverable.EndDate.ToString("d")</td>
+
+    <!-- Duration -->
+    <td class="col-duration"></td>
+
+    <!-- Dependencies -->
+    <td class="col-dependencies"></td>
+
+    <!-- Dependency Type -->
+    <td class="col-dependency-type"></td>
+
+    <!-- Lag -->
+    <td class="col-lag"></td>
+
+    <!-- Budget -->
+    <td class="col-budget">
+        @Deliverable.TotalBudget.ToCurrencyCulture()
+    </td>
+
+    <!-- Actions -->
+    <td class="col-lag">
+    </td>
+
+</tr>
+@if (Deliverable.IsExpanded)
+{
+    @foreach (var task in Deliverable.OrderedItems)
+    {
+        <GanttTaskRow @bind-Deliverable="@Deliverable"
+                     
+                      Task="@task"
+                      GetAll="GetAll"
+                      OnDelete="OnDelete"
+                      OnEdit="OnEdit"
+                      OnCancel="OnCancel"
+                      OnClick="OnClick"
+                      OnSave="OnSave"></GanttTaskRow>
+    }
+
+}
+ *@
+
+@code {
+    // [Parameter]
+    // public EventCallback GetAll { get; set; }
+    // [Parameter]
+    // public EventCallback<DeliverableWithGanttTaskResponse> OnClickDeliverable { get; set; }
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnClick { get; set; }
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnEdit { get; set; }
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnSave { get; set; }
+
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnCancel { get; set; }
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnDelete { get; set; }
+
+
+
+}

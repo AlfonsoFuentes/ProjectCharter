@@ -1,0 +1,91 @@
+﻿@* <tr class="data-row" @onclick="() => OnClick.InvokeAsync(Task)">
+    <!-- Expand Icon -->
+    <td class="col-expand">
+        @if (Task.OrderedSubGanttTasks.Any())
+        {
+            @if (Task.IsExpanded)
+            {
+
+                <IconButton Icon="@Icons.Material.Rounded.ArrowDropDown" Variant=Variant.Text ToolTip="Down" OnClick="() => OnToggleTask(Task)"></IconButton>
+
+            }
+            else
+            {
+
+                <IconButton Icon="@Icons.Material.Rounded.ArrowRight" Variant=Variant.Text ToolTip="Down" OnClick="() => OnToggleTask(Task)"></IconButton>
+
+            }
+        }
+        else
+        {
+            <span>&nbsp;</span>
+        }
+    </td>
+
+    <!-- ID -->
+    <td class="col-id">@Task.LabelOrder</td>
+
+    <!-- WBS -->
+    <td class="col-wbs">@Task.WBS</td>
+
+    <!-- Name -->
+    <td class="col-name @(Task.OrderedSubGanttTasks.Any() ? "has-subdeliverables" : "")">
+        @if (Task.IsEditing)
+        {
+            <TextField Value="@Task.Name"
+                       ValueChanged="OnChangeName"
+                       Lines=2>
+            </TextField>
+
+
+        }
+        else
+        {
+            @Task.Name
+        }
+    </td>
+
+   
+
+    <!-- Actions -->
+    <td class="col-actions">
+        @if (Task.IsEditing)
+        {
+            <IconButton Icon="@Icons.Material.Filled.Save" OnClick=" () =>  OnSave.InvokeAsync(Task)" ToolTip="Save" Disabled="@DisableSaveButton(Task)" />
+            <IconButton Icon="@Icons.Material.Filled.Cancel" OnClick=" () =>  OnCancel.InvokeAsync(Task)" ToolTip="Cancel" />
+
+        }
+        else
+        {
+           
+            <IconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => OnEdit.InvokeAsync(Task)" ToolTip="Edit" Disabled=@Task.ShowBudgetItems />
+            <IconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => OnDelete.InvokeAsync(Task)" ToolTip="Delete" Disabled=@Task.ShowBudgetItems />
+
+
+        }
+    </td>
+
+</tr>
+<!-- Mostrar Elementos del Presupuesto -->
+
+<!-- Subtareas Expandidas -->
+@if (Task.IsExpanded)
+{
+    foreach (var subtask in Task.OrderedSubGanttTasks)
+    {
+        <WBSGanttTaskRow @bind-Deliverable="@Deliverable"
+                      Task="@subtask"
+                      OnEdit="OnEdit"
+                      OnSave="OnSave"
+                      OnCancel="OnCancel"
+                      OnDelete="OnDelete"
+                      GetAll="GetAll"
+                    
+                      OnClick="OnClick"></WBSGanttTaskRow>
+    }
+}
+ *@
+
+@code {
+   
+}

@@ -1,0 +1,105 @@
+﻿<MudDataGrid T="PurchaseOrderItemResponse" Items="@OrderedItems" ReadOnly="@_readOnly" EditMode="@(_isCellEditMode ? DataGridEditMode.Cell : DataGridEditMode.Form)"
+             EditTrigger="@(_editTriggerRowClick ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)"
+             StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+             Bordered="true" Dense="true">
+    <Columns>
+        <PropertyColumn Property="x => x.NomenclatoreName" Title="#" T="PurchaseOrderItemResponse" TProperty="string" Sortable="false" Filterable="false" Editable=false>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.Name" T="PurchaseOrderItemResponse" Title="Name" TProperty="string" Sortable="false" Filterable="false" Editable=false>
+
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.TotalPurchaseOrderCurrency.ToCurrencyCulture()" T="PurchaseOrderItemResponse" Title="@($"${PurchaseOrderCurrency.Name}")"
+                        Editable=false TProperty="string" Sortable="false" Filterable="false">
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.ReceivingValueCurrency" T="PurchaseOrderItemResponse"
+                        Title="@($"Receiving ${PurchaseOrderCurrency.Name}")" TProperty="double" Sortable="false" Filterable="false">
+            <EditTemplate Context="Context">
+                <DoubleNumericField For="() => Context.Item.ReceivingValueCurrency"
+                                    @bind-Value="@Context.Item.ReceivingValueCurrency"
+                                    ValidateAsync="ValidateAsync"></DoubleNumericField>
+            </EditTemplate>
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.ReceivingValueCurrency).ToCurrencyCulture()</b>
+               
+            </FooterTemplate>
+        </PropertyColumn>
+        <TemplateColumn Hidden=@(PurchaseOrderCurrency.Id==CurrencyEnum.USD.Id) Title="@(PurchaseOrderCurrency.Id==CurrencyEnum.COP.Id?"TRM, $USD/COP":"TRM, $USD/EUR")">
+            <EditTemplate Context="template">
+                @if (PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id)
+                {
+                    <Field>@template.Item.ReceivingUSDCOP.ToCurrencyCulture()</Field>
+                }
+                else
+                {
+                    <Field>@template.Item.ReceivingUSDEUR.ToCurrencyCulture()</Field>
+                }
+            </EditTemplate>
+
+        </TemplateColumn>
+
+        <PropertyColumn Hidden=@(PurchaseOrderCurrency.Id==CurrencyEnum.USD.Id) Property="x => x.ReceivingValueUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"Receiving, USD")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+            <FooterTemplate>
+
+                <b>@Items.Sum(x => x.ReceivingValueUSD).ToCurrencyCulture()</b>
+
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.BudgetUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"Budget, USD")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.BudgetUSD).ToCurrencyCulture()</b>
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.NewActualPurchaseOrderUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"Actual, USD")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.NewActualPurchaseOrderUSD).ToCurrencyCulture()</b>
+
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.NewCommitmentPurchaseOrderUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"Commitment, USD")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.NewCommitmentPurchaseOrderUSD).ToCurrencyCulture()</b>
+               
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.PendingToReceiveUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"Pending, USD")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.PendingToReceiveUSD).ToCurrencyCulture()</b>
+              
+            </FooterTemplate>
+        </PropertyColumn>
+
+
+    </Columns>
+</MudDataGrid>
+
+
+@code {
+    private bool _readOnly = false;
+    private bool _isCellEditMode = true;
+    private List<string> _events = new();
+    private bool _editTriggerRowClick = false;
+    void StartedEditingItem(PurchaseOrderItemResponse item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(PurchaseOrderItemResponse item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CommittedItemChanges(PurchaseOrderItemResponse item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+
+}
+

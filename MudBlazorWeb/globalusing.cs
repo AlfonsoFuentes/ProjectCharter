@@ -1,0 +1,19 @@
+﻿global using Blazored.LocalStorage;
+global using Microsoft.AspNetCore.Components.Authorization;
+global using Shared.Commons;
+global using Shared.Constants.Routes;
+global using Shared.Models.IdentityModels.Requests.Identity;
+global using Shared.Models.IdentityModels.Responses.Identity;
+global using System.Net.Http.Headers;
+global using System.Net.Http.Json;
+global using Web.Infrastructure.ExtensionMethods;
+global using Web.Infrastructure.Services.Client;
+global using MudBlazorWeb.Services.Authentications;
+global using MudBlazorWeb.Services.Identities.Accounts;
+global using MudBlazorWeb.Services.SnackBars;
+global using Microsoft.AspNetCore.Components;
+global using MudBlazorWeb.Services.Extensions;
+global using Web.Infrastructure.Managers;
+
+global using MudBlazorWeb.Services.Https;
+global using MudBlazorWeb.Services.LocalStorages;

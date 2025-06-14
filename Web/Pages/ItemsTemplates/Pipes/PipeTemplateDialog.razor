@@ -1,0 +1,92 @@
+﻿@using Shared.Enums.CurrencyEnums
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudDialog>
+        <DialogContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+           
+            <MudGrid Spacing="2" Style="padding: 2px;width:100%; ">
+                <MudItem xs="12" sm="12" md="4">
+                    <Select @bind-Value="Model.Diameter"
+                            Items="@NominalDiameterEnum.List"
+                            Label="Diameter"
+                            Property="@(p=>p.Name)"
+                            For="()=>Model.Diameter"
+                           
+                            ValidateAsync="@(()=>ValidateAsync())"
+                            Clearable="false">
+                    </Select>
+
+       
+
+                </MudItem>
+                <MudItem xs="12" sm="12" md="4">
+                    <Select @bind-Value="Model.Material"
+                            Items="@MaterialEnum.List"
+                            Label="Material"
+                            Property="@(p=>p.Name)"
+                            For="()=>Model.Material"
+                            ValidateAsync="@(()=>ValidateAsync())"
+                            Clearable="false">
+                    </Select>
+
+                </MudItem>
+                <MudItem xs="12" sm="12" md="4">
+                    <Select @bind-Value="Model.Class"
+                            Items="@PipeClassEnum.List"
+                            Label="Class"
+                            Property="@(p=>p.Name)"
+                            For="()=>Model.Class"
+                            ValidateAsync="@(()=>ValidateAsync())"
+                            Clearable="false">
+                    </Select>
+
+
+
+                </MudItem>
+
+            </MudGrid>
+
+            <MudGrid Spacing="2" Style="padding: 2px;width:100%; ">
+                <MudItem xs="12" sm="12" md="4">
+
+                    <Switch Label="Is Insulated?" @bind-Value=@Model.Insulation ValidateAsync="ValidateAsync"></Switch>
+
+                </MudItem>
+              
+        
+       
+
+            </MudGrid>
+
+            <MudGrid Spacing="2" Style="padding: 2px;width:100%; ">
+                <MudItem xs="12" sm="12" md="6">
+                    <DoubleNumericField Label="Unitary cost $USD/day, USD"
+                                          @bind-Value="Model.LaborDayPrice"
+                                          For="()=>Model.LaborDayPrice"
+                                          ValidateAsync="@(()=>ValidateAsync())" />
+
+                </MudItem>
+                <MudItem xs="12" sm="12" md="6">
+
+                    <DoubleNumericField Label="Unitary cost $USD/mt equivalent, USD"
+                                          @bind-Value="Model.EquivalentLenghPrice"
+                                          For="()=>Model.EquivalentLenghPrice"
+                                          ValidateAsync="@(()=>ValidateAsync())" />
+                </MudItem>
+             
+
+            </MudGrid>
+  
+        </DialogContent>
+        <DialogActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit"  Variant="Variant.Outlined"></MudIconButton>
+
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+@code {
+
+}

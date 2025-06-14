@@ -1,0 +1,46 @@
+﻿
+@using Shared.Models.Objectives.Responses
+
+
+<TableTemplate TValue="ObjectiveResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               ShowOrderUpDown="true"
+               OnRowClicked="RowClicked"
+               OrderUp="Up"
+               OrderDown="Down"
+               DisableDownButton="@DisableDownButton"
+               DisableUpButton="@DisableUpButton"
+               @bind-SelectedItems=@SelecteItems
+           >
+    <ColumnsTemplate>
+        <SelectColumn T="ObjectiveResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" SortBy="@_sortBy"/>
+        <TemplateColumn CellClass="d-flex justify-end" T="ObjectiveResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined  OnClick="@(()=>Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+    private bool _sortNameByLength = true;
+
+    private Func<ObjectiveResponse, object> _sortBy => x =>
+       {
+           if (_sortNameByLength)
+               return x.Name.Length;
+           else
+               return x.Name;
+       };
+
+    
+}

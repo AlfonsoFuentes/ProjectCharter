@@ -1,0 +1,32 @@
+﻿@using Shared.Enums.CurrencyEnums
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudDialog>
+        <DialogContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+
+            <TextField Label="Code"
+                       @bind-Value=@Model.Code
+                       Placeholder="Define Code"
+                       For="()=>Model.Code"
+                       ValidateAsync="ValidateAsync"></TextField>
+     
+            <TextField Label="Name"
+                     @bind-Value=@Model.Name
+                     Placeholder="Define name"
+                       For="()=>Model.Name"
+                       ValidateAsync="ValidateAsync"></TextField>
+            
+
+        </DialogContent>
+        <DialogActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+@code {
+
+}

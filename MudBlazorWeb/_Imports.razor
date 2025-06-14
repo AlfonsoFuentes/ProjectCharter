@@ -1,0 +1,127 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using BlazorDownloadFile
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.AspNetCore.Components.Authorization
+@using Blazored.FluentValidation
+@using Microsoft.JSInterop
+@using MudBlazor
+@using System.Globalization
+@using System.Linq.Expressions
+
+
+@using MudBlazorWeb
+@using Web.Infrastructure.Managers.Generic
+@using MudBlazorWeb.Pages.ProjectDependant.MonitoringExpendingTools
+@using MudBlazorWeb.Pages.ProjectDependant
+@using MudBlazorWeb.Pages.ProjectDependant.ProjectsMonitoringExpendingTools
+@using MudBlazorWeb.Layout
+@using MudBlazorWeb.Templates
+@using MudBlazorWeb.Services.Authentications
+@using MudBlazorWeb.Services.Identities.Accounts
+@using MudBlazorWeb.Services.Identities.Authentications
+@using MudBlazorWeb.Services.Identities.Users
+@using MudBlazorWeb.Services.Interceptor
+@using MudBlazorWeb.Services.LocalStorages
+@using MudBlazorWeb.Services.Navigations
+@using MudBlazorWeb.Services.SnackBars
+@using MudBlazorWeb.Pages.ItemsTemplates.NozzleTemplates
+@using MudBlazorWeb.Pages.BudgetItems.Nozzles
+@using MudBlazorWeb.Pages.ItemsTemplates.Equipments
+@using MudBlazorWeb.Pages.ItemsTemplates.Instruments
+@using MudBlazorWeb.Pages.PurchaseOrders.Tables
+@using MudBlazorWeb.Pages.BudgetItems
+@using MudBlazorWeb.Pages.ProjectDependant.AcceptanceCriterias
+@using MudBlazorWeb.Pages.ProjectDependant.Acquisitions
+@using MudBlazorWeb.Pages.ProjectDependant.Assumptions
+@using MudBlazorWeb.Pages.ProjectDependant.BackGrounds
+@using MudBlazorWeb.Pages.ProjectDependant.Bennefits
+@using MudBlazorWeb.Pages.ProjectDependant.Communications
+@using MudBlazorWeb.Pages.ProjectDependant.Constrainsts
+@using MudBlazorWeb.Pages.ProjectDependant.DeliverableGantTasks
+@using MudBlazorWeb.Pages.ProjectDependant.ExpendingTools
+@using MudBlazorWeb.Pages.ProjectDependant.ExpertJudgements
+@using MudBlazorWeb.Services.Enums
+@using MudBlazorWeb.Pages.ProjectDependant.KnownRisks
+@using MudBlazorWeb.Pages.ProjectDependant.LearnedLessons
+@using MudBlazorWeb.Pages.ProjectDependant.Objectives
+@using MudBlazorWeb.Pages.ProjectDependant.Qualitys
+@using MudBlazorWeb.Pages.ProjectDependant.Requirements
+@using MudBlazorWeb.Pages.ProjectDependant.Resources
+@using MudBlazorWeb.Pages.ProjectDependant.Scopes
+@using MudBlazorWeb.Pages.ProjectDependant.StakeHolderInsideProjects
+@using MudBlazorWeb.Pages.ProjectDependant.MonitoringGanttTasks
+@using MudBlazorWeb.Pages.ProjectDependant.WBSTableGraphics
+@using MudBlazorWeb.Pages.ProjectDependant.WorkBreakownStructures
+@using MudBlazorWeb.Pages.ProjectDependant.MonitoringLogs
+
+@using Shared.Models.BudgetItemNewGanttTasks.Responses
+@using Shared.Models.Objectives.Responses
+@using Shared.Models.Backgrounds.Responses
+@using Shared.Models.Suppliers.Responses
+@using Shared.Models.Brands.Records
+@using Shared.Models.Brands.Requests
+@using Shared.Models.Brands.Responses
+@using Shared.StaticClasses
+@using Shared.Models.StakeHolders.Responses
+@using Shared.Enums.CurrencyEnums
+@using Shared.Enums.Materials
+@using Shared.Models.Templates.NozzleTemplates
+@using Shared.Enums.ConnectionTypes
+@using Shared.Enums.DiameterEnum
+@using Shared.Enums.NozzleTypes
+@using Shared.Models.Projects.Reponses
+@using Shared.Enums.StakeHolderTypes
+@using Shared.Models.BudgetItems.Responses
+@using Shared.Models.Templates.Equipments.Responses
+@using Shared.Models.Templates.Valves.Responses
+@using Shared.Models.Templates.Instruments.Responses
+@using Shared.Models.Templates.Pipings.Responses
+@using Shared.Models.EngineeringFluidCodes.Responses;
+@using Shared.Enums.Instruments
+@using Shared.Enums.ValvesEnum
+@using Shared.Models.BudgetItems.IndividualItems.Nozzles.Responses
+@using Shared.Enums.CostCenter
+@using Shared.Enums.Focuses
+@using Shared.Enums.ProjectNeedTypes
+@using Shared.Models.PurchaseOrders.Requests
+@using Shared.Models.PurchaseOrders.Responses
+@using Shared.Enums.PurchaseOrderStatusEnums;
+@using Shared.ExtensionsMetods
+@using Shared.Enums.TasksRelationTypes
+@using Shared.Models.MainTaskDependencys
+@using Shared.Models.DeliverableGanttTasks.Responses
+@using Shared.Models.BudgetItems.IndividualItems.Engineerings.Responses
+@using Shared.Models.BudgetItems.BasicEngineeringItems.BasicEquipments.Responses
+@using Shared.Models.BudgetItems.BasicEngineeringItems.BasicInstruments.Responses
+@using Shared.Models.BudgetItems.BasicEngineeringItems.BasicPipes.Responses
+@using Shared.Models.BudgetItems.BasicEngineeringItems.BasicValves.Responses
+@using Shared.Models.BudgetItems.IndividualItems.Equipments.Responses
+@using Shared.Models.BudgetItems.IndividualItems.Instruments.Responses
+@using Shared.Models.BudgetItems.IndividualItems.Pipes.Responses
+@using Shared.Models.BudgetItems.IndividualItems.Valves.Responses
+@using Shared.Models.BudgetItems.BasicEngineeringItems
+
+@attribute [Authorize]
+@inject IBlazorDownloadFileService blazorDownloadFileService
+@inject IAuthenticationManager _authenticationManager
+@inject IAccountManager _accountManager
+@inject NavigationManager _NavigationManager
+@inject BlazorHeroStateProvider _stateProvider
+@inject IAuthorizationService _authorizationService
+@inject HttpClient _httpClient
+@inject IHttpInterceptorManager _interceptor
+@inject IUserManager _userManager
+@inject ILocalStorageService _localStorage
+@inject IJSRuntime _jsRuntime
+@inject NavigationBack Navigation
+@inject ISnackBarService _snackBar
+@inject IDialogService DialogService
+@inject IGenericService GenericService
+@inject IModelLocalStorage _localModelStorage

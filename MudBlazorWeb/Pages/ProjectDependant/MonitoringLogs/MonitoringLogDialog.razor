@@ -1,0 +1,40 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <DatePicker @bind-Value="@Model.InitialDate"
+                        Label="Created Date"
+                        For="@(() => Model.InitialDate)"
+                        ValidateAsync="ValidateAsync"></DatePicker>
+            @if (Model.Id != Guid.Empty)
+            {
+                <DatePicker @bind-Value="@Model.EndDate"
+                        Label="Close Date"
+                        For="@(() => Model.EndDate)"
+                        ValidateAsync="ValidateAsync"></DatePicker>
+            }
+            <TextField @bind-Value="@Model.Name"
+                       Lines=3
+                       ValidateAsync="ValidateAsync"
+                       Label="Name"
+                       For="@(() => Model.Name)">
+            </TextField>
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+    async Task NameChanged(string name)
+    {
+        Model.Name = name;
+        await ValidateAsync();
+    }
+}

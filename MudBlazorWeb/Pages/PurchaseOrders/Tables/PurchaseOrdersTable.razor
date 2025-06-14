@@ -1,0 +1,86 @@
+﻿
+<TableTemplate TValue="PurchaseOrderResponse"
+               ShowAdd=false
+               ShowToolbar=@ShowToolbar
+               ShowDelete=false
+               ShowOrderUpDown=false
+               ShowPrint=@ShowPrint
+               TableTitle="@TableTitle"
+               @bind-NameFilter=@nameFilter
+               Items="FilteredItems">
+    <Buttons>
+        @if (!HideExpectedDate)
+        {   
+            
+            <MudSwitch @bind-Value="@ExpectedByDate" Label="Filter By Expeted Date" Color="Color.Info" />
+          
+            <div style="width:200px"><DatePicker @bind-Value="@ExpectedDate" Label="Select Expected Date"  /></div>
+        }
+
+
+
+    </Buttons>
+    <ColumnsTemplate>
+        <PropertyColumn Hidden=@HidePR Property="x => x.PurchaseRequisition" Title="PR#" T="PurchaseOrderResponse" TProperty="string"></PropertyColumn>
+        <PropertyColumn Hidden=@HidePONumber Property="x => x.PONumber" Title="PO Number" T="PurchaseOrderResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Name" Title="Name" T="PurchaseOrderResponse" TProperty="string" />
+        <PropertyColumn Hidden=@HideExpectedDate Property="x => x.sExpectedDate" Title="Expected Date" T="PurchaseOrderResponse" TProperty="string" />
+        <PropertyColumn Hidden=@HideStatus Property="x => x.PurchaseOrderStatus.Name" Title="Status" T="PurchaseOrderResponse" TProperty="string" />
+        <PropertyColumn Hidden=@HideAccount Property="x => x.ProjectAccount" Title="Account" T="PurchaseOrderResponse" TProperty="string" />
+        <PropertyColumn Hidden=@HideSupplier Property="x => x.SupplierNickName" Title="Supplier" T="PurchaseOrderResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.ActualPurchaseOrderUSD.ToCurrencyCulture()" Title="$Actual, USD" T="PurchaseOrderResponse" TProperty="string">
+            <FooterTemplate>
+
+                <b>@FilteredItems.Sum(x => x.ActualPurchaseOrderUSD).ToCurrencyCulture()</b>
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Hidden=@HideSupplier Property="x => x.CommitmentPurchaseOrderUSD.ToCurrencyCulture()" Title="$Commitment, USD" T="PurchaseOrderResponse" TProperty="string">
+            <FooterTemplate>
+
+                <b>@FilteredItems.Sum(x => x.CommitmentPurchaseOrderUSD).ToCurrencyCulture()</b>
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Hidden=@HideSupplier Property="x => x.PotentialPurchaseOrderUSD.ToCurrencyCulture()" Title="$Potential,USD" T="PurchaseOrderResponse" TProperty="string">
+            <FooterTemplate>
+                <b>@FilteredItems.Sum(x => x.PotentialPurchaseOrderUSD).ToCurrencyCulture()</b>
+            </FooterTemplate>
+        </PropertyColumn>
+
+        <TemplateColumn CellClass="d-flex justify-end" T="PurchaseOrderResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    @if (template.Item.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id)
+                    {
+                        <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => EditPurchaseOrderCreated(template.Item))" />
+                        <IconButton ToolTip="@($"Approve {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Approval" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => ApprovePurchaseOrder(template.Item))" />
+                    }
+                    else if (template.Item.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Approved.Id || template.Item.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Receiving.Id)
+                    {
+                        <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => EditPurchaseOrderApproved(template.Item))" />
+                        <IconButton ToolTip="@($"Receive {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.AssignmentTurnedIn" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => ReceivePurchaseOrder(template.Item))" />
+                    }
+                    else if (template.Item.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Closed.Id)
+                    {
+                        if(template.Item.IsCapitalizedSalary)
+                        {
+                            <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => EditPurchaseOrderSalary(template.Item))" />
+                        }
+                        else 
+                        {
+                            <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => EditPurchaseOrderClosed(template.Item))" />
+                        }
+                    
+
+                    }
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+}

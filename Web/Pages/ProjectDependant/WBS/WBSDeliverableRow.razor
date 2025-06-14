@@ -1,0 +1,76 @@
+﻿
+@* <tr class="data-row" @onclick="() => OnClickDeliverable.InvokeAsync(Deliverable)">
+    <!-- Expand Icon -->
+    <td class="col-expand">
+        <span>
+            @if (Deliverable.IsExpanded)
+            {
+                <IconButton Icon="@Icons.Material.Rounded.ArrowDropDown" ToolTip="Down" OnClick="() => OnToggleTask(Deliverable)"></IconButton>
+
+            }
+            else
+            {
+                <IconButton Icon="@Icons.Material.Rounded.ArrowRight" ToolTip="Right" OnClick="() => OnToggleTask(Deliverable)"></IconButton>
+
+            }
+        </span>
+    </td>
+
+    <!-- ID -->
+    <td class="col-id"></td>
+
+    <!-- WBS -->
+    <td class="col-wbs">@Deliverable.WBS</td>
+
+    <!-- Name -->
+    <td class="col-name">@Deliverable.Name</td>
+
+
+
+    <!-- Actions -->
+    <td class="col-lag">
+        <IconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => OnEditDeliverable.InvokeAsync(Deliverable)" ToolTip="Edit" />
+        <IconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => OnDeleteDeliverable.InvokeAsync(Deliverable)" ToolTip="Delete" />
+    </td>
+
+</tr>
+@if (Deliverable.IsExpanded)
+{
+    @foreach (var task in Deliverable.OrderedItems)
+    {
+        <WBSGanttTaskRow @bind-Deliverable="@Deliverable"
+                         Task="@task"
+                         GetAll="GetAll"
+                         OnDelete="OnDelete"
+                         OnEdit="OnEdit"
+                         OnCancel="OnCancel"
+                         OnClick="OnClick"
+                      
+                         OnSave="OnSave"></WBSGanttTaskRow>
+    }
+
+}
+ *@
+
+@code {
+    // [Parameter]
+    // public EventCallback GetAll { get; set; }
+    // [Parameter]
+    // public EventCallback<DeliverableWithGanttTaskResponse> OnClickDeliverable { get; set; }
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnClick { get; set; }
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnEdit { get; set; }
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnSave { get; set; }
+
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnCancel { get; set; }
+    // [Parameter]
+    // public EventCallback<GanttTaskResponse> OnDelete { get; set; }
+    // [Parameter]
+    // public EventCallback<DeliverableWithGanttTaskResponse> OnDeleteDeliverable { get; set; }
+    // [Parameter]
+    // public EventCallback<DeliverableWithGanttTaskResponse> OnEditDeliverable { get; set; }
+
+}

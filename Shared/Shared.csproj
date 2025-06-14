@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\BudgetItems\IndividualItems\Nozzles\Exports\**" />
+    <Compile Remove="Models\BudgetItems\IndividualItems\Nozzles\Records\**" />
+    <Compile Remove="Models\BudgetItems\IndividualItems\Nozzles\Requests\**" />
+    <Compile Remove="Models\BudgetItems\IndividualItems\Nozzles\Validators\**" />
+    <EmbeddedResource Remove="Models\BudgetItems\IndividualItems\Nozzles\Exports\**" />
+    <EmbeddedResource Remove="Models\BudgetItems\IndividualItems\Nozzles\Records\**" />
+    <EmbeddedResource Remove="Models\BudgetItems\IndividualItems\Nozzles\Requests\**" />
+    <EmbeddedResource Remove="Models\BudgetItems\IndividualItems\Nozzles\Validators\**" />
+    <None Remove="Models\BudgetItems\IndividualItems\Nozzles\Exports\**" />
+    <None Remove="Models\BudgetItems\IndividualItems\Nozzles\Records\**" />
+    <None Remove="Models\BudgetItems\IndividualItems\Nozzles\Requests\**" />
+    <None Remove="Models\BudgetItems\IndividualItems\Nozzles\Validators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Flee" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\BudgetItemNewGanttTasks\Records\" />
+    <Folder Include="Models\StakeHolderInsideProjects\Exports\" />
+    <Folder Include="Models\StakeHolders\Mappers\" />
+    <Folder Include="Models\Suppliers\Mappers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UnitSystem\UnitSystem.csproj" />
+  </ItemGroup>
+
+</Project>

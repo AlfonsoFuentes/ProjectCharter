@@ -1,0 +1,76 @@
+﻿@using Web.Pages.ProjectDependant
+<MudCard Style="width:100%">
+    <MudCardContent>
+        <MudStack Spacing="2" Style="width:100%">
+            <IconButton Size=Size.Small ToolTip="Add new Project" Icon="@Icons.Material.Filled.Add" Variant=Variant.Outlined OnClick="AddNew"></IconButton>
+            <MudExpansionPanels>
+                @foreach (var row in FilteredItems)
+                {
+                    <MudExpansionPanel HideIcon=true @bind-Expanded="@open">
+                        <TitleContent>
+                            <MudGrid>
+                                <MudItem xs="12" sm="8">
+                                    <MudGrid>
+                                        <MudItem xs="12" sm="4">
+                                            <MudText Class="mt-1"> @row.Name</MudText>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="2">
+                                            <MudText Class="mt-1"> @row.Status.Name</MudText>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="2">
+                                            <MudText Class="mt-1"> @row.Focus.Name</MudText>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="2">
+                                            <MudText Class="mt-1"> @row.CostCenter.Name</MudText>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="2">
+                                            <MudText Class="mt-1"> @row.ProjectNeedType.Name</MudText>
+                                        </MudItem>
+
+                                    </MudGrid>
+                                </MudItem>
+                                <MudItem xs="12" sm="4">
+                                    <MudStack Row=true Spacing="2" Class="mt-1">
+                                        <IconButton ToolTip="@($"Expand {row.Name}")" Size="@Size.Small" Icon="@ExpandIcon" OnClick="@(()=>OnExpandedChanged(row))" />
+                                        <IconButton ToolTip="@($"Export {row.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(()=>ExportProjectCharter(row))" />
+
+                                        @if (row.Status.Id == ProjectStatusEnum.Created.Id)
+                                        {
+                                            <IconButton ToolTip="@($"Edit {row.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(()=>Edit(row))" />
+                                            <IconButton ToolTip="@($"Approve {row.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Check" Variant=Variant.Outlined OnClick="@(()=>Approve(row))" />
+                                        }
+                                        else if (row.Status.Id == ProjectStatusEnum.Approved.Id)
+                                        {
+                                            <IconButton ToolTip="@($"Un Approve {row.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Undo" Variant=Variant.Outlined OnClick="@(()=>UnApprove(row))" />
+                                        }
+                                        else
+                                        {
+
+                                        }
+
+                                        <IconButton ToolTip="@($"Delete {row.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined OnClick="@(()=>Delete(row))" />
+                                    </MudStack>
+                                </MudItem>
+                            </MudGrid>
+
+
+                        </TitleContent>
+                        <ChildContent>
+                            <ProjectContainer Project="@row"></ProjectContainer>
+
+
+                        </ChildContent>
+
+                    </MudExpansionPanel>
+                }
+
+            </MudExpansionPanels>
+        </MudStack>
+    </MudCardContent>
+</MudCard>
+
+
+@code {
+    string ExpandIcon => _selectedProjectId == Guid.Empty ? Icons.Material.Outlined.ExpandMore : Icons.Material.Outlined.ExpandLess;
+
+}

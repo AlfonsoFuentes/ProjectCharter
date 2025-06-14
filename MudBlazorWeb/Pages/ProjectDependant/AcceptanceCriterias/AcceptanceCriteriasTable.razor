@@ -1,0 +1,45 @@
+﻿@page "/AcceptanceCriterias"
+@using Shared.Models.AcceptanceCriterias.Responses
+
+
+<TableTemplate TValue="AcceptanceCriteriaResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               OnRowClicked="@RowClicked"
+               Items="FilteredItems"
+               ShowOrderUpDown="true"
+               OrderUp="Up"
+               OrderDown="Down"
+               DisableDownButton="@DisableDownButton"
+               DisableUpButton="@DisableUpButton"
+               @bind-SelectedItems=@SelecteItems>
+    <ColumnsTemplate>
+        <SelectColumn T="AcceptanceCriteriaResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" SortBy="@_sortBy" />
+        <TemplateColumn CellClass="d-flex justify-end" T="AcceptanceCriteriaResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(()=>Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+    private bool _sortNameByLength = true;
+
+    private Func<AcceptanceCriteriaResponse, object> _sortBy => x =>
+       {
+           if (_sortNameByLength)
+               return x.Name.Length;
+           else
+               return x.Name;
+       };
+
+
+}

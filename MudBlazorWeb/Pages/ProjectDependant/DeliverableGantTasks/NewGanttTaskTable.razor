@@ -1,0 +1,263 @@
+﻿
+<style>
+    .fixed-column {
+        position: sticky;
+        left: 0;
+        background-color: white;
+        z-index: 1;
+        box-shadow: 1px 0 0 #ccc;
+    }
+
+    .gantt-progress-cell {
+        position: relative;
+        height: 40px;
+        padding: 0;
+        overflow: visible;
+    }
+
+    .gantt-bar {
+        position: absolute;
+        height: 15px;
+        background-color: #2196F3;
+        border-radius: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+    }
+
+    .gantt-timeline {
+        display: flex;
+        white-space: nowrap;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 4px;
+        position: relative;
+        height: 24px;
+    }
+
+    .gantt-scale-unit {
+        width: 30px;
+        text-align: center;
+        font-size: 0.75rem;
+        float: left;
+        height: 24px;
+        position: relative;
+    }
+
+    .weekend-line {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background-color: red;
+        z-index: 1;
+    }
+</style>
+
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+    <div style="position: sticky; top: 0; z-index: 1100; background: white; box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2);width:100%;">
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+            <MudStack Row=true Spacing="2">
+                <IconButton ToolTip="@LegendAdd" Size="@Size.Small" Icon="@Icons.Material.Outlined.Add"
+                            OnClick="AddRow" />
+                <IconButton ToolTip="@($"Move down to {SelectedRowName}")" Size="@Size.Small" Disabled=@(DisableButtonCanMoveDown())
+                            Icon="@Icons.Material.Outlined.ArrowDownward" OnClick="()=>MoveDown()" />
+
+                <IconButton ToolTip="@($"Move up to {SelectedRowName}")" Size="@Size.Small" Disabled=@(DisableButtonCanMoveUp())
+                            Icon="@Icons.Material.Outlined.ArrowUpward" OnClick="()=>MoveUp()" />
+
+                <IconButton ToolTip="@($"Move left to {SelectedRowName}")" Size="@Size.Small" Disabled=@(DisableButtonCanMoveLeft())
+                            Icon="@Icons.Material.Outlined.ArrowLeft" OnClick="()=>MoveLeft()" />
+
+                <IconButton ToolTip="@($"Move Rigth to {SelectedRowName}")" Size="@Size.Small" Disabled=@(DisableButtonCanMoveRight())
+                            Icon="@Icons.Material.Outlined.ArrowRight" OnClick="()=>MoveRight()" />
+                <MudSelect @bind-Value="SelectedScale" T="TimeScale">
+                    <MudSelectItem Value="TimeScale.Daily">Dayly</MudSelectItem>
+                    <MudSelectItem Value="TimeScale.Weekly">Weekly</MudSelectItem>
+                    <MudSelectItem Value="TimeScale.Monthly">Monthly</MudSelectItem>
+                    <MudSelectItem Value="TimeScale.Quarterly">Quarterly</MudSelectItem>
+                    <MudSelectItem Value="TimeScale.SemiAnnually">Biannual</MudSelectItem>
+                    <MudSelectItem Value="TimeScale.Yearly">Yearly</MudSelectItem>
+                </MudSelect>
+                <MudSpacer />
+                <Field Label="Selected row">@SelectedRowName</Field>
+
+            </MudStack>
+        </MudContainer>
+    </div>
+
+
+    <!-- Contenedor general con scroll único -->
+    <div style="overflow-x: auto; width: 100%;overflow-y: auto;">
+        @if (loaded)
+        {
+            <MudSimpleTable Dense="true" Hover="true" Bordered="true" Striped="true"
+                            Style="overflow-y: auto;min-width: 1200px; width: max-content;" FixedHeader=true>
+                <thead>
+                    <tr>
+                        <th class="fixed-column" style="width: 50px;">ID</th>
+                        <th class="fixed-column" style="width: 80px;">WBS</th>
+                        <th class="fixed-column" style="width: 300px;">Name</th>
+                        <th class="fixed-column" style="width: 120px;">Start Date</th>
+                        <th class="fixed-column" style="width: 120px;">End Date</th>
+                        <th style="width: 80px;">Duration</th>
+                        <th style="width: 100px;">Dependencies</th>
+                        <th style="width: 150px;">Budget, USD</th>
+                        <th style="width: 80px;">Actions</th>
+                     @*    @if (Response.ProjectStart != null && Response.ProjectEnd != null)
+                        {
+                            <th style="width: 400px;">
+                                <!-- Escala de tiempo -->
+                                <div class="gantt-timeline">
+                                    @{
+                                        var currentDate = Response.ProjectStart!.Value.Date;
+                                        var endDate = Response.ProjectEnd!.Value.Date;
+
+                                        while (currentDate <= endDate)
+                                        {
+                                            var isWeekend = currentDate.DayOfWeek == DayOfWeek.Saturday ||
+                                            currentDate.DayOfWeek == DayOfWeek.Sunday;
+
+                                            <div class="gantt-scale-unit" style="@GetScaleUnitStyle(currentDate, SelectedScale)">
+                                                @GetScaleLabel(currentDate, SelectedScale)
+
+                                                @if (SelectedScale == TimeScale.Daily &&
+                                                                                (currentDate.DayOfWeek == DayOfWeek.Saturday ||
+                                                                                currentDate.DayOfWeek == DayOfWeek.Sunday))
+                                                {
+                                                    <div class="weekend-line"></div>
+                                                }
+                                            </div>
+
+                                            if (SelectedScale == TimeScale.Daily)
+                                            {
+                                                currentDate = currentDate.AddDays(1);
+                                            }
+                                            else
+                                            {
+                                                currentDate = GetNextDate(currentDate, SelectedScale).AddDays(1);
+                                            }
+                                        }
+                                    }
+                                </div>
+
+                            </th>
+                        } *@
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var context in Response.OrderedItems)
+                    {
+                       
+
+                        <tr @onclick="() => OnSelectRow(context)" @ondblclick="() => OnEditLocalRow(context)">
+                            <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.MainOrder.ToString()" /></td>
+                            <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.WBS" /></td>
+                            <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.Name" /></td>
+                            <td class="fixed-column">
+                                @if (EditLocalRow != null && EditLocalRow.Id == context.Id)
+                                {
+                                    <DatePicker @bind-Value="@context.StartDate"
+                                                ValidateAsync="ValidateAsync"
+                                                ChangePrior="ChangeStartDate"
+                                                For="@(() => context.StartDate)" />
+                                }
+                                else
+                                {
+                                    <SimpleText IsBold="@context.HasSubTask" Text="@context.stringStartDate" />
+                                }
+                            </td>
+                            <td class="fixed-column">
+                                @if (EditLocalRow != null && EditLocalRow.Id == context.Id)
+                                {
+                                    <DatePicker Value="@context.EndDate"
+                                                ValueChanged="ChangeEndDate"
+                                                ValidateAsync="ValidateAsync"
+                                                For="@(() => context.EndDate)" />
+                                }
+                                else
+                                {
+                                    <SimpleText IsBold="@context.HasSubTask" Text="@context.stringEndDate" />
+                                }
+                            </td>
+                            <td>
+                                @if (EditLocalRow != null && EditLocalRow.Id == context.Id)
+                                {
+                                    <TextField @bind-Value="@context.Duration"
+                                               ValidateAsync="ValidateAsync"
+                                               For="@(() => context.Duration)">
+                                    </TextField>
+                                }
+                                else
+                                {
+                                    <SimpleText IsBold=@context.HasSubTask Text="@context.Duration"></SimpleText>
+                                }
+                            </td>
+
+                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.DependencyList"></SimpleText></td>
+                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.BudgetAssignedUSDCurrency"></SimpleText></td>
+
+                            <td>
+                                @if (EditLocalRow != null && EditLocalRow.Id == context.Id)
+                                {
+                                    <MudStack Row=true Spacing="2">
+                                        <IconButton ToolTip="@($"Edit {context.Name}")" Size="@Size.Small"
+                                                    Icon="@Icons.Material.Outlined.Save" OnClick="()=>Save()" />
+
+                                        <IconButton ToolTip="@($"Cancel {context.Name}")" Size="@Size.Small"
+                                                    Icon="@Icons.Material.Outlined.Cancel" OnClick="()=>CancelEditLocalRow(context)" />
+                                    </MudStack>
+                                }
+                                else
+                                {
+                                    <MudStack Row=true Spacing="2">
+                                        <IconButton ToolTip="@($"Edit {context.Name}")" Size="@Size.Small"
+                                                    Icon="@Icons.Material.Outlined.Edit" OnClick="()=>Edit(context)" />
+
+                                        <IconButton ToolTip="@($"Delete {context.Name}")" Size="@Size.Small"
+                                                    Icon="@Icons.Material.Outlined.Delete" OnClick="()=>Delete(context)" />
+                                    </MudStack>
+                                }
+                            </td>
+
+                           @*  <!-- Columna Progress con barra horizontal -->
+                            @if (Response.ProjectStart != null && Response.ProjectEnd != null)
+                            {
+                                <td class="gantt-progress-cell">
+                                    <div class="gantt-bar"
+                                         style="left: @GetLeft(context);width: @GetWidth(context)"
+                                         title="@($"{context.Name}: ${context.Duration} days")">
+                                    </div>
+                                </td>
+                            } *@
+
+                        </tr>
+
+                    }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedUSD).ToCurrencyCulture()</strong></td>
+                        @* <td></td>
+                        @if (Response.ProjectStart != null && Response.ProjectEnd != null)
+                        {
+                            <td></td>
+                        } *@
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+        }
+    </div>
+</MudContainer>
+
+@code {
+    TimeScale SelectedScale = TimeScale.Weekly;
+}

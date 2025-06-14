@@ -1,0 +1,35 @@
+﻿
+
+<g>
+    <!-- Rectángulo con bordes redondeados -->
+    <rect x="@X"
+          y="@Y"
+          width="@BoxWidth"
+          height="@boxHeight"
+          fill="#f0f0f0"
+          stroke="#ccc"
+          rx="5" />
+
+    <!-- Texto generado dinámicamente -->
+    @if (Node.TextLines(BoxWidth).Count > 0)
+    {
+        @((MarkupString)GenerateSvgText())
+    }
+
+    <!-- Renderizar OrderedItems -->
+    @if (Node.OrderedSubTasks != null && Node.OrderedSubTasks.Count > 0)
+    {
+        var childY = Y + boxHeight + 10;
+
+        foreach (var item in Node.OrderedSubTasks)
+        {
+            int subtaskHeight = GetSubtaskHeight(item); // Obtener la altura del subtask
+            <SubtaskNode Node="@item" ParentX="@(X + 10)" ParentY="@childY" Level="1" />
+            childY += subtaskHeight + 10;
+        }
+    }
+</g>
+
+@code {
+   
+}

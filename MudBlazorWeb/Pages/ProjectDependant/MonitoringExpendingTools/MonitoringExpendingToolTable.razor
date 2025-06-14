@@ -1,0 +1,53 @@
+﻿<div style="overflow-x: auto; width: 100%;overflow-y: auto;">
+
+    <MudSimpleTable Dense="true" Hover="true" Bordered="true" Striped="true"
+                    Style="overflow-y: auto;min-width: 1200px; width: max-content;" FixedHeader=true>
+        <thead>
+            <tr>
+                <th>Nomenclatore</th>
+                <th>Name</th>
+                <th>Budget, USD</th>
+                <th>Pending, USD</th>
+                @foreach (var context in Response.OrderedColumns)
+                {
+                    <th>@context.Name</th>
+                }
+
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var context in Response.OrderedItems)
+            {
+
+                <tr>
+                    <td>@context.Nomenclatore</td>
+                    <td>@context.Name</td>
+                    <td>@context.BudgetUSD.ToCurrencyCulture()</td>
+                    <td>@context.PendingBudgetUSD.ToCurrencyCulture()</td>
+                    @foreach (var column in context.MonthlyData)
+                    {
+                        <td>@column.ValueUSD.ToCurrencyCulture()</td>
+                    }
+                </tr>
+
+            }
+            <tr>
+                <td></td>
+                <td><strong>Totals</strong></td>
+                <td><strong>@Response.BudgetUSD.ToCurrencyCulture()</strong></td>
+                <td><strong>@Response.PendingBudgetUSD.ToCurrencyCulture()</strong></td>
+                @foreach (var column in Response.OrderedColumns)
+                {
+                    <td><strong>@column.ValueUSD.ToCurrencyCulture()</strong></td>
+                }
+            </tr>
+
+        </tbody>
+    </MudSimpleTable>
+</div>
+
+@code {
+
+}

@@ -1,0 +1,21 @@
+﻿@using Shared.Models.Projects.Request
+@* <MudStack Row=true AlignItems="AlignItems.Center">
+    @if (ShowAdd)
+    {
+        <IconButton Icon="@Icons.Material.Filled.PlaylistAdd" OnClick="@OnAddNewdeliverable" ToolTip="Add New Deliverable"></IconButton>
+        <IconButton Icon="@Icons.Material.Filled.Add" OnClick="@OnAddNew" ToolTip="Add New Task" Disabled="@DisableAddButton"></IconButton>
+    }
+
+    <IconButton Icon="@Icons.Material.Filled.ArrowUpward" OnClick="@OnMoveUp" ToolTip="Move Up" Disabled="@DisableUpButton"></IconButton>
+    <IconButton Icon="@Icons.Material.Filled.ArrowDownward" OnClick="@OnMoveDown" ToolTip="Move Down" Disabled="@DisableDownButton"></IconButton>
+    <IconButton Icon="@Icons.Material.Filled.ArrowRight" OnClick="@OnMoveRight" ToolTip="Move Right" Disabled="@DisableRightButton"></IconButton>
+    <IconButton Icon="@Icons.Material.Filled.ArrowLeft" OnClick="@OnMoveLeft" ToolTip="Move Left" Disabled="@DisableLeftButton"></IconButton>
+    <DatePicker Label="Project Start Date" @bind-Value=@Project.InitialProjectDate Change="OnSaveProjectStartDate"></DatePicker>
+    <div></div>
+    <MudSpacer></MudSpacer>
+    <Field Typo="Typo.body1" Label="Task"><strong>@CurrentRowName</strong></Field>
+</MudStack> *@
+
+@code {
+   
+}

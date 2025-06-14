@@ -1,0 +1,71 @@
+﻿@inject IJSRuntime JSRuntime
+@* <MudCard Style="width:100%">
+    <MudCardContent>
+        <div style="width: 100%; max-height: 1000px; overflow-y: auto; position: relative;">
+
+            <!-- Barra de Herramientas -->
+            <GanttTaskToolBar ShowAdd=true
+                              OnAddNewdeliverable=AddNewDeliverable
+                              Project="@Project"
+                              OnAddNew="AddNew"
+                              OnMoveUp="Up"
+                              OnMoveDown="Down"
+                              OnMoveRight="Right"
+                              OnMoveLeft="Left"
+                              DisableAddButton="@DisableAddButton"
+                              DisableUpButton="@DisableUpButton"
+                              DisableDownButton="@DisableDownButton"
+                              DisableRightButton="@DisableRightButton"
+                              DisableLeftButton="@DisableLeftButton"
+                              OnProjectStartDateChange="UpdateProjectStartDate"
+                              CurrentRowName="@CurrentRowName">
+            </GanttTaskToolBar>
+            @if (Response != null)
+            {
+                <table class="deliverable-table">
+                    <thead>
+                        <tr>
+                            <!-- Columnas Fijas -->
+                            <th class="col-expand"></th>
+                            <th class="col-id">ID</th>
+                            <th class="col-wbs">WBS</th>
+                            <th class="col-name">Name</th>
+                            <th class="col-start-date">Start Date</th>
+                            <th class="col-end-date">End Date</th>
+                            <th class="col-duration">Duration</th>
+                            <th class="col-dependencies">Dependencies</th>
+                            <th class="col-dependency-type">Type</th>
+                            <th class="col-lag">Lag</th>
+                            <th class="col-budget">Budget ($USD)</th>
+                            <th class="col-actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var deliverable in Response.Deliverables)
+                        {
+                            <DeliverableRow Deliverable="@deliverable"
+                                            GetAll="GetAll"
+                                            OnDelete="Delete"
+                                            OnEdit="RowEdit"
+                                            OnCancel="CancelEdit"
+                                            OnClick="RowClick"
+                                            OnClickDeliverable="OnClickDeliverable"
+                                            OnSave="Save">
+                            </DeliverableRow>
+                        }
+                    </tbody>
+                </table>
+            }
+            <!-- Tabla Principal -->
+
+
+        </div>
+
+    </MudCardContent>
+
+</MudCard> *@
+
+
+@code {
+
+}

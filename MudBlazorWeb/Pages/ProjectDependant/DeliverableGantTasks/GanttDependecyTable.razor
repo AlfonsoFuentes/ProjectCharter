@@ -1,0 +1,83 @@
+﻿
+
+<MudDataGrid T="MainTaskDependencyResponse"
+             MultiSelection="false"
+             Items="@Model.NewDependencies"
+             Hideable="true"
+             Dense=true
+             Bordered=true
+             Hover=true
+             Outlined=true
+             Striped=true>
+    <Columns>
+         <PropertyColumn Property="x => x.MainOrder" Title="ID">
+            <CellTemplate Context="template">
+                <Select @bind-Value="@template.Item.DependencyTask"
+                        Items="@Items"
+                        TValue="DeliverableGanttTaskResponse"
+                        Change="@(()=>SelectedItemChanged(template.Item))"
+                        Property="@(p=>p.MainOrderName)"
+                        ValidateAsync="ValidateAsync"
+                        Clearable="false">
+                </Select>
+            </CellTemplate>
+
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.Name" Title="Dependency Name" />
+         <PropertyColumn Property="x => x.DependencyType.Name" Title="Type">
+            <CellTemplate Context="template">
+                @if (template.Item.DependencyTask != null)
+                {
+                    <Select @bind-Value="@template.Item.DependencyType"
+                            Items="@TasksRelationTypeEnum.List"
+                            TValue="TasksRelationTypeEnum"
+                           
+                            Property="@(p=>p.Name)"
+                            ValidateAsync="ValidateAsync"
+                            Clearable="false"></Select>
+                    
+                }
+
+            </CellTemplate>
+
+        </PropertyColumn>
+
+       <PropertyColumn Property="x => x.Lag" Title="Lag">
+            <CellTemplate Context="template">
+                @if (template.Item.DependencyTask != null)
+                {
+                   <TextField @bind-Value="@template.Item.Lag"
+                           
+                               ValidateAsync="ValidateAsync"
+                               />
+                    
+                }
+
+            </CellTemplate>
+
+        </PropertyColumn>
+
+       
+        <TemplateColumn CellClass="d-flex justify-end" T="MainTaskDependencyResponse">
+            <CellTemplate Context="template">
+                @if (template.Item.DependencyTask != null)
+                {
+                    <MudStack Row=true Spacing="2">
+                       
+                        <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined
+                                    Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                    </MudStack>
+
+                }
+
+            </CellTemplate>
+        </TemplateColumn> 
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="MainTaskDependencyResponse" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+  
+}

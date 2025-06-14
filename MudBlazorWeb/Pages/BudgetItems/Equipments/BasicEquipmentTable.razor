@@ -1,0 +1,30 @@
+﻿
+<TableTemplate TValue="BasicEquipmentResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+          
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="Specific Equipment List">
+    <ColumnsTemplate>
+        <SelectColumn T="BasicEquipmentResponse"></SelectColumn>
+        <PropertyColumn Property="x => x.Tag" Title="Tag" T="BasicEquipmentResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Name" Title="Name" T="BasicEquipmentResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Brand" Title="Brand" T="BasicEquipmentResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.sBudgetUSD" Title="Budget, USD" T="BasicEquipmentResponse" TProperty="string" />
+        <TemplateColumn CellClass="d-flex justify-end" T="BasicEquipmentResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+}

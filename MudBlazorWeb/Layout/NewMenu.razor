@@ -1,0 +1,32 @@
+﻿<MudNavMenu Class="mud-width-full">
+
+    <MudDrawerHeader>
+        <MudText Typo="Typo.h6">Project Charter</MudText>
+    </MudDrawerHeader>
+    <AuthorizeView>
+
+        <MudNavLink Href="/" Icon="@Icons.Material.Outlined.Home">Projects</MudNavLink>
+        <MudNavGroup Title="Purchase Orders" Icon="@Icons.Material.Outlined.Business" Expanded="true">
+            <MudNavLink Href="@($"/PurchaseOrderCreated")" Icon="@Icons.Material.Outlined.CreditCard" IconColor="Color.Info">Created</MudNavLink>
+            <MudNavLink Href="@($"/PurchaseOrderApproved")" Icon="@Icons.Material.Outlined.CreditScore" IconColor="Color.Info">Approved</MudNavLink>
+            <MudNavLink Href="@($"/PurchaseOrderClosed")" Icon="@Icons.Material.Outlined.CreditCardOff" IconColor="Color.Info">Closed</MudNavLink>
+        </MudNavGroup>
+        <MudNavLink Href="/StakeHolders" Icon="@Icons.Material.Outlined.People">StakeHolders</MudNavLink>
+        <MudNavLink Href="/Suppliers" Icon="@Icons.Material.Outlined.Store">Suppliers</MudNavLink>
+        <MudNavLink Href="/Brands" Icon="@Icons.Material.Outlined.BrandingWatermark">Brands</MudNavLink>
+        <MudNavGroup Title="Templates" Icon="@Icons.Material.Outlined.TableRows" Expanded="true">
+            <MudNavLink Href="/templates/equipment-templates" IconColor="Color.Info">Equipments</MudNavLink>
+            <MudNavLink Href="/templates/valve-templates"  IconColor="Color.Info">Valves</MudNavLink>
+            <MudNavLink Href="/templates/instrument-templates"  IconColor="Color.Info">Instruments</MudNavLink>
+            <MudNavLink Href="/templates/pipe-templates"  IconColor="Color.Info">Pipes</MudNavLink>
+            <MudNavLink Href="/EngineeringFluidCodes" IconColor="Color.Info">Fluids</MudNavLink>
+        </MudNavGroup>
+
+    </AuthorizeView>
+
+
+</MudNavMenu>
+
+@code {
+
+}

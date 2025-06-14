@@ -1,0 +1,21 @@
+﻿
+@* <MudDataGrid Items="@Deliverables" EditMode="@DataGridEditMode.Cell" Dense=true Bordered=true>
+    <Columns>
+        <HierarchyColumn T="DeliverableWithGanttTaskResponse" InitiallyExpandedFunc="@InitiallyExpandedFunc" />
+        <PropertyColumn Property="x => x.LabelOrder" Title="ID" />
+        <PropertyColumn Property="x => x.WBS" Title="WBS" />
+        <PropertyColumn Property="x => x.Name" Title="Name" />
+        <PropertyColumn Property="x => x.StartDate" Title="Start Date" />
+        <PropertyColumn Property="x => x.EndDate" Title="End Date" />
+    </Columns>
+    <ChildRowContent>
+       <PlannedGanttTaskTable Items="@context.Item.Items"></PlannedGanttTaskTable>
+    </ChildRowContent>
+    <PagerContent>
+        <MudDataGridPager T="DeliverableWithGanttTaskResponse" />
+    </PagerContent>
+</MudDataGrid> *@
+
+@code {
+    // Func<DeliverableWithGanttTaskResponse, bool> InitiallyExpandedFunc => x => !string.IsNullOrEmpty(x.Name);
+}

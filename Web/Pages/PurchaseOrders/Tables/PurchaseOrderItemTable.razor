@@ -1,0 +1,174 @@
+﻿<MudDataGrid T="PurchaseOrderItemResponse" Items="@OrderedItems" ReadOnly="@_readOnly" EditMode="@(_isCellEditMode ? DataGridEditMode.Cell : DataGridEditMode.Form)"
+             EditTrigger="@(_editTriggerRowClick ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)"
+             StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+             Bordered="true" Dense="true">
+    <Columns>
+        <PropertyColumn Property="x => x.NomenclatoreName" Title="#" T="PurchaseOrderItemResponse" TProperty="string" Sortable="false" Filterable="false">
+            <EditTemplate Context="Context">
+                @if (Context.Item.BudgetItem == null)
+                {
+                    <Select @bind-Value="@Context.Item.BudgetItem"
+                            Items="@NonSelectedBudgetItems"
+                            TValue="BudgetItemWithPurchaseOrdersResponse"
+                            Property="@(p=>p.NomenclatoreName)"
+                            ValidateAsync="ValidateAsync"
+                            Change="SelectItemChanged"
+                            Clearable="false">
+                    </Select>
+                    
+                }
+                else if (Context.Item.BudgetItem.Id == MainBudgetItemId)
+                {
+                    <Field>@Context.Item.BudgetItem.NomenclatoreName</Field>
+
+                }
+                else
+                {
+                    <Select @bind-Value="@Context.Item.BudgetItem"
+                            Items="@NonSelectedBudgetItems"
+                            TValue="BudgetItemWithPurchaseOrdersResponse"
+                            Property="@(p=>p.NomenclatoreName)"
+                            ValidateAsync="ValidateAsync"
+                            Clearable="false">
+                    </Select>
+                }
+
+            </EditTemplate>
+        </PropertyColumn>
+
+
+        <PropertyColumn Property="x => x.Name" T="PurchaseOrderItemResponse" Title="Name" TProperty="string" Sortable="false" Filterable="false">
+            <EditTemplate Context="Context">
+                <TextField @bind-Value="@Context.Item.Name"
+                           Change="@(()=>OnChangeName(Context.Item.Name))"
+                           For="() => Context.Item.Name"
+                           Disabled=@(Context.Item.BudgetItem==null)
+                           ValidateAsync="ValidateAsync"></TextField>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.Quantity" T="PurchaseOrderItemResponse" Title="Qty" TProperty="double" Sortable="false" Filterable="false">
+            <EditTemplate Context="Context">
+                <DoubleNumericField Disabled=@(Context.Item.BudgetItem==null)
+                                    @bind-Value="@Context.Item.Quantity"
+                                    For="() => Context.Item.Quantity"
+                                    ValidateAsync="ValidateAsync"></DoubleNumericField>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.UnitaryQuoteCurrency" T="PurchaseOrderItemResponse"
+                        Title="@($"${QuoteCurrency.Name}/EA")" TProperty="double" Sortable="false" Filterable="false">
+            <EditTemplate Context="Context">
+                <DoubleNumericField Disabled=@(Context.Item.BudgetItem==null)
+                                    For="() => Context.Item.UnitaryQuoteCurrency"
+                                    @bind-Value="@Context.Item.UnitaryQuoteCurrency"
+                                    ValidateAsync="ValidateAsync"></DoubleNumericField>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.TotalItemQuoteCurrency.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"Total, {QuoteCurrency.Name}")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.TotalItemQuoteCurrency).ToCurrencyCulture()</b>
+
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Hidden=IsSameCurrency Property="x => x.UnitaryValuePurchaseOrderCurrency.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"${PurchaseOrderCurrency.Name}/EA")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+
+        </PropertyColumn>
+        <PropertyColumn Hidden=IsSameCurrency Property="x => x.TotalPurchaseOrderCurrency.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"Total, {PurchaseOrderCurrency.Name}")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.TotalPurchaseOrderCurrency).ToCurrencyCulture()</b>
+
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Hidden=QuoteIsUSD Property="x => x.UnitaryValueUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"$USD/EA")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+
+        </PropertyColumn>
+        <PropertyColumn Hidden=QuoteIsUSD Property="x => x.TotalPurchaseOrderUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse"
+                        Title="@($"Total, USD")" TProperty="string" Editable=false Sortable="false" Filterable="false">
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.TotalPurchaseOrderUSD).ToCurrencyCulture()</b>
+
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.BudgetUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse" Title="Budget" TProperty="string" Editable=false Sortable="false" Filterable="false">
+            <FooterTemplate>
+
+                <b>@Items.Sum(x => x.BudgetUSD).ToCurrencyCulture()</b>
+
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.AssignedBudgetItemUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse" Title="Assigned" TProperty="string" Editable=false Sortable="false" Filterable="false">
+            <FooterTemplate>
+
+                <b>@Items.Sum(x => x.AssignedBudgetItemUSD).ToCurrencyCulture()</b>
+            </FooterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.ToCommitItemUSD.ToCurrencyCulture()" T="PurchaseOrderItemResponse" Title="To Commit" TProperty="string" Editable=false Sortable="false" Filterable="false">
+            <FooterTemplate>
+                <b>@Items.Sum(x => x.ToCommitItemUSD).ToCurrencyCulture()</b>
+            </FooterTemplate>
+        </PropertyColumn>
+        <TemplateColumn CellClass="d-flex justify-end">
+            <EditTemplate Context="Context">
+                <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(()=>Delete(Context.Item))"
+                               Disabled=@(GetButtonDisabled(Context.Item)) />
+
+
+            </EditTemplate>
+        </TemplateColumn>
+
+    </Columns>
+</MudDataGrid>
+
+
+@code {
+    private bool _readOnly = false;
+    private bool _isCellEditMode = true;
+    private List<string> _events = new();
+    private bool _editTriggerRowClick = false;
+    void StartedEditingItem(PurchaseOrderItemResponse item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(PurchaseOrderItemResponse item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CommittedItemChanges(PurchaseOrderItemResponse item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+    bool GetButtonDisabled(PurchaseOrderItemResponse cell)
+    {
+
+
+        return cell.BudgetItem == null || (cell.BudgetItem != null && cell.BudgetItem.Id == MainBudgetItemId);
+    }
+    async Task BudgetItemChanged(BudgetItemWithPurchaseOrdersResponse item, CellContext<PurchaseOrderItemResponse> context)
+    {
+        context.Item.BudgetItem = item;
+        await SelectItemChanged.InvokeAsync();
+        await ValidateAsync.InvokeAsync();
+
+    }
+    private async Task<IEnumerable<BudgetItemWithPurchaseOrdersResponse>> Search(string value, CancellationToken token)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5, token);
+
+        // if text is null or empty, show complete list
+        if (string.IsNullOrEmpty(value))
+            return NonSelectedBudgetItems;
+
+        return NonSelectedBudgetItems.Where(x =>
+            x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
+            x.Tag.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
+            x.Nomenclatore.Contains(value, StringComparison.InvariantCultureIgnoreCase)
+        );
+    }
+}
+

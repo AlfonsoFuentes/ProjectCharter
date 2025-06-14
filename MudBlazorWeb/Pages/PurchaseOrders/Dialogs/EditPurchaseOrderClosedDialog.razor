@@ -1,0 +1,82 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+           
+            <PurchaseOrderDialog Model="@Model"
+                                 ValidateAsync="ValidateAsync"
+                                 Suppliers="@Suppliers" AddSupplier=AddSupplier
+                                 ShowEditReceive=true>
+                <PurchaseOrderNumber>
+                    <TextField Label="PO Number"
+                               @bind-Value=@Model.PONumber
+                               Placeholder="Define PO Number"
+                               For="() => Model.PONumber"
+                               ValidateAsync="ValidateAsync"></TextField>
+                </PurchaseOrderNumber>
+                <PurchaseOrderExpectedDate>
+                    <DatePicker Label="Expect date"
+                                @bind-Value=@Model.ExpectedDate
+                                ValidateAsync="ValidateAsync"
+                                For="() => Model.ExpectedDate"></DatePicker>
+                </PurchaseOrderExpectedDate>
+                <PurchaseOrderApprovedDate>
+                    <DatePicker Label="Approved date"
+                                @bind-Value=@Model.ApprovedDate
+                                ValidateAsync="ValidateAsync"
+                                For="() => Model.ApprovedDate"></DatePicker>
+
+                </PurchaseOrderApprovedDate>
+                <PurchaseOrderReceiveContent>
+                    <MudGrid>
+                        <MudItem sm="4" xs="12">
+                            <DatePicker Label="Receive Date"
+                                        @bind-Value=@Model.ReceivingDate
+                                        ValidateAsync="ValidateAsync"
+                                        For="() => Model.ReceivingDate"
+                                        Change="@(()=>ChangedReceiveDate(Model.ReceivingDate))"></DatePicker>
+                        </MudItem>
+                     
+                        <MudItem sm="4" xs="12">
+                            <MudToggleGroup T="string" Value="_value" ValueChanged="ToReceiveValueChanged" Size=Size.Small Color="Color.Surface"
+                                            SelectionMode="SelectionMode.SingleSelection">
+                                <MudToggleItem Value="@("Manual")" />
+                                <MudToggleItem Value="@("Complete")" />
+                                <MudToggleItem Value="@("Percentage")" />
+                            </MudToggleGroup>
+                        </MudItem>
+                        <MudItem sm="4" xs="12">
+                            @if (_value.Equals("Percentage"))
+                            {
+                                <DoubleNumericField Label="%Percentage" Value="PercentageReceiving" ValueChanged="PercentageChanged">
+
+                                </DoubleNumericField>
+
+                            }
+
+                        </MudItem>
+                    </MudGrid>
+                </PurchaseOrderReceiveContent>
+
+
+            </PurchaseOrderDialog>
+
+
+
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+
+@code {
+    private string _value = "To define";
+
+}

@@ -1,0 +1,220 @@
+﻿
+<MudGrid>
+    <MudItem sm="4" xs="12">
+        <TextField Label="Name"
+                   Lines="4"
+                   @bind-Value=@Model.Name
+                   Placeholder="Define name"
+                   For="() => Model.Name"
+                   Change="ChangeNamePO"
+                   ValidateAsync="ValidateAsync"></TextField>
+
+    </MudItem>
+    <MudItem sm="8" xs="12">
+        <MudGrid>
+            <MudItem sm="3" xs="12">
+                <TextField Label="Purchase Requisition"
+                    PlaceHolder="Define Purchase Requisition"
+                           For="() => Model.PurchaseRequisition"
+                           @bind-Value=@Model.PurchaseRequisition
+                           ValidateAsync="ValidateAsync"></TextField>
+
+            </MudItem>
+             @if(PurchaseOrderNumber==null)
+             {
+                  <MudItem sm="3" xs="12">
+                     <Field Label="Project number:">@Model.ProjectAccount</Field>
+                  </MudItem>
+                  <MudItem sm="3" xs="12">
+                        <Field Label="Tax Code:">@Model.TaxCode</Field>
+                  </MudItem>
+                  <MudItem sm="3" xs="12">
+                  </MudItem>
+             }
+             else
+            {
+                 <MudItem sm="3" xs="12">
+                   @if(PurchaseOrderNumber!=null)
+                    {
+                        @PurchaseOrderNumber
+                    }
+
+                 </MudItem>
+                 <MudItem sm="3" xs="12">
+                     <Field Label="Project number:">@Model.ProjectAccount</Field>
+                 </MudItem>
+                 <MudItem sm="3" xs="12">
+                    <Field Label="Tax Code:">@Model.TaxCode</Field>
+                 </MudItem>
+            }
+           
+           
+
+        </MudGrid>
+        <MudGrid>
+            <MudItem sm="3" xs="12">
+                <TextField Label="Quote No"
+                           For="() => Model.QuoteNo"
+                           @bind-Value=@Model.QuoteNo
+                           ValidateAsync="ValidateAsync"></TextField>
+
+            </MudItem>
+            <MudItem sm="3" xs="12">
+                <Field Label="Cost Center:">@Model.CostCenter.Name</Field>
+            </MudItem>
+            <MudItem sm="3" xs="12">
+                <Field Label="SPL:">@Model.SPL</Field>
+            </MudItem>
+            <MudItem sm="3" xs="12">
+                @if (Model.PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id )
+                {
+
+                    <DoubleNumericField ValidateAsync="ValidateAsync"
+                                        @bind-Value="@Model.USDCOP"
+                                        For="() => Model.USDCOP"
+                                        Label="@($"TRM $COP/$USD")" />
+
+
+                }
+                else if (Model.PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id )
+                {
+                    <DoubleNumericField ValidateAsync="ValidateAsync"
+                                        @bind-Value="@Model.USDEUR"
+                                        For="() => Model.USDEUR"
+                                        Label="@($"TRM $EUR/$USD")" />
+
+                }
+            </MudItem>
+
+        </MudGrid>
+    </MudItem>
+</MudGrid>
+<MudGrid>
+    <MudItem xs="12" sm="4">
+        <AutoCompleteIconButton @bind-Value="@Model.Supplier"
+                          TValue="SupplierResponse"
+                          Label="Supplier"
+                          ValidateAsync="ValidateAsync"
+                          For="()=>Model.Supplier"
+                          Clearable="true"
+                          SearchFunc="SearchSuppliers"
+                          ToStringFunc="@(e=> e==null?null : $"{e.Name} ")"
+                          Icon="@Icons.Material.Filled.Add"
+                          ButtonClick="AddSupplier"
+                          ToolTip="Add new Supplier"
+                          Change="ChangeSupplier">
+
+        </AutoCompleteIconButton>
+
+    </MudItem>
+    <MudItem sm="8" xs="12">
+        <MudGrid>
+            <MudItem sm="3" xs="12">
+                <Field Label="Vendor Code:">@Model.VendorCode</Field>
+
+            </MudItem>
+            <MudItem sm="3" xs="12">
+                <Field Label="PO Currency:">@Model.PurchaseOrderCurrency.Name</Field>
+            </MudItem>
+            <MudItem sm="3" xs="12">
+                <Select Label="Quote Qurrency"
+                        TValue="CurrencyEnum"
+                        Items="CurrencyEnum.List"
+                        @bind-Value=@Model.QuoteCurrency
+                        Property="@(p => p.Name)"
+                        For="() => Model.QuoteCurrency"
+                        ValidateAsync="ValidateAsync">
+                </Select>
+            </MudItem>
+            <MudItem sm="3" xs="12">
+
+                <Field Label="@($"PO Value {Model.PurchaseOrderCurrency.Name}")">@Model.TotalPurchaseOrderCurrency.ToCurrencyCulture()</Field>
+                <ValidationMessage For="() => Model.TotalUSD" style="color:red; font-size:x-small;" />
+            </MudItem>
+
+        </MudGrid>
+    </MudItem>
+
+
+</MudGrid>
+<MudGrid>
+     <MudItem sm="4" xs="12">
+        <MudGrid>
+            <MudItem sm="6" xs="12">
+                 <DatePicker Label="Created Date"
+                            @bind-Value=@Model.CurrencyDate
+                            ValidateAsync="ValidateAsync"
+                            For="() => Model.CurrencyDate"
+                            Change="@(()=>ChangedCurrencyDate(Model.CurrencyDate))"></DatePicker>
+            </MudItem>
+            <MudItem sm="6" xs="12">
+                 @if(PurchaseOrderApprovedDate!=null)
+                {
+                    @PurchaseOrderApprovedDate
+                }
+               
+            </MudItem>
+        </MudGrid>
+     </MudItem>
+     <MudItem sm="8" xs="12">
+          <MudGrid>              
+              <MudItem sm="3" xs="12">
+                    @if(PurchaseOrderExpectedDate!=null)
+                    {
+                        @PurchaseOrderExpectedDate
+                    }
+              </MudItem>
+              <MudItem sm="9" xs="12">
+                  @if(PurchaseOrderReceiveContent!=null)
+                {
+                    @PurchaseOrderReceiveContent
+                }
+            </MudItem>
+          </MudGrid>
+     </MudItem>
+ 
+         
+
+            
+</MudGrid>
+
+<MudGrid>
+    <MudItem xs="12">
+          <PurchaseOrderItemTable @bind-Items="@Model.PurchaseOrderItems"
+                                    MainBudgetItemId="Model.MainBudgetItemId"
+                                    ChangeName="ChangeBudgetItemName"
+                                    NonSelectedBudgetItems="NonSelectedBudgetItems"
+                                    QuoteCurrency="Model.QuoteCurrency"
+                                    PurchaseOrderCurrency="Model.PurchaseOrderCurrency"
+                                    SelectItemChanged="AddBudgetItem"
+                                    DeleteItem="DeleteItem"
+                                 
+                                    ValidateAsync="ValidateAsync"></PurchaseOrderItemTable>
+        @if (ShowReceive)
+        {
+            <PurchaseOrderReceiveItemTable Items="@Model.PurchaseOrderItems"
+                                           PurchaseOrderCurrency="Model.PurchaseOrderCurrency"
+                                           ValidateAsync="ValidateAsync"></PurchaseOrderReceiveItemTable>
+        
+        }
+        else if (ShowEditReceive)
+        {
+            <PurchaseOrderEditReceiveItemTable Items="@Model.PurchaseOrderItemReceiveds"
+                                           PurchaseOrderCurrency="Model.PurchaseOrderCurrency"
+                                           ValidateAsync="ValidateAsync"></PurchaseOrderEditReceiveItemTable>
+           
+        }
+        else
+        {
+          
+        }
+
+
+
+
+    </MudItem>
+</MudGrid>
+
+@code {
+
+}

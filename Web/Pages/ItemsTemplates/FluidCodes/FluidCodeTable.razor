@@ -1,0 +1,40 @@
+﻿@page "/EngineeringFluidCodes"
+
+
+<TableTemplate TValue="EngineeringFluidCodeResponse"
+               AddNew="AddNew"
+        
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="Pipe Template List">
+    <ColumnsTemplate>
+        <SelectColumn T="EngineeringFluidCodeResponse" />
+        <PropertyColumn Title="Code" Property="@(c => c.Code)" T="EngineeringFluidCodeResponse" TProperty="string" />
+        <PropertyColumn Title="Name" Property="@(c => c.Name)" T="EngineeringFluidCodeResponse" TProperty="string" />
+   
+        
+       
+
+        <TemplateColumn CellClass="d-flex justify-end" T="EngineeringFluidCodeResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(()=>Edit(template.Item))" />
+
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                    
+
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+
+
+}

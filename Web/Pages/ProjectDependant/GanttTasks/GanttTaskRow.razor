@@ -1,0 +1,205 @@
+﻿@using Shared.Enums.TasksRelationTypes
+@using Web.Pages.BudgetItems
+
+@* 
+
+<tr class="data-row" @onclick="() => OnClick.InvokeAsync(Task)">
+    <!-- Expand Icon -->
+    <td class="col-expand">
+        @if (Task.OrderedSubGanttTasks.Any())
+        {
+            @if (Task.IsExpanded)
+            {
+
+                <IconButton Icon="@Icons.Material.Rounded.ArrowDropDown" Variant=Variant.Text ToolTip="Down" OnClick="() => OnToggleTask(Task)"></IconButton>
+
+            }
+            else
+            {
+
+                <IconButton Icon="@Icons.Material.Rounded.ArrowRight" Variant=Variant.Text ToolTip="Down" OnClick="() => OnToggleTask(Task)"></IconButton>
+
+            }
+        }
+        else
+        {
+            <span>&nbsp;</span>
+        }
+    </td>
+
+    <!-- ID -->
+    <td class="col-id">@Task.LabelOrder</td>
+
+    <!-- WBS -->
+    <td class="col-wbs">@Task.WBS</td>
+
+    <!-- Name -->
+    <td class="col-name @(Task.IsEditing ? "edit-mode" : "") @(Task.OrderedSubGanttTasks.Any() ? "has-subdeliverables" : "")">
+        @if (Task.IsEditing)
+        {
+            <TextField Value="@Task.Name"
+                       ValueChanged="OnChangeName"
+                       Lines=2>
+            </TextField>
+
+
+        }
+        else
+        {
+            @Task.Name
+        }
+    </td>
+
+    <!-- Start Date -->
+    <td class="col-start-date @(Task.IsEditing ? "edit-mode" : "")">
+        @if (!Task.IsEditing || Task.SubGanttTasks.Any() || Task.Dependants.Any())
+        {
+            @Task.StartDateValue.ToString("d")
+        }
+        else
+        {
+            <DatePicker Value="@Task.StartDateValue"
+                        ValueChanged="OnChangeStartDate">
+
+            </DatePicker>
+
+        }
+    </td>
+
+    <!-- End Date -->
+    <td class="col-end-date @(Task.IsEditing ? "edit-mode" : "")">
+        @if (!Task.IsEditing || Task.SubGanttTasks.Any() || Task.Dependants.Any())
+        {
+            @Task.EndDateValue.ToString("d")
+        }
+        else
+        {
+            <DatePicker Value="@Task.EndDateValue"
+                        ValueChanged="OnChangeEndDate">
+
+            </DatePicker>
+
+
+
+        }
+    </td>
+
+    <!-- Duration -->
+    <td class="col-duration @(Task.IsEditing ? "edit-mode" : "")">
+        @if (Task.IsEditing)
+        {
+            <TextField Value="@Task.Duration"
+                       ValueChanged="OnChangeDuration">
+            </TextField>
+
+        }
+        else
+        {
+            @Task.Duration
+        }
+    </td>
+
+    <!-- Dependencies -->
+    <td class="col-dependencies @(Task.IsEditing ? "edit-mode" : "")">
+        @if (Task.IsEditing)
+        {
+            <TextField Value="@Task.sDependences"
+                       ValueChanged="OnChangeDependences">
+            </TextField>
+
+
+        }
+        else
+        {
+            @Task.sDependences
+        }
+    </td>
+
+    <!-- Dependency Type -->
+    <td class="col-dependency-type @(Task.IsEditing ? "edit-mode" : "")">
+        @if (Task.Dependants.Any())
+        {
+            @if (Task.IsEditing)
+            {
+                <Select Value="Task.DependencyType"
+                        TValue="TasksRelationTypeEnum"
+                        ValueChanged="OnChangeDependencyType"
+                        Items=TasksRelationTypeEnum.List>
+                </Select>
+
+
+            }
+            else
+            {
+                @Task.DependencyType?.Name
+            }
+        }
+    </td>
+
+    <!-- Lag -->
+    <td class="col-lag @(Task.IsEditing ? "edit-mode" : "")">
+        @if (Task.IsEditing)
+        {
+            <TextField Value="@Task.Lag"
+                       ValueChanged="OnChangeLag">
+            </TextField>
+
+        }
+        else
+        {
+            @Task.Lag
+        }
+    </td>
+
+    <!-- Budget -->
+    <td class="col-budget">@Task.TotalBudget.ToCurrencyCulture()</td>
+
+    <!-- Actions -->
+    <td class="col-actions">
+        @if (Task.IsEditing)
+        {
+            <IconButton Icon="@Icons.Material.Filled.Save" Size=Size.Small OnClick=" () =>  OnSave.InvokeAsync(Task)" ToolTip="Save" Disabled="@DisableSaveButton(Task)" />
+            <IconButton Icon="@Icons.Material.Filled.Cancel" Size=Size.Small OnClick=" () =>  OnCancel.InvokeAsync(Task)" ToolTip="Cancel" />
+
+        }
+        else
+        {
+            <IconButton Icon="@Icons.Material.Filled.List" Size=Size.Small OnClick="@(() => Task.ShowBudgetItems = !Task.ShowBudgetItems)" ToolTip="Show BudgetItems" />
+            <IconButton Icon="@Icons.Material.Filled.Edit" Size=Size.Small OnClick="() => OnEdit.InvokeAsync(Task)" ToolTip="Edit" Disabled=@Task.ShowBudgetItems />
+            <IconButton Icon="@Icons.Material.Filled.Delete" Size=Size.Small OnClick="() => OnDelete.InvokeAsync(Task)" ToolTip="Delete" Disabled=@Task.ShowBudgetItems />
+
+
+        }
+    </td>
+
+</tr>
+<!-- Mostrar Elementos del Presupuesto -->
+@if (Task.ShowBudgetItems)
+{
+    <tr>
+        <td colspan="12" style="padding: 2px;">
+            <div>
+                <BudgetItemsTableForGanttTasks GanttTask="@Task" GetAll="GetAll"></BudgetItemsTableForGanttTasks>
+            </div>
+        </td>
+    </tr>
+}
+<!-- Subtareas Expandidas -->
+@if (Task.IsExpanded)
+{
+    foreach (var subtask in Task.OrderedSubGanttTasks)
+    {
+        <GanttTaskRow @bind-Deliverable="@Deliverable"
+                  
+                      Task="@subtask"
+                      OnEdit="OnEdit"
+                      OnSave="OnSave"
+                      OnCancel="OnCancel"
+                      OnDelete="OnDelete"
+                      OnClick="OnClick"></GanttTaskRow>
+    }
+} *@
+
+@code {
+
+}

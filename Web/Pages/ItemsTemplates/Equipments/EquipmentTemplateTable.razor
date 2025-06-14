@@ -1,0 +1,55 @@
+﻿@page "/templates/equipment-templates"
+
+
+<TableTemplate TValue="EquipmentTemplateResponse"
+               AddNew="AddNew"
+               ShowAdd=!ByParameter
+               ShowDelete=!ByParameter
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               >
+    <ColumnsTemplate>
+       
+        @if (!ByParameter)
+        {
+            <SelectColumn T="EquipmentTemplateResponse" />
+            
+        }
+        <PropertyColumn Property="x => x.Type" Title="Type" Sortable="true" T="EquipmentTemplateResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.SubType" Title="Sub Type" Sortable="true" T="EquipmentTemplateResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.BrandName" Title="Brand" Sortable="true" T="EquipmentTemplateResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Model" Title="Model" Sortable="false" T="EquipmentTemplateResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.InternalMaterial.Name" Title="Inner Material " Sortable="false" T="EquipmentTemplateResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.ExternalMaterial.Name" Title="Outer Material " Sortable="false" T="EquipmentTemplateResponse" TProperty="string" />
+        <PropertyColumn Property="@(x => x.Value.ToCurrencyCulture())" Title="Value, USD " Sortable="false" T="EquipmentTemplateResponse" TProperty="string" />
+        <TemplateColumn CellClass="d-flex justify-end" T="EquipmentTemplateResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(()=>Edit(template.Item))" />
+                    @if (!ByParameter)
+                    {
+
+                        <IconButton ToolTip="@($"Copy {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.ContentCopy" Variant=Variant.Outlined OnClick="@(()=>Copy(template.Item))" />
+                        <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                    }
+                    else
+                    {
+                        <IconButton ToolTip="@($"Send {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Send"
+                                    Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>SendToForm.InvokeAsync(template.Item))" />
+                    }
+
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+
+
+}

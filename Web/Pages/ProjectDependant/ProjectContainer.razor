@@ -1,0 +1,390 @@
+﻿@using Web.Pages.ProjectDependant.DeliverableGantTasks
+
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1">
+    <MudTabPanel Text="Start">
+        @if (ShowAll)
+        {
+            <MudCard Style="width:100%">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <Field><strong>Stakeholders</strong></Field>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" OnClick="@ShowStakeHolderInside" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+
+            </MudCard>
+            <MudCard Style="width:100%">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <Field><strong>Backgrounds</strong></Field>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" OnClick="@ShowBackGrounds" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+               
+            </MudCard>
+        }
+        @if (StakeHolderInside)
+        {
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <Field><strong>Stakeholders</strong></Field>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" OnClick="@ShowStakeHolderInside" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <StakeHolderInsideProjectsTable Project=@Project></StakeHolderInsideProjectsTable>
+                </MudCardContent>
+            </MudCard>
+        }
+        @if (BackGrounds)
+        {
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <Field><strong>Backgrounds</strong></Field>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" OnClick="@ShowBackGrounds" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <BackGroundsTable Project="@Project"></BackGroundsTable>
+                </MudCardContent>
+            </MudCard>
+        }
+        @if (Show)
+        {
+            <MudExpansionPanels>
+                <MudExpansionPanel ExpandedChanged="@(() => StakeHolderInside = !StakeHolderInside)" Dense=true>
+                    <TitleContent>
+                        <Field><strong>Stakeholders</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (StakeHolderInside)
+                        {
+                            <StakeHolderInsideProjectsTable Project=@Project></StakeHolderInsideProjectsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel ExpandedChanged="@(() => BackGrounds = !BackGrounds)">
+                    <TitleContent>
+                        <Field><strong>Backgrounds</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (BackGrounds)
+                        {
+                            <BackGroundsTable Project="@Project"></BackGroundsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+
+                <MudExpansionPanel Text="Objectives" ExpandedChanged="@(() => Objectives = !Objectives)">
+                    <TitleContent>
+                        <Field><strong>Objectives</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Objectives)
+                        {
+                            <ObjectivesTable Project="@Project"></ObjectivesTable>
+                        }
+
+                    </ChildContent>
+
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Requirements" ExpandedChanged="@(() => Requirements = !Requirements)">
+                    <TitleContent>
+                        <Field><strong>Requirements</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Requirements)
+                        {
+                            <RequirementsTable Project="@Project"></RequirementsTable>
+                        }
+
+                    </ChildContent>
+
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Scopes" ExpandedChanged="@(() => Scopes = !Scopes)">
+                    <TitleContent>
+                        <Field><strong>Scopes</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Scopes)
+                        {
+                            <ScopesTable Project="@Project"></ScopesTable>
+                        }
+                    </ChildContent>
+
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Bennefits" ExpandedChanged="@(() => Bennefits = !Bennefits)">
+                    <TitleContent>
+                        <Field><strong>Bennefits</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Bennefits)
+                        {
+                            <BennefitsTable Project="@Project"></BennefitsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel ExpandedChanged="@(() => AcceptanceCriterias = !AcceptanceCriterias)">
+                    <TitleContent>
+                        <Field><strong>Acceptance Criterias</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (AcceptanceCriterias)
+                        {
+                            <AcceptanceCriteriasTable Project="@Project"></AcceptanceCriteriasTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Contraints" ExpandedChanged="@(() => Constrainsts = !Constrainsts)">
+                    <TitleContent>
+                        <Field><strong>Contraints</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Constrainsts)
+                        {
+                            <ConstrainstsTable Project="@Project"></ConstrainstsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel ExpandedChanged="@(() => Assumptions = !Assumptions)">
+                    <TitleContent>
+                        <Field><strong>Assumptions</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Assumptions)
+                        {
+                            <AssumptionsTable Project="@Project"></AssumptionsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel ExpandedChanged="@(() => LearnedLessons = !LearnedLessons)">
+                    <TitleContent>
+                        <Field><strong>Learned Lessons</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (LearnedLessons)
+                        {
+                            <LearnedLessonsTable Project="@Project"></LearnedLessonsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel ExpandedChanged="@(() => ExpertJudgement = !ExpertJudgement)">
+                    <TitleContent>
+                        <Field><strong>Expert Judgement</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (ExpertJudgement)
+                        {
+                            <ExpertJudgementsTable Project="@Project"></ExpertJudgementsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel ExpandedChanged="@(() => Deliverables = !Deliverables)">
+                    <TitleContent>
+                        <Field><strong>Deliverables/WBS</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Deliverables)
+                        {
+                            <WBSTableGraphic Project="@Project"></WBSTableGraphic>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+
+                <MudExpansionPanel Text="Budget" ExpandedChanged="@(() => Budget = !Budget)">
+                    <TitleContent>
+                        <Field><strong>Budget</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Budget)
+                        {
+                            <BudgetItemsTable Project="@Project"></BudgetItemsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel ExpandedChanged="@(() => Quality = !Quality)">
+                    <TitleContent>
+                        <Field><strong>Quality</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Quality)
+                        {
+                            <QualitysTable Project="@Project"></QualitysTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel ExpandedChanged="@(() => KnownRisk = !KnownRisk)">
+                    <TitleContent>
+                        <Field><strong>Known risks</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (KnownRisk)
+                        {
+                            <KnownRisksTable Project="@Project"></KnownRisksTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel ExpandedChanged="@(() => Resources = !Resources)">
+                    <TitleContent>
+                        <Field><strong>Resources</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Resources)
+                        {
+                            <ResourcesTable Project="@Project"></ResourcesTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Communications" ExpandedChanged="@(() => Communications = !Communications)">
+                    <TitleContent>
+                        <Field><strong>Communications</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Communications)
+                        {
+                            <CommunicationsTable Project="@Project"></CommunicationsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Acquisitions" ExpandedChanged="@(() => Acquisitions = !Acquisitions)">
+                    <TitleContent>
+                        <Field><strong>Acquisitions</strong></Field>
+                    </TitleContent>
+                    <ChildContent>
+                        @if (Acquisitions)
+                        {
+                            <AcquisitionsTable Project="@Project"></AcquisitionsTable>
+                        }
+                    </ChildContent>
+
+
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+        }
+       
+    </MudTabPanel>
+    <MudTabPanel Text="Planning">
+
+        <MudExpansionPanels>
+            <MudExpansionPanel ExpandedChanged="@(() => gantttask = !gantttask)">
+                <TitleContent>
+                    <Field><strong>Planning Gantt Task</strong></Field>
+                </TitleContent>
+                <ChildContent>
+
+                    @if (gantttask)
+                    {
+
+                        <NewGanttTaskTable Project=@Project></NewGanttTaskTable>
+                    }
+                </ChildContent>
+
+
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </MudTabPanel>
+    <MudTabPanel Text="Execution" Disabled="@(Project.Status.Id != ProjectStatusEnum.Approved.Id)">
+        <MudExpansionPanels>
+            <MudExpansionPanel ExpandedChanged="@(() => BudgetItemsinPurchaseOrders = !BudgetItemsinPurchaseOrders)">
+                <TitleContent>
+                    <Field><strong>Manage Purchase Orders in BudgetItems</strong></Field>
+                </TitleContent>
+                <ChildContent>
+                    @if (BudgetItemsinPurchaseOrders)
+                    {
+                        <BudgetItemsWithPurchaseOrders Project=@Project></BudgetItemsWithPurchaseOrders>
+                    }
+                </ChildContent>
+
+
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </MudTabPanel>
+    <MudTabPanel Text="Monitoring" Disabled="true">
+        <MudText>Content Three</MudText>
+    </MudTabPanel>
+    <MudTabPanel Text="Closing" Disabled="true">
+        <MudText>Content Disabled</MudText>
+    </MudTabPanel>
+</MudTabs>
+
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public ProjectResponse Project { get; set; } = null!;
+    bool Show = false;
+    bool StakeHolderInside = false;
+    bool BackGrounds = false;
+    bool Objectives = false;
+    bool Requirements = false;
+    bool Scopes = false;
+    bool Bennefits = false;
+    bool AcceptanceCriterias = false;
+    bool Constrainsts = false;
+    bool Assumptions = false;
+    bool LearnedLessons = false;
+    bool ExpertJudgement = false;
+    bool Deliverables = false;
+    bool Budget = false;
+    bool Quality = false;
+    bool KnownRisk = false;
+    bool Resources = false;
+    bool Communications = false;
+    bool Acquisitions = false;
+    bool gantttask = false;
+    bool BudgetItemsinPurchaseOrders = false;
+    bool ShowAll = false;
+    void ShowStakeHolderInside()
+    {
+        StakeHolderInside = !StakeHolderInside;
+        ShowAll = !ShowAll;
+    }
+    void ShowBackGrounds()
+    {
+        BackGrounds = !BackGrounds;
+        ShowAll = !ShowAll;
+    }
+}

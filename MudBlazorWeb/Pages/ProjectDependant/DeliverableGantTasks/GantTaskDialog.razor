@@ -1,0 +1,109 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1">
+                <MudTabPanel Text="Task Definition">
+                    <MudGrid>
+                        <MudItem sm="12" xs="12">
+                            <TextField @bind-Value="@Model.Name"
+                                       ValidateAsync="ValidateAsync"
+                                       Label="Name"
+                                       For="@(() => Model.Name)">
+                            </TextField>
+                        </MudItem>
+                    </MudGrid>
+                    @if (Model.IsTask)
+                    {
+                        <MudGrid>
+                            <MudItem sm="4" xs="12">
+                                <DatePicker @bind-Value="@Model.StartDate"
+                                            ValidateAsync="ValidateAsync"
+                                            ChangePrior="OnChangeStartDate"
+                                            Disabled=@Model.HasSubTask
+                                            Label="Start Date"
+                                            For="@(() => Model.StartDate)">
+                                </DatePicker>
+                            </MudItem>
+                            <MudItem sm="4" xs="12">
+                                <DatePicker Value="@Model.EndDate"
+                                            ValueChanged="ChangeEndDate"
+                                            ValidateAsync="ValidateAsync"
+                                            Disabled=Model.HasSubTask
+                                            Label="End Date"
+                                            For="@(() => Model.EndDate)">
+                                </DatePicker>
+                            </MudItem>
+                            <MudItem sm="4" xs="12">
+                                <TextField @bind-Value="@Model.Duration"
+                                           Change="OnChangeDuration"
+                                           ValidateAsync="ValidateAsync"
+                                           Disabled=Model.HasSubTask
+                                           Label="Duration"
+                                           For="@(() => Model.Duration)">
+                                </TextField>
+                            </MudItem>
+
+
+
+                        </MudGrid>
+                        <MudGrid>
+                            <MudItem xs="12">
+                                <Field><strong>Dependency List</strong></Field>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <CascadingValue Value="@Model">
+                                    <GanttDependecyTable Items="@GanttTaskItems"
+                                                         RecreateItems="RecreateGanttTaskItems"
+                                                         ValidateAsync="ValidateAsync"></GanttDependecyTable>
+
+                                </CascadingValue>
+
+                            </MudItem>
+                        </MudGrid>
+
+
+
+                    }
+                </MudTabPanel>
+                <MudTabPanel Text="Budget Assigned">
+                    <MudGrid>
+                        <MudItem sm="12" xs="12">
+                            <TextField @bind-Value="@Model.Name"
+                                       ValidateAsync="ValidateAsync"
+                                       Label="Name"
+                                       For="@(() => Model.Name)">
+                            </TextField>
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid>
+
+                        <MudItem xs="12">
+                            <CascadingValue Value="@Model">
+                                <GanttTaskBudgetTable SelectedItems="@SelectedBudgetItems"
+                                                      NonSelectedItems="@NonSelectedBudgetItems"
+                                                      RecreateItems="RecreateBudgetItems"
+                                                      ValidateAsync="ValidateAsync"></GanttTaskBudgetTable>
+
+                            </CascadingValue>
+
+                        </MudItem>
+                    </MudGrid>
+                </MudTabPanel>
+            </MudTabs>
+
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

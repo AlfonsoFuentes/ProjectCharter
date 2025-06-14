@@ -1,0 +1,166 @@
+﻿<MudStack AlignItems="AlignItems.Start" Style="width:100%" Justify="Justify.FlexStart" Spacing="2" StretchItems="StretchItems.StartAndEnd">
+    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+        <MudStack Row=true Spacing="2">
+            <IconButton ToolTip="@LegendAdd" Size="@Size.Small" Icon="@Icons.Material.Outlined.Add"
+                        OnClick="AddRow" />
+            <IconButton ToolTip="@($"Move down to {SelectedRowName}")" Size="@Size.Small" Disabled=@(DisableButtonCanMoveDown()||EditRow!=null)
+                        Icon="@Icons.Material.Outlined.ArrowDownward" OnClick="()=>MoveDown()" />
+
+            <IconButton ToolTip="@($"Move up to {SelectedRowName}")" Size="@Size.Small" Disabled=@(DisableButtonCanMoveUp()||EditRow!=null)
+                        Icon="@Icons.Material.Outlined.ArrowUpward" OnClick="()=>MoveUp()" />
+
+            <IconButton ToolTip="@($"Move left to {SelectedRowName}")" Size="@Size.Small" Disabled=@(DisableButtonCanMoveLeft()||EditRow!=null)
+                        Icon="@Icons.Material.Outlined.ArrowLeft" OnClick="()=>MoveLeft()" />
+
+            <IconButton ToolTip="@($"Move Rigth to {SelectedRowName}")" Size="@Size.Small" Disabled=@(DisableButtonCanMoveRight()||EditRow!=null)
+                        Icon="@Icons.Material.Outlined.ArrowRight" OnClick="()=>MoveRight()" />
+
+            <MudSpacer />
+            <Field Label="Selected row">@SelectedRowName</Field>
+
+        </MudStack>
+    </MudContainer>
+    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+
+        <MudSimpleTable Dense="true" Hover="true" Bordered="true" Striped="true" Style="overflow-x: auto;overflow-y:auto;width:100%" FixedHeader=true>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>WBS</th>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Duration</th>
+                    <th>Relations</th>
+                    <th>Type</th>
+                    <th>Lag</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var context in Response.OrderedItems)
+                {
+                    <tr @onclick="()=>OnSelectRow(context)">
+                        @if (EditRow != null && EditRow.MainOrder == context.MainOrder)
+                        {
+                            @* <EditForm Model="@EditRow">
+                                <FluentValidationValidator @ref="_fluentValidationValidator" /> *@
+
+                            <td>@EditRow.MainOrder</td>
+                            <td>@EditRow.WBS</td>
+                            <td>
+                                <TextField @bind-Value=@EditRow.Name ValidateAsync="ValidateAsync"></TextField>
+                            </td>
+                            <td>
+                                @if (EditRow.IsTask)
+                                {
+                                    <DatePicker @bind-Value=@EditRow.StartDate Change="OnChangeStartDate" Disabled=@EditRow.HasSubTask></DatePicker>
+                                }
+
+                            </td>
+                            <td>
+                                @if (EditRow.IsTask)
+                                {
+                                    <DatePicker @bind-Value=@EditRow.EndDate Change="OnChangeEndDate" Disabled=@EditRow.HasSubTask></DatePicker>
+                                }
+
+                            </td>
+                            <td>
+                                @if (EditRow.IsTask)
+                                {
+                                    <TextField @bind-Value=@EditRow.Duration Change="OnChangeDuration" Disabled=@EditRow.HasSubTask></TextField>
+                                }
+
+                            </td>
+                            <td>
+                                @if (EditRow.IsTask)
+                                {
+                                    <TextField  Value=@EditRow.DependencyList ValueChanged=OnChangeDependencies Disabled=@EditRow.HasSubTask></TextField>
+                                }
+
+                            </td>
+                            <td>
+                                @if (EditRow.HasDependencies)
+                                {
+                                    <Select @bind-Value="@EditRow.DependencyType"
+                                           
+                                            Items="@TasksRelationTypeEnum.List"
+                                            Property="@(p=>p.Name)"
+                                            For="()=>EditRow.DependencyType"
+                                         
+                                            Clearable="false">
+                                    </Select>
+
+
+                                }
+
+                            </td>
+                            <td>
+                                @if (EditRow.HasDependencies)
+                                {
+                                    <TextField @bind-Value=@EditRow.Lag ></TextField>
+                                }
+
+
+                            </td>
+                            <td>
+                                <MudStack Row=true Spacing="2">
+                                    <IconButton ToolTip="@($"Save")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Save" OnClick="Save" />
+                                    <IconButton ToolTip="@($"Cancel")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Cancel"
+                                                Color="Color.Surface" OnClick="()=>Cancel(EditRow)" Disabled=@(!Validated) />
+                                </MudStack>
+
+
+                            </td>
+                            @*     </EditForm> *@
+                        }
+                        else
+                        {
+                            <td>@context.MainOrder</td>
+                            <td>@context.WBS</td>
+                            <td>@context.Name</td>
+                            <td>@context.stringStartDate</td>
+                            <td>@context.stringEndDate</td>
+                            <td>@context.Duration</td>
+                            <td>@context.DependencyList</td>
+                            <td>
+                                @if (context.HasDependencies)
+                                {
+                                    @context.DependencyType.Name
+                                }
+
+                            </td>
+                            <td>
+                                @if (context.HasDependencies)
+                                {
+                                    @context.Lag
+                                }
+                            </td>
+                            <td>
+                                <MudStack Row=true Spacing="2">
+                                    <IconButton ToolTip="@($"Edit {context.Name}")" Size="@Size.Small" Disabled=@(EditRow !=null)
+                                                Icon="@Icons.Material.Outlined.Edit" OnClick="()=>Edit(context)" />
+
+                                    <IconButton ToolTip="@($"Delete {context.Name}")" Size="@Size.Small" Disabled=@(EditRow !=null)
+                                                Icon="@Icons.Material.Outlined.Delete" OnClick="()=>Delete(context)" />
+                                </MudStack>
+
+                            </td>
+                        }
+
+
+
+
+
+
+
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudContainer>
+</MudStack>
+
+@code {
+
+}

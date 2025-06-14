@@ -1,0 +1,41 @@
+﻿
+@using Shared.Models.ExpertJudgements.Responses
+
+
+<TableTemplate TValue="ExpertJudgementResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+           >
+    <ColumnsTemplate>
+        <SelectColumn T="ExpertJudgementResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" SortBy="@_sortBy"/>
+        <PropertyColumn Property="x => x.ExpertName" Title="Expert" SortBy="@_sortBy" />
+        <TemplateColumn CellClass="d-flex justify-end" T="ExpertJudgementResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined  OnClick="@(()=>Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+    private bool _sortNameByLength = true;
+
+    private Func<ExpertJudgementResponse, object> _sortBy => x =>
+       {
+           if (_sortNameByLength)
+               return x.Name.Length;
+           else
+               return x.Name;
+       };
+
+    
+}

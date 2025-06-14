@@ -1,0 +1,42 @@
+﻿
+@using Shared.Models.StakeHolderInsideProjects.Responses
+
+
+<TableTemplate TValue="StakeHolderInsideProjectResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+        
+               @bind-SelectedItems=@SelecteItems
+             >
+    <ColumnsTemplate>
+        <SelectColumn T="StakeHolderInsideProjectResponse" />
+        <PropertyColumn Property="x => x.StakeHolderName" Title="Name" SortBy="@_sortBy" T="StakeHolderInsideProjectResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Role.Name" Title="Role" T="StakeHolderInsideProjectResponse" TProperty="string" />
+        <TemplateColumn CellClass="d-flex justify-end" T="StakeHolderInsideProjectResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined  OnClick="@(()=>Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+    private bool _sortNameByLength = true;
+
+    private Func<StakeHolderInsideProjectResponse, object> _sortBy => x =>
+       {
+           if (_sortNameByLength)
+               return x.Name.Length;
+           else
+               return x.Name;
+       };
+
+    
+}

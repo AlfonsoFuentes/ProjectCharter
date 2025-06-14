@@ -1,0 +1,29 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <TextField @bind-Value="@Model.Name"
+                       Lines=3
+                       ValidateAsync="ValidateAsync"
+                       Label="Name"
+                       For="@(() => Model.Name)">
+            </TextField>
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit"  Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+    async Task NameChanged(string name)
+    {
+        Model.Name = name;
+        await ValidateAsync();
+    }
+}

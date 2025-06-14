@@ -1,0 +1,60 @@
+﻿@page "/templates/valve-templates"
+
+
+<TableTemplate TValue="ValveTemplateResponse"
+               AddNew="AddNew"
+               ShowAdd=!ByParameter
+               ShowDelete=!ByParameter
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems>
+    <ColumnsTemplate>
+        @if (!ByParameter)
+        {
+            <SelectColumn T="ValveTemplateResponse" />
+        }
+        <PropertyColumn Property="x => x.Type.Name" Title="Type" T="ValveTemplateResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.BrandName" Title="Brand" T="ValveTemplateResponse" TProperty="string" />
+        @if (!ByParameter)
+        {
+
+            <PropertyColumn Property="x => x.Model" Title="Model" Sortable="true" T="ValveTemplateResponse" TProperty="string" />
+        }
+
+        <PropertyColumn Property="x => x.Diameter.Name" Title="Diameter" T="ValveTemplateResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.ActuatorType.Name" Title="Actuator" T="ValveTemplateResponse" TProperty="string" />
+        
+        <PropertyColumn Title="Material" Property="@(c => c.Material.Name)" T="ValveTemplateResponse" TProperty="string" />
+        <PropertyColumn Title="Positioner" Property="@(c => c.PositionerType.Name)" T="ValveTemplateResponse" TProperty="string" />
+        <PropertyColumn Title="Signal" Property="@(c => c.SignalType.Name)" T="ValveTemplateResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Value.ToCurrencyCulture()" Title="Value, USD " Sortable="false" T="ValveTemplateResponse" TProperty="string" />
+        <TemplateColumn CellClass="d-flex justify-end" T="ValveTemplateResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(()=>Edit(template.Item))" />
+                    @if (!ByParameter)
+                    {
+
+                        <IconButton ToolTip="@($"Copy {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.ContentCopy" Variant=Variant.Outlined OnClick="@(()=>Copy(template.Item))" />
+                        <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                    }
+                    else
+                    {
+                        <IconButton ToolTip="@($"Send {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Send"
+                                    Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>SendToForm.InvokeAsync(template.Item))" />
+                    }
+
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+
+
+}

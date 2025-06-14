@@ -1,0 +1,49 @@
+﻿@using Shared.Enums.CurrencyEnums
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <TextField @bind-Value="@Model.Name"
+             
+                       ValidateAsync="ValidateAsync"
+                       Label="Name"
+                       For="@(() => Model.Name)">
+            </TextField>
+
+            <TextField @bind-Value="@Model.Area"
+                          Label="Area"
+               
+                          ValidateAsync="ValidateAsync"
+                          For="()=>Model.Area">
+            </TextField>
+
+            <TextField @bind-Value="@Model.PhoneNumber"
+                          Label="Cell Phone"
+                       
+                          InputType="InputType.Telephone"
+                       
+                          ValidateAsync="ValidateAsync"
+                          For="()=>Model.PhoneNumber">
+            </TextField>
+
+            <TextField @bind-Value="@Model.Email"
+                          Label="Email"
+                        
+                          InputType="InputType.Email"
+                       
+                          ValidateAsync="ValidateAsync"
+                          For="()=>Model.Email">
+            </TextField>
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit"  Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

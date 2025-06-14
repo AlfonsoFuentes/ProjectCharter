@@ -1,0 +1,44 @@
+﻿
+
+<EditForm Model="@Model" OnValidSubmit="OnOk">
+    <MudDialog>
+        <DialogContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <Select @bind-Value="Model.ConnectionType"
+                    Items="@ConnectionTypeEnum.List"
+                    Label="Connection Type"
+                    Disable=!EditConnection
+                    For="()=>Model.ConnectionType"
+                    ValidateAsync="ValidateAsync"
+                    Clearable="false">
+            </Select>
+            <Select @bind-Value="Model.NominalDiameter"
+                    Items="@NominalDiameterEnum.List"
+                    ValidateAsync="ValidateAsync"
+                    Label="Diameter"
+                    Disable=!EditDiameter
+                    For="()=>Model.NominalDiameter"
+                    Clearable="false">
+            </Select>
+            <Select @bind-Value="Model.NozzleType"
+                    Items="@NozzleTypeEnum.List"
+                    ValidateAsync="ValidateAsync"
+                    For="()=>Model.NozzleType"
+                    Label="Nozzle Type"
+                    Clearable="false">
+            </Select>
+        </DialogContent>
+        <DialogActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+
+
+@code {
+
+}

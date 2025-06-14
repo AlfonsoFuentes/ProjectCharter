@@ -1,0 +1,65 @@
+﻿@typeparam TValue
+@* <MudAutocomplete Value="Value"
+                 ValueChanged="OnValueChanged"
+                 T="TValue"
+                 SearchFunc="Search"
+                 Variant="variant"
+                 Label="@Label"
+                 Margin="_margin"
+                 Dense="true"
+                 Disabled="@Disable"
+                 For="@For"
+                  
+                 Clearable="@Clearable" /> *@
+
+@code {
+    // Margin _margin = Margin.Dense;
+    // Variant variant = Variant.Outlined;
+
+    // [Parameter]
+    // public bool Disable { get; set; } = false;
+    // [Parameter]
+    // public bool Clearable { get; set; } = false;
+    // [Parameter]
+    // public List<TValue> Items { get; set; } = new();
+    // [Parameter]
+    // public string Label { get; set; } = string.Empty;
+    // [Parameter]
+    // public TValue Value { get; set; } = default(TValue)!;
+    // [Parameter]
+    // public EventCallback<TValue> ValueChanged { get; set; }
+    // [Parameter]
+    // public EventCallback ValidateAsync { get; set; }
+    // [Parameter]
+    // public EventCallback Change { get; set; }
+    // [Parameter]
+    // public EventCallback<TValue> ChangeItem { get; set; }
+    // [Parameter]
+    // public Expression<Func<TValue>>? For { get; set; }
+    // [Parameter]
+    // public Func<string, TValue>? Property { get; set; }
+    // async Task OnValueChanged(TValue value)
+    // {
+    //     Value = value;
+    //     if (ValueChanged.HasDelegate)
+    //         await ValueChanged.InvokeAsync(Value);
+    //     if (Change.HasDelegate)
+    //         await Change.InvokeAsync();
+    //     if (ChangeItem.HasDelegate)
+    //         await ChangeItem.InvokeAsync(Value);
+    //     if (ValidateAsync.HasDelegate)
+    //         await ValidateAsync.InvokeAsync();
+    // }
+
+    // private async Task<IEnumerable<TValue>> Search(string value, CancellationToken token)
+    // {
+    //     // In real life use an asynchronous function for fetching data from an api.
+    //     await Task.Delay(5, token);
+
+    //     // if text is null or empty, show complete list
+    //     if (string.IsNullOrEmpty(value))
+    //         return Items;
+
+    //     return Items.Where(Property.Invoke(value));
+    // }
+}

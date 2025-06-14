@@ -1,0 +1,142 @@
+﻿@using MudBlazorWeb.Pages.BudgetItems.Equipments
+@using MudBlazorWeb.Pages.BudgetItems.Instruments
+@using MudBlazorWeb.Pages.BudgetItems.Pipings
+@using MudBlazorWeb.Pages.BudgetItems.Valves
+
+<MudStack>
+
+    <MudStack Row=true Spacing="3">
+
+
+        <IconButton Size=@Size.Small ToolTip="Delete Selected Items" Icon="@Icons.Material.Filled.PlaylistRemove" Variant=Variant.Outlined
+                    Disabled=@(SelectedItems==null||SelectedItems.Count==0) OnClick="DeleteGroup"></IconButton>
+        <IconButton Size=@Size.Small ToolTip="Export to excel" Icon="@Icons.Material.Filled.TableView" Variant=Variant.Outlined OnClick="ExportExcel"></IconButton>
+        <IconButton Size=@Size.Small ToolTip="Export to pdf" Icon="@Icons.Material.Filled.PictureAsPdf" Variant=Variant.Outlined OnClick="ExportPdf"></IconButton>
+        @if (Response.Status.Id == ProjectStatusEnum.Created.Id)
+        {
+            <Button Variant=Variant.Outlined OnClick="@(() => AddAlterations())" ToolTip="Add Alteration" Text="A"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddFoundations())" ToolTip="Add Foundation" Text="B"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddStructurals())" ToolTip="Add Structural" Text="C"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddEquipments())" ToolTip="Add Equipment" Text="D"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddValves())" ToolTip="Add Valve" Text="V"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddElectricals())" ToolTip="Add Electrical" Text="E"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddPipes())" ToolTip="Add Pipe" Text="F"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddInstruments())" ToolTip="Add Instrument" Text="G"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddEHSs())" ToolTip="Add EHS" Text="H"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddPaintings())" ToolTip="Add Painting" Text="I"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddTaxs())" ToolTip="Add Tax" Text="K"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddTestings())" ToolTip="Add Testing" Text="M"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(() => AddEngineeringDesigns())" ToolTip="Add EngineeringDesign" Text="O"></Button>
+        }
+
+        <MudSpacer></MudSpacer>
+        <TextField @bind-Value="@nameFilter" Placeholder="Search" Adornment="Adornment.Start"
+                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></TextField>
+
+    </MudStack>
+
+    <MudDataGrid T="BudgetItemResponse"
+                 MultiSelection="true"
+                 Items="@FilteredItems"
+                 Hideable="true"
+                 Dense=true
+                 Bordered=true
+                 Hover=true
+                 RowsPerPage=@(FilteredItems.Count==0?100:FilteredItems.Count)
+                 Outlined=true
+                 Striped=true
+                 Virtualize=true
+                 @bind-SelectedItems="@SelectedItems">
+        <Columns>
+            <HierarchyColumn T="BudgetItemResponse" EnableHeaderToggle="false" ButtonDisabledFunc="@ButtonDisabledFunc" />
+
+            <SelectColumn T="BudgetItemResponse" />
+            <PropertyColumn Property="x => x.Nomenclatore" Title="#" T="BudgetItemResponse" TProperty="string" />
+
+            <PropertyColumn Property="x => x.Name" Title="Name" T="BudgetItemResponse" TProperty="string" />
+            <PropertyColumn Property="x => x.BudgetUSD.ToCurrencyCulture()" Title="Budget, USD" T="BudgetItemResponse" TProperty="string">
+                <FooterTemplate>
+                    <MudStack Spacing="1">
+                        <strong>Expenses: @Response.TotalExpenses.ToCurrencyCulture()</strong>
+                        <strong>Capital: @Response.TotalCapitalPlusEngineeringContingency.ToCurrencyCulture()</strong>
+                        <strong>Appropiation: @Response.TotalBudget.ToCurrencyCulture()</strong>
+                    </MudStack>
+
+                </FooterTemplate>
+            </PropertyColumn>
+            <TemplateColumn CellClass="d-flex justify-end" T="BudgetItemResponse">
+                <CellTemplate Context="template">
+                    <MudStack Row=true Spacing="2">
+                        @if (Response.Status.Id == ProjectStatusEnum.Created.Id)
+                        {
+                            <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                        }
+                        else
+                        {
+                            <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.TableView" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item, false))" />
+                        }
+                        <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined OnClick="@(() => Delete(template.Item))" />
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <ChildRowContent>
+            <MudCard>
+
+                <MudCardContent>
+                    @switch (context.Item)
+                    {
+                        case EquipmentResponse:
+                            <BasicEquipmentTable Response="@((EquipmentResponse)context.Item)" GetAll="GetAll"></BasicEquipmentTable>
+                            break;
+                        case InstrumentResponse:
+                            <BasicInstrumenTable Response="@((InstrumentResponse)context.Item)" GetAll="GetAll"></BasicInstrumenTable>
+                            break;
+                        case PipeResponse:
+                            <BasicPipeTable Response="@((PipeResponse)context.Item)" GetAll="GetAll"></BasicPipeTable>
+                            break;
+                        case ValveResponse:
+                            <BasicValveTable Response="@((ValveResponse)context.Item)" GetAll="GetAll"></BasicValveTable>
+                            break;
+
+
+
+                    }
+                </MudCardContent>
+            </MudCard>
+        </ChildRowContent>
+        <PagerContent>
+            <MudDataGridPager T="BudgetItemResponse" />
+        </PagerContent>
+    </MudDataGrid>
+</MudStack>
+
+@code {
+
+
+
+    void OnSelectedItemsChanged(HashSet<BudgetItemResponse> items)
+    {
+        SelectedItems = items;
+
+    }
+
+    bool ButtonDisabledFunc(BudgetItemResponse response)
+    {
+        bool result = true;
+        switch (response)
+        {
+            case EquipmentResponse:
+            case InstrumentResponse:
+            case PipeResponse:
+            case ValveResponse:
+                result = false;
+                break;
+
+        }
+
+
+        return result;
+    }
+
+}

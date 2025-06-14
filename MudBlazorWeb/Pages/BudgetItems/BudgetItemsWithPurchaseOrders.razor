@@ -1,0 +1,127 @@
+﻿<MudCard Style="width:100%">
+    <MudCardContent>
+        <MudDataGrid T="BudgetItemWithPurchaseOrdersResponse"
+                     MultiSelection="false"
+                     Items="@FilteredItems"
+                     Hideable="false"
+                     Dense=true
+                     Bordered=true
+                     Hover=true
+                     Outlined=true
+                     Filterable=false
+                     RowsPerPage="FilteredItems.Count==0?100:FilteredItems.Count"
+                     Striped=true>
+            <ToolBarContent>
+                <MudStack Row=true Spacing="2">
+
+
+                    <IconButton Size=@Size.Small ToolTip="Export to excel" Icon="@Icons.Material.Filled.TableView" Variant=Variant.Outlined OnClick="ExportExcel"></IconButton>
+                    <IconButton Size=@Size.Small ToolTip="Export to pdf" Icon="@Icons.Material.Filled.PictureAsPdf" Variant=Variant.Outlined OnClick="ExportPdf"></IconButton>
+
+
+                </MudStack>
+                <MudSpacer />
+                <TextField @bind-Value="@NameFilter" Change=OnNameFilterChanged Placeholder="Search" Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></TextField>
+            </ToolBarContent>
+            <Columns>
+                <HierarchyColumn T="BudgetItemWithPurchaseOrdersResponse" InitiallyExpandedFunc="x=>x.PurchaseOrders.Count>0" />
+                <PropertyColumn Property="x => x.Nomenclatore" Title="#" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="true" Filterable="false"/>
+                
+                <PropertyColumn Property="x => x.Name" Title="Name" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="true" Filterable="false" />
+                <PropertyColumn Property="x => x.BudgetUSD.ToCurrencyCulture()" Title="Budget, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="false" Filterable="false">
+                    <FooterTemplate>
+                        <MudStack Spacing="1">
+                            <strong>Expenses: @ResponseList.TotalExpenses.ToCurrencyCulture()</strong>
+                            <strong>Capital: @ResponseList.TotalCapitalPlusEngineeringContingency.ToCurrencyCulture()</strong>
+                            <strong>Appropiation: @ResponseList.TotalBudget.ToCurrencyCulture()</strong>
+                        </MudStack>
+                 
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.AssignedUSD.ToCurrencyCulture()" Title="Assigned, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="true" Filterable="false">
+                    <FooterTemplate>
+                        <MudStack Spacing="1">
+                            <strong>Expenses: @ResponseList.ExpensesAssignedUSD.ToCurrencyCulture()</strong>
+                            <strong>Capital: @ResponseList.CapitalAssignedUSD.ToCurrencyCulture()</strong>
+                            <strong>Appropiation: @ResponseList.AppropiationAssignedUSD.ToCurrencyCulture()</strong>
+                        </MudStack>
+                       
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.ActualUSD.ToCurrencyCulture()" Title="Actual, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string"
+                    Hideable="false" Sortable="true" Filterable="false">
+                    <FooterTemplate>
+                        <MudStack Spacing="1">
+                            <strong>Expenses: @ResponseList.ExpensesActualUSD.ToCurrencyCulture()</strong>
+                            <strong>Capital: @ResponseList.CapitalActualUSD.ToCurrencyCulture()</strong>
+                            <strong>Appropiation: @ResponseList.AppropiationActualUSD.ToCurrencyCulture()</strong>
+                        </MudStack>
+                        
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.CommitmentUSD.ToCurrencyCulture()" Title="Commitment, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" 
+                    Hideable="false" Sortable="false" Filterable="false">
+                    <FooterTemplate>
+                        <MudStack Spacing="1">
+                            <strong>Expenses: @ResponseList.ExpensesCommitemntUSD.ToCurrencyCulture()</strong>
+                            <strong>Capital: @ResponseList.CapitalCommitemntUSD.ToCurrencyCulture()</strong>
+                            <strong>Appropiation: @ResponseList.AppropiationCommitemntUSD.ToCurrencyCulture()</strong>
+                        </MudStack>
+                      
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.PotentialUSD.ToCurrencyCulture()" Title="Potential, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="false" Filterable="false">
+                    <FooterTemplate>
+                        <MudStack Spacing="1">
+                            <strong>Expenses: @ResponseList.ExpensesPotentialUSD.ToCurrencyCulture()</strong>
+                            <strong>Capital: @ResponseList.CapitalPotentialUSD.ToCurrencyCulture()</strong>
+                            <strong>Appropiation: @ResponseList.AppropiationPotentialUSD.ToCurrencyCulture()</strong>
+                        </MudStack>
+
+                       
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.ToCommitUSD.ToCurrencyCulture()" Title="To Commit, USD" T="BudgetItemWithPurchaseOrdersResponse" TProperty="string" Hideable="false" Sortable="false" Filterable="false">
+                    <FooterTemplate>
+                        <MudStack Spacing="1">
+                            <strong>Expenses: @ResponseList.ExpensesToCommitUSD.ToCurrencyCulture()</strong>
+                            <strong>Capital: @ResponseList.CapitalToCommitUSD.ToCurrencyCulture()</strong>
+                            <strong>Appropiation: @ResponseList.AppropiationToCommitUSD.ToCurrencyCulture()</strong>
+                        </MudStack>
+
+                      
+                    </FooterTemplate>
+                </PropertyColumn>
+                <TemplateColumn CellClass="d-flex justify-end" T="BudgetItemWithPurchaseOrdersResponse">
+                    <CellTemplate Context="template">
+                        <MudStack Row=true Spacing="2">
+                            <IconButton ToolTip="@($"Add Purchaseorder in {template.Item.Name}")" Size="@Size.Small"
+                            Icon="@Icons.Material.Outlined.AddBox" Variant=Variant.Outlined OnClick="@(()=>AddPurchaseorder(template.Item))" />
+
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <ChildRowContent>
+                @if(context.Item is EngineeringResponse)
+                {
+                     <PurchaseOrdersTable HidePR=true HideSupplier=true HideExpectedDate=true HideStatus=true ShowPrint=false Items="@context.Item.PurchaseOrders" ShowToolbar=false GetAll="GetAll"></PurchaseOrdersTable>
+                }
+                else
+                {
+                    <PurchaseOrdersTable HideAccount=true ShowPrint=false Items="@context.Item.PurchaseOrders" ShowToolbar=false GetAll="GetAll"></PurchaseOrdersTable>
+                }
+               
+
+            </ChildRowContent>
+
+            <PagerContent>
+                <MudDataGridPager T="BudgetItemWithPurchaseOrdersResponse" />
+            </PagerContent>
+        </MudDataGrid>
+    </MudCardContent>
+</MudCard>
+@code {
+
+}

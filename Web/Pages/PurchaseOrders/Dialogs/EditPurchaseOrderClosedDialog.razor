@@ -1,0 +1,87 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+           
+            <PurchaseOrderDialog Model="@Model"
+                                 ValidateAsync="ValidateAsync"
+                                 Suppliers="@Suppliers" AddSupplier=AddSupplier
+                                 ShowEditReceive=true>
+                <ChildContent>
+                    <MudGrid>
+                        <MudItem sm="2" xs="12">
+                            <TextField Label="PO Number"
+                                       @bind-Value=@Model.PONumber
+                                       Placeholder="Define PO Number"
+                                       For="() => Model.PONumber"
+                                       ValidateAsync="ValidateAsync"></TextField>
+
+                        </MudItem>
+                        <MudItem sm="2" xs="12">
+                            <DatePicker Label="Expect date"
+                                        @bind-Value=@Model.ExpectedDate
+                                        ValidateAsync="ValidateAsync"
+                                        For="() => Model.ExpectedDate"></DatePicker>
+                        </MudItem>
+                        <MudItem sm="8" xs="12">
+                            <MudGrid>
+                                <MudItem sm="3" xs="12">
+                                    <Field Label="@($"PO Value, ${Model.PurchaseOrderCurrency.Name}")">
+                                        @Model.TotalPurchaseOrderCurrency.ToCurrencyCulture()
+                                    </Field>
+
+                                </MudItem>
+                                <MudItem sm="3" xs="12">
+                                 
+                                    @if (Model.PurchaseOrderCurrency.Id != CurrencyEnum.USD.Id)
+                                    {
+                                        <Field Label="PO Value, USD">
+                                            @Model.TotalUSD.ToCurrencyCulture()
+                                        </Field>
+                                    }
+
+                                </MudItem>
+                                <MudItem sm="3" xs="12">
+                                    <Field Label="@($"Received, ${Model.PurchaseOrderCurrency.Name}")">
+                                        @Model.ActualPurchaseOrderCurrency.ToCurrencyCulture()
+                                    </Field>
+                                    <ValidationMessage For="() => Model.IsAnyPendingToReceiveLessThanZero" style="color:red; font-size:x-small;" />
+                                </MudItem>
+                                <MudItem sm="3" xs="12">
+                                    @if (Model.PurchaseOrderCurrency.Id != CurrencyEnum.USD.Id)
+                                    {
+                                        <Field Label="Received, USD">
+                                            @Model.ActualPurchaseOrderUSD.ToCurrencyCulture()
+                                        </Field>
+                                    }
+
+
+
+                                </MudItem>
+                            </MudGrid>
+                        </MudItem>
+                    </MudGrid>
+                </ChildContent>
+
+
+            </PurchaseOrderDialog>
+
+
+
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+
+@code {
+    private string _value = "To define";
+
+}

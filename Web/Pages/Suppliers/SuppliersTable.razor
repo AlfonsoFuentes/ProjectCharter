@@ -1,0 +1,35 @@
+﻿@page "/Suppliers"
+
+<TableTemplate TValue="SupplierResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="Suppliers List">
+    <ColumnsTemplate>
+             <SelectColumn T="SupplierResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" Sortable="true" T="SupplierResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.NickName" Title="Nick Name" Sortable="true" T="SupplierResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.VendorCode" Title="Vendor Code" Sortable="true" T="SupplierResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.SupplierCurrency.Name" Title="Currency" Sortable="false" T="SupplierResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.ContactName" Title="Contact" Sortable="false" T="SupplierResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.ContactEmail" Title="Email" Sortable="false" T="SupplierResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.PhoneNumber" Title="Phone " Sortable="false" T="SupplierResponse" TProperty="string" />
+       <TemplateColumn CellClass="d-flex justify-end" T="SupplierResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined  OnClick="@(()=>Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn> 
+
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+
+}

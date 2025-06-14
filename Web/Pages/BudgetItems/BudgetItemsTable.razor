@@ -1,0 +1,61 @@
+﻿<TableTemplate TValue="IBudgetItemResponse"
+               DisableAdd=false
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               ShowAdd=false
+               @bind-SelectedItems=@SelecteItems>
+    <Buttons>
+        <IconButton Size=@Size.Small ToolTip="Export to excel" Icon="@Icons.Material.Filled.TableView" Variant=Variant.Outlined OnClick="ExportExcel"></IconButton>
+        <IconButton Size=@Size.Small ToolTip="Export to pdf" Icon="@Icons.Material.Filled.PictureAsPdf" Variant=Variant.Outlined OnClick="ExportPdf"></IconButton>
+
+        @if (Response.Status.Id == ProjectStatusEnum.Created.Id)
+        {
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddAlterations())" ToolTip="Add Alteration" Text="A"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddFoundations())" ToolTip="Add Foundation" Text="B"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddStructurals())" ToolTip="Add Structural" Text="C"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddEquipments())" ToolTip="Add Equipment" Text="D"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddValves())" ToolTip="Add Valve" Text="V"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddElectricals())" ToolTip="Add Electrical" Text="E"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddPipes())" ToolTip="Add Pipe" Text="F"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddInstruments())" ToolTip="Add Instrument" Text="G"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddEHSs())" ToolTip="Add EHS" Text="H"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddPaintings())" ToolTip="Add Painting" Text="I"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddTaxs())" ToolTip="Add Tax" Text="K"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddTestings())" ToolTip="Add Testing" Text="M"></Button>
+            <Button Variant=Variant.Outlined OnClick="@(()=>AddEngineeringDesigns())" ToolTip="Add EngineeringDesign" Text="O"></Button>
+        }
+
+    </Buttons>
+    <ColumnsTemplate>
+        <SelectColumn T="IBudgetItemResponse" />
+        <PropertyColumn Property="x => x.Nomenclatore" Title="#" T="IBudgetItemResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Tag" Title="Tag" T="IBudgetItemResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Name" Title="Name" T="IBudgetItemResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.BudgetUSD.ToCurrencyCulture()" Title="Budget, USD" T="IBudgetItemResponse" TProperty="string" >
+            <FooterTemplate>
+                <Field><strong>@FilteredItems.Sum(x=>x.BudgetUSD).ToCurrencyCulture()</strong></Field>
+            </FooterTemplate>
+        </PropertyColumn>
+        <TemplateColumn CellClass="d-flex justify-end" T="IBudgetItemResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    @if (Response.Status.Id == ProjectStatusEnum.Created.Id)
+                    {
+                        <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(()=>Edit(template.Item))" />
+                    }
+                    else
+                    {
+                        <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.TableView" Variant=Variant.Outlined OnClick="@(()=>Edit(template.Item,false))" />
+                    }
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined OnClick="@(()=>Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+}

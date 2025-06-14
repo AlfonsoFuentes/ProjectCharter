@@ -1,0 +1,50 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+         
+            <PurchaseOrderDialog Model="@Model"
+                                 ValidateAsync="ValidateAsync"
+                                 Suppliers="@Suppliers" AddSupplier=AddSupplier
+                                 NonSelectedBudgetItems="@NonSelectedBudgetItemsOrdered">
+                <PurchaseOrderNumber>
+                    <TextField Label="PO Number"
+                               @bind-Value=@Model.PONumber
+                               Placeholder="Define PO Number"
+                               For="() => Model.PONumber"
+                               ValidateAsync="ValidateAsync"></TextField>
+                </PurchaseOrderNumber>
+                <PurchaseOrderExpectedDate>
+                    <DatePicker Label="Expect date"
+                                @bind-Value=@Model.ExpectedDate
+                                ValidateAsync="ValidateAsync"
+                                For="() => Model.ExpectedDate"></DatePicker>
+                </PurchaseOrderExpectedDate>
+                <PurchaseOrderApprovedDate>
+                    <DatePicker Label="Approved date"
+                                @bind-Value=@Model.ApprovedDate
+                                ValidateAsync="ValidateAsync"
+                                For="() => Model.ApprovedDate"></DatePicker>
+
+                </PurchaseOrderApprovedDate>
+
+
+            </PurchaseOrderDialog>
+
+
+
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

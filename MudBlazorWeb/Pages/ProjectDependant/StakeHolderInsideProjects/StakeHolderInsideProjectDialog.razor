@@ -1,0 +1,58 @@
+﻿
+
+
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <MudStack Row=true AlignItems="AlignItems.Stretch" Justify="Justify.FlexEnd">
+                <SelectIconButton @bind-Value="@Model.StakeHolder"
+                                  TValue="StakeHolderResponse"
+                                  Icon="@Icons.Material.Filled.Add"
+                                  ToolTip="Add StakeHolder"
+                                  ButtonClick="AddSatkeHolder"
+                                  Label="Stake Holder"
+                                  For="@(() => Model.StakeHolder)"
+                                  Items=StakeHolderResponseList.Items
+                                  Property="p=>p.Name"
+                                  Clearable="true">
+
+                </SelectIconButton>
+
+
+
+            </MudStack>
+
+            <Select @bind-Value="Model.Role"
+                    TValue="StakeHolderRoleEnum"
+                    ValidateAsync="ValidateAsync"
+                    Label="Role"
+                    Items=StakeHolderRoleEnum.List
+                    For="@(() => Model.Role)">
+            </Select>
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+#nullable enable
+    async Task StakeHolderChanged(StakeHolderResponse stakeHolder)
+    {
+        Model.StakeHolder = stakeHolder;
+        await ValidateAsync();
+
+    }
+    async Task RoleChanged(StakeHolderRoleEnum role)
+    {
+        Model.Role = role;
+        await ValidateAsync();
+
+    }
+}

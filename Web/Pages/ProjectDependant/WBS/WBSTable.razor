@@ -1,0 +1,67 @@
+﻿
+@* <MudCard Style="width:100%">
+    <MudCardContent>
+
+        <div style="width: 100%; max-height: 1000px; overflow-y: auto; position: relative;">
+
+            <!-- Barra de Herramientas -->
+            <GanttTaskToolBar OnAddNewdeliverable="AddNewDeliverable"
+                              OnAddNew="AddNew"
+                              OnMoveUp="Up"
+                              OnMoveDown="Down"
+                              OnMoveRight="Right"
+                              OnMoveLeft="Left"
+                              DisableAddButton="@DisableAddButton"
+                              DisableUpButton="@DisableUpButton"
+                              DisableDownButton="@DisableDownButton"
+                              DisableRightButton="@DisableRightButton"
+                              DisableLeftButton="@DisableLeftButton"
+                             
+                              CurrentRowName="@CurrentRowName">
+            </GanttTaskToolBar>
+
+            <!-- Tabla Principal -->
+            <MudSimpleTable Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        <!-- Columnas Fijas -->
+                        <th class="col-expand"></th>
+                        <th class="col-id">ID</th>
+                        <th class="col-wbs">WBS</th>
+                        <th class="col-name">Name</th>
+
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var deliverable in Response.Deliverables)
+                    {
+                        <WBSDeliverableRow Deliverable="@deliverable"
+                                           GetAll="GetAll"
+                                           OnDelete="Delete"
+                                           OnEdit="RowEdit"
+                                           OnSave="Save"
+                                           OnClick="RowClick"
+                                           OnCancel="CancelEdit"
+                                            OnClickDeliverable="OnClickDeliverable"
+                                           OnEditDeliverable="EditDeliverable"
+                                           OnDeleteDeliverable="DeleteDeliverable">
+                        </WBSDeliverableRow>
+                    }
+                </tbody>
+            </MudSimpleTable>
+
+        </div>
+
+
+    </MudCardContent>
+
+</MudCard> *@
+
+@code {
+
+    // private bool dense = true;
+    // private bool hover = true;
+    // private bool striped = true;
+    // private bool bordered = true;
+}

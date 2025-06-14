@@ -1,0 +1,34 @@
+﻿<TableTemplate TValue="NozzleResponse"
+               AddNew="Add"
+               ShowDelete="false"
+               ShowSearch="false"
+               ShowOrderUpDown="false"
+               ShowPrint="false"
+               ShowAdd="true"
+               @bind-NameFilter=@nameFilter
+               Items="@Items">
+    <ColumnsTemplate>
+        <SelectColumn T="NozzleResponse" />
+        <PropertyColumn Property="x => x.NozzleType.Name" Title="Type" Sortable="false" T="NozzleResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.NominalDiameter.Name" Title="Diameter" Sortable="false" T="NozzleResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.ConnectionType.Name" Title="Connection" Sortable="false" T="NozzleResponse" TProperty="string" />
+
+
+        <TemplateColumn CellClass="d-flex justify-end" T="NozzleResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(()=>Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(()=>Delete(template.Item))" />
+
+
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+    string nameFilter = string.Empty;
+}

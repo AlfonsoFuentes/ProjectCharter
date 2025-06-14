@@ -1,0 +1,54 @@
+﻿@using Shared.Models.BudgetItems.BasicEngineeringItems
+
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper Elevation="2" Class="pa-2" Width="100%">
+            <MudStack Spacing="2">
+                <MudGrid Spacing="3">
+                    <MudItem xs="12" sm="8">
+                        <strong>Total Budget Selected, USD</strong>
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        @sBudgetSelected
+                    </MudItem>
+
+                </MudGrid>
+
+                <MudTable T="BasicResponse" Items="@Items" MultiSelection="true" SelectionChangeable="true" Hover="true" Dense="true" Striped=true Bordered=true
+                          @bind-SelectedItems="SelectedItems">
+                    <HeaderContent>
+                        <MudTh>Name</MudTh>
+                        <MudTh>Budget, USD</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Name">@context.Name</MudTd>
+                        <MudTd DataLabel="Budget, USD">@context.BudgetUSD.ToCurrencyCulture()</MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
+                    </PagerContent>
+                </MudTable>
+            </MudStack>
+        </MudPaper>
+
+    </DialogContent>
+    <DialogActions>
+        <MudGrid Spacing="3">
+            <MudItem xs="12" sm="1">
+                <IconButton Icon="@Icons.Material.Filled.Send" OnClick="Submit" Color="Color.Transparent" />
+            </MudItem>
+            <MudItem xs="12" sm="1">
+                <IconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" />
+            </MudItem>
+        </MudGrid>
+
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+
+
+}
