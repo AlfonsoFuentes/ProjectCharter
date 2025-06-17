@@ -11,14 +11,17 @@
     <Compile Remove="Models\BudgetItems\IndividualItems\Nozzles\Records\**" />
     <Compile Remove="Models\BudgetItems\IndividualItems\Nozzles\Requests\**" />
     <Compile Remove="Models\BudgetItems\IndividualItems\Nozzles\Validators\**" />
+    <Compile Remove="Models\Suppliers\Mappers\**" />
     <EmbeddedResource Remove="Models\BudgetItems\IndividualItems\Nozzles\Exports\**" />
     <EmbeddedResource Remove="Models\BudgetItems\IndividualItems\Nozzles\Records\**" />
     <EmbeddedResource Remove="Models\BudgetItems\IndividualItems\Nozzles\Requests\**" />
     <EmbeddedResource Remove="Models\BudgetItems\IndividualItems\Nozzles\Validators\**" />
+    <EmbeddedResource Remove="Models\Suppliers\Mappers\**" />
     <None Remove="Models\BudgetItems\IndividualItems\Nozzles\Exports\**" />
     <None Remove="Models\BudgetItems\IndividualItems\Nozzles\Records\**" />
     <None Remove="Models\BudgetItems\IndividualItems\Nozzles\Requests\**" />
     <None Remove="Models\BudgetItems\IndividualItems\Nozzles\Validators\**" />
+    <None Remove="Models\Suppliers\Mappers\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +32,6 @@
     <Folder Include="Models\BudgetItemNewGanttTasks\Records\" />
     <Folder Include="Models\StakeHolderInsideProjects\Exports\" />
     <Folder Include="Models\StakeHolders\Mappers\" />
-    <Folder Include="Models\Suppliers\Mappers\" />
   </ItemGroup>
 
   <ItemGroup>

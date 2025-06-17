@@ -12,8 +12,11 @@ namespace Shared.Models.BudgetItems.Responses
         public double ActualUSD { get; set; }
         public double CommitmentUSD { get; set; }
         public double PotentialUSD { get; set; }
-      
-        public double AssignedUSD => ActualUSD + CommitmentUSD + PotentialUSD;
+        public double _ActualUSD => PurchaseOrders.Sum(x => x.ActualPurchaseOrderUSD);
+        public double _CommitmentUSD => PurchaseOrders.Sum(x => x.CommitmentPurchaseOrderUSD);
+        public double _PotentialUSD => PurchaseOrders.Sum(x => x.PotentialPurchaseOrderUSD);
+
+        public double AssignedUSD => _ActualUSD + _CommitmentUSD + _PotentialUSD;
         public double ToCommitUSD => BudgetUSD - AssignedUSD;
 
       

@@ -61,6 +61,7 @@ namespace Server.EndPoint.MonitoringLogs.Commands
             row.Name = request.Name;
             row.InitialDate = request.InitialDate;
             row.EndDate = request.EndDate;  
+            row.ClosingText = request.ClosingText;
             return row;
         }
 

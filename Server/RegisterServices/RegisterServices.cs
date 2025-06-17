@@ -125,7 +125,7 @@ namespace Server.RegisterServices
             services.AddDbContext<BlazorHeroContext>(
                     (sp, options) => options
                         .UseSqlServer(connectionString)
-                        .EnableSensitiveDataLogging()
+                        //.EnableSensitiveDataLogging()
                     .AddInterceptors(
                         sp.GetRequiredService<SoftDeleteInterceptor>()));
 

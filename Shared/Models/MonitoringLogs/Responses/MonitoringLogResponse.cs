@@ -18,5 +18,6 @@ namespace Shared.Models.MonitoringLogs.Responses
         public string sInitialDate => InitialDate?.ToString("d") ?? string.Empty;
         public string sEndDate => EndDate?.ToString("d") ?? string.Empty;
         public Guid ProjectId { get; set; }
+        public string ClosingText { get; set; } = string.Empty;
     }
 }

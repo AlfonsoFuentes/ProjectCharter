@@ -7,20 +7,27 @@
                         Label="Created Date"
                         For="@(() => Model.InitialDate)"
                         ValidateAsync="ValidateAsync"></DatePicker>
-            @if (Model.Id != Guid.Empty)
-            {
-                <DatePicker @bind-Value="@Model.EndDate"
-                        Label="Close Date"
-                        For="@(() => Model.EndDate)"
-                        ValidateAsync="ValidateAsync"></DatePicker>
-            }
+           
             <TextField @bind-Value="@Model.Name"
                        Lines=3
                        ValidateAsync="ValidateAsync"
                        Label="Name"
                        For="@(() => Model.Name)">
             </TextField>
-
+            @if (Model.Id != Guid.Empty)
+            {
+                <DatePicker @bind-Value="@Model.EndDate"
+                            Label="Close Date"
+                            For="@(() => Model.EndDate)"
+                            ValidateAsync="ValidateAsync"></DatePicker>
+                            
+            <TextField @bind-Value="@Model.ClosingText"
+                       Lines=3
+                       ValidateAsync="ValidateAsync"
+                       Label="Name"
+                       For="@(() => Model.ClosingText)">
+            </TextField>
+            }
 
         </MudCardContent>
         <MudCardActions>

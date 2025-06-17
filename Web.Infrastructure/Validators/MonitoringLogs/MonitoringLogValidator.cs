@@ -18,10 +18,13 @@ namespace Web.Infrastructure.Validators.MonitoringLogs
                 .WithMessage("Initial date must defined");
             RuleFor(x => x.EndDate).NotNull().When(x => x.Id != Guid.Empty)
               .WithMessage("End date must defined");
+            RuleFor(x => x.EndDate).NotEmpty().When(x => x.Id != Guid.Empty)
+             .WithMessage("Closing text must defined");
 
             RuleFor(x => x.Name).MustAsync(ReviewIfNameExist)
                 .When(x => !string.IsNullOrEmpty(x.Name))
                 .WithMessage(x => $"{x.Name} already exist");
+           
 
         }
 

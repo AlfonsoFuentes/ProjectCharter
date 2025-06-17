@@ -87,7 +87,8 @@ namespace Server.EndPoint.PurchaseOrders.Queries
                 Order = row.Order,
                 PurchaseOrderItemReceiveds = row.PurchaseOrderReceiveds.Select(x => x.Map()).ToList(),
                 BasicResponse = row.BasicEngineeringItem == null ? null! : row.BasicEngineeringItem.Map(),
-               
+                BasicReponseId = row.BasicEngineeringItemId.HasValue ? row.BasicEngineeringItemId.Value : Guid.Empty,
+
 
 
             };

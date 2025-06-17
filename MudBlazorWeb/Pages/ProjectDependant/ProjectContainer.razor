@@ -1,6 +1,7 @@
 ﻿
 
 
+
 <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1">
     <MudTabPanel Text="Start" OnClick="@(() => StartShowAll=true)">
         <TemplateProjectContainer Title="Stakeholders" ShowContentChanged="StartShowAllChanged" ShowAll=@StartShowAll>
@@ -128,6 +129,11 @@
         <TemplateProjectContainer Title="Monitoring Project Logs " ShowContentChanged="MonitoringShowAllChanged" ShowAll=@MonitoringShowAll>
             <Content>
                 <MonitoringLogTable Project=@Project></MonitoringLogTable>
+            </Content>
+        </TemplateProjectContainer>
+        <TemplateProjectContainer Title="Warings" ShowContentChanged="MonitoringShowAllChanged" ShowAll=@MonitoringShowAll>
+            <Content>
+                <WarningsGetByProjectId Project=@Project></WarningsGetByProjectId>
             </Content>
         </TemplateProjectContainer>
     </MudTabPanel>

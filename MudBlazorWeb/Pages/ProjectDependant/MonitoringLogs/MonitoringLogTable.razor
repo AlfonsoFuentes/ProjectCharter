@@ -1,5 +1,5 @@
 ﻿
-@using Shared.Models.MonitoringLogs.Responses
+
 
 
 <TableTemplate TValue="MonitoringLogResponse"
@@ -19,7 +19,8 @@
         <SelectColumn T="MonitoringLogResponse" />
         <PropertyColumn Property="x => x.sInitialDate" Title="Created date" T="MonitoringLogResponse" TProperty="string" />
         <PropertyColumn Property="x => x.sEndDate" Title="Closed date" T="MonitoringLogResponse" TProperty="string" />
-        <PropertyColumn Property="x => x.Name" Title="Name" T="MonitoringLogResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Name" Title="Issue" T="MonitoringLogResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.ClosingText" Title="Closing Text" T="MonitoringLogResponse" TProperty="string" />
       
         <TemplateColumn CellClass="d-flex justify-end" T="MonitoringLogResponse">
             <CellTemplate Context="template">

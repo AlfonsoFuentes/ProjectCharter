@@ -8,6 +8,7 @@
         public string Name { get; set; } = string.Empty;
         public DateTime? InitialDate { get; set; } 
         public DateTime? EndDate { get; set; }
+        public string? ClosingText { get; set; } = string.Empty;
         public static MonitoringLog Create(Guid ProjectId, int Order)
         {
             return new()

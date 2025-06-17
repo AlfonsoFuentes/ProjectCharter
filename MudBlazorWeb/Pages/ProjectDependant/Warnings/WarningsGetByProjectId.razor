@@ -1,0 +1,46 @@
+﻿
+<MudCard Style="width:100%">
+    <MudCardContent>
+        <MudDataGrid T="WarningResponse"
+                     MultiSelection="false"
+                     Items="@FilteredItems"
+                     Hideable="false"
+                     Dense=true
+                     Bordered=true
+                     Hover=true
+                     Outlined=true
+                     Filterable=false
+                     RowsPerPage="FilteredItems.Count==0?100:FilteredItems.Count"
+                     Striped=true>
+            <ToolBarContent>
+                
+                <MudSpacer />
+                <TextField @bind-Value="@nameFilter" Placeholder="Search" Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></TextField>
+            </ToolBarContent>
+            <Columns>
+               
+                <PropertyColumn Property="x => x.WarningText" Title="Warning" T="WarningResponse" TProperty="string" Hideable="false" Sortable="true" Filterable="false" />
+
+                
+                <TemplateColumn CellClass="d-flex justify-end" T="WarningResponse">
+                    <CellTemplate Context="template">
+                        <MudStack Row=true Spacing="2">
+                           
+
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            
+
+            <PagerContent>
+                <MudDataGridPager T="WarningResponse" />
+            </PagerContent>
+        </MudDataGrid>
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+}

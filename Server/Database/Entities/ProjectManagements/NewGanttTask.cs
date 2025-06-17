@@ -11,7 +11,7 @@ namespace Server.Database.Entities.ProjectManagements
         [NotMapped]
         public Guid ProjectId => Deliverable == null ? Guid.Empty : Deliverable.ProjectId;
         public int InternalOrder { get; set; }
-
+        public int TaskStatus { get; set; } // Representa el estado de la tarea
         public string ParentWBS { get; set; } = string.Empty;
         [NotMapped]
         public string WBS => $"{ParentWBS}.{InternalOrder}";

@@ -1,6 +1,7 @@
 ﻿using Shared.Enums.PurchaseOrderStatusEnums;
 using Shared.Models.BudgetItems.BasicEngineeringItems;
 using Shared.Models.BudgetItems.Responses;
+using Shared.Models.PurchaseOrders.Responses;
 using System.Text.Json.Serialization;
 
 namespace Shared.Models.BudgetItemNewGanttTasks.Responses
@@ -35,7 +36,7 @@ namespace Shared.Models.BudgetItemNewGanttTasks.Responses
         public double TotalBudgetAssignedByOther => BudgetItem == null ? 0 : BudgetItem.BudgetItemGanttTasks
             .Where(x => x.GanttTaskId != GanttTaskId).Sum(x => x.BudgetAssignedUSD);
         [JsonIgnore]
-        public double PendingToAssign => BudgetUSD - TotalBudgetAssignedByOther - BudgetAssignedUSD;
+        public double PendingToAssign => BudgetUSD - TotalBudgetAssignedByOther - BudgetPlannedUSD;
 
         public DateTime? PlannedStartDate => BudgetItem == null ? null : BudgetItem.PurchaseOrders.Min(x => x.ApprovedDate);
         public DateTime? MaxApprovedEndDate => BudgetItem == null ? null : BudgetItem.PurchaseOrders
@@ -44,10 +45,23 @@ namespace Shared.Models.BudgetItemNewGanttTasks.Responses
         public DateTime? MaxClosedEndDate => BudgetItem == null ? null : BudgetItem.PurchaseOrders
             .Where(x => x.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Closed.Id).Max(x => x.ClosedDate);
         public DateTime? PlannedEndDate => MaxClosedEndDate > MaxApprovedEndDate ? MaxClosedEndDate : MaxApprovedEndDate;
-        public double BudgetAssignedUSD { get; set; }
+        public double BudgetPlannedUSD { get; set; }
+        [JsonIgnore]
+        public double BudgetAssignedUSD => PurchaseOrders.Sum(x => x.TotalUSD);
+        [JsonIgnore]
+        public double BudgetAssignedActualUSD => PurchaseOrders.Sum(x => x.ActualPurchaseOrderUSD);
+        [JsonIgnore]
+        public double BudgetAssignedCommitmentUSD => PurchaseOrders.Sum(x => x.CommitmentPurchaseOrderUSD);
+        [JsonIgnore]
+        public double ToCommitUSD => BudgetPlannedUSD - BudgetAssignedUSD;
         public int Order { get; set; } = 0;
         public Guid SelectedEngineeringItemsBudgetId { get; set; } = Guid.Empty;
         public BasicResponse SelectedEngineeringItemsBudget { get; set; } = null!;
+        [JsonIgnore]
+        public List<PurchaseOrderResponse> PurchaseOrders =>
+            _BudgetItem == null ? new List<PurchaseOrderResponse>() :
+            SelectedEngineeringItemsBudgetId == Guid.Empty ? _BudgetItem.PurchaseOrders :
+            _BudgetItem.PurchaseOrders.Select(x => x).Where(y => y.PurchaseOrderItems.Any(z => z.BasicReponseId == SelectedEngineeringItemsBudgetId)).ToList();
     }
 
 }

@@ -40,7 +40,7 @@ namespace Server.EndPoint.MonitoringLogs.Queries
                 Order = row.Order,
                 EndDate = row.EndDate,
                 InitialDate = row.InitialDate,
-
+                ClosingText=row.ClosingText!,
                 ProjectId = row.ProjectId,
             };
         }

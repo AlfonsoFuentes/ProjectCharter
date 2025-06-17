@@ -40,8 +40,8 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
             async Task RemoveRows(DeliverableGanttTaskResponseList Data, IRepository Repository)
             {
                 Func<IQueryable<Deliverable>, IIncludableQueryable<Deliverable, object>> includes = x => x
-               .Include(x => x.NewGanttTasks).ThenInclude(x => x.SubTasks);
-
+               .Include(x => x.NewGanttTasks).ThenInclude(x => x.SubTasks)
+                .Include(x => x.NewGanttTasks).ThenInclude(x => x.BudgetItemNewGanttTasks);
                 Expression<Func<Deliverable, bool>> criteria = x => x.ProjectId == Data.ProjectId;
                 var deliverables = await Repository.GetAllAsync(Criteria: criteria, Includes: includes);
 
@@ -66,12 +66,20 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
                 {
                     if (!Data.Any(x => x.Id == task.Id))
                     {
+                        if (task.BudgetItemNewGanttTasks.Any())
+                        {
+                            foreach (var budget in task.BudgetItemNewGanttTasks)
+                            {
+                                await Repository.RemoveAsync(budget);
+                            }
+                        }
                         await Repository.RemoveAsync(task);
                     }
                     if (task.SubTasks.Any())
                     {
                         await RemoveSubTask(Data, task.SubTasks, Repository);
                     }
+                    
                 }
             }
             async Task UpdateRows(DeliverableGanttTaskResponseList Data, IRepository Repository)
@@ -255,7 +263,7 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
 
                         }
                     }
-                   
+
 
                 }
             }

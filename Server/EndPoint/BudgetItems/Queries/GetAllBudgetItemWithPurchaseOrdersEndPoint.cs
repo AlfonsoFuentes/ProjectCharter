@@ -56,23 +56,7 @@ namespace Server.EndPoint.BudgetItems.Queries
                     response.CostCenter = CostCenterEnum.GetType(row.CostCenter);
                     response.ProjectId = row.Id;
                     response.ProjectNumber = $"CEC0000{row.ProjectNumber}";
-                    //double totalpercentage = response.PercentageContingency + response.PercentageEngineering;
-
-                    //if (100 - totalpercentage > 0)
-                    //{
-                    //    var contingency = response.Contingencys.FirstOrDefault();
-                    //    if (contingency != null)
-                    //    {
-                    //        contingency.BudgetUSD = Math.Round(response.TotalCapital /
-                    //        (100 - totalpercentage) * contingency.Percentage, 1);
-                    //    }
-                    //    var engineering = response.Salaries.FirstOrDefault();
-                    //    if (engineering != null)
-                    //    {
-                    //        engineering.BudgetUSD = Math.Round(response.TotalCapital /
-                    //       (100 - totalpercentage) * engineering.Percentage, 1);
-                    //    }
-                    //}
+    
 
 
                     return Result<BudgetItemWithPurchaseOrderResponseList>.Success(response);

@@ -1,4 +1,5 @@
-﻿using Shared.Models.BudgetItemNewGanttTasks.Responses;
+﻿using Shared.Enums.TaskStatus;
+using Shared.Models.BudgetItemNewGanttTasks.Responses;
 using Shared.Models.MonitoringTask.Records;
 using Shared.Models.MonitoringTask.Responses;
 namespace Server.EndPoint.MonitoringTasks.Queries
@@ -77,7 +78,7 @@ namespace Server.EndPoint.MonitoringTasks.Queries
             private static List<MonitoringGanttTaskResponse> MapFlatInParallelAsync(List<NewGanttTask> rows)
             {
 
-                var tasks = rows.Select(row => row.MapParallel()).ToList();
+                var tasks = rows.Select(row => row.MapMonitoringParallel()).ToList();
 
 
                 return tasks.OrderBy(x => x.MainOrder).ToList();
@@ -133,13 +134,13 @@ namespace Server.EndPoint.MonitoringTasks.Queries
                 return project!;
             }
         }
-        public static MonitoringGanttTaskResponse MapParallel(this NewGanttTask row)
+        public static MonitoringGanttTaskResponse MapMonitoringParallel(this NewGanttTask row)
         {
             return new MonitoringGanttTaskResponse
             {
                 MainOrder = row.MainOrder,
                 WBS = row.WBS,
-                HasSubTask = row.SubTasks.Any(),
+                
                 Name = row.Name,
                 StartDate = row.StartDate,
                 EndDate = row.EndDate,
@@ -148,6 +149,7 @@ namespace Server.EndPoint.MonitoringTasks.Queries
                 DurationUnit = row.DurationUnit,
                 IsDeliverable = false,
                 Id = row.Id,
+                DaBaseTaskStatus = GanttTaskStatusEnum.GetType(row.TaskStatus),
 
                 DeliverableId = row.DeliverableId,
                 TaskParentId = row.ParentId == null ? row.DeliverableId : row.ParentId,
@@ -170,8 +172,9 @@ namespace Server.EndPoint.MonitoringTasks.Queries
                 GanttTaskId = row.NewGanttTaskId,
 
                 Order = row.Order,
-                BudgetAssignedUSD = row.GanttTaskBudgetAssigned,
-                SelectedEngineeringItemsBudget= row.SelectedBasicEngineeringItem == null ? null! : row.SelectedBasicEngineeringItem.Map()
+                BudgetPlannedUSD = row.GanttTaskBudgetAssigned,
+                SelectedEngineeringItemsBudget= row.SelectedBasicEngineeringItem == null ? null! : row.SelectedBasicEngineeringItem.Map(),
+                SelectedEngineeringItemsBudgetId = row.SelectedBasicEngineeringItemId == null ? Guid.Empty : row.SelectedBasicEngineeringItemId.Value,
 
             };
 

@@ -1,142 +1,156 @@
 ﻿
 <MudStack>
 
-   
-    @if(FilteredItems.Count==1)
-    {   
-        
-        
+
+    @if (FilteredItems.Count == 1)
+    {
+
+
         <MudDataGrid T="ProjectResponse"
-                 MultiSelection="true"
-                 Items="@FilteredItems"
-                 Hideable="true"
-                 Dense=true
-                 Bordered=true
-                 Hover=true
-                 RowsPerPage=@(FilteredItems.Count==0?100:FilteredItems.Count)
-                 Outlined=true
-                 Striped=true
-                 Virtualize=true
-                 @bind-SelectedItems="@SelectedItems">
-        <Columns>
-      
-            <PropertyColumn Property="x => x.Name" Title="#" T="ProjectResponse" TProperty="string" />
+                     MultiSelection="true"
+                     Items="@FilteredItems"
+                     Hideable="true"
+                     Dense=true
+                     Bordered=true
+                     Hover=true
+                     RowsPerPage=@(FilteredItems.Count==0?100:FilteredItems.Count)
+                     Outlined=true
+                     Striped=true
+                     Virtualize=true
+                     @bind-SelectedItems="@SelectedItems">
+            <Columns>
 
-            <PropertyColumn Property="x => x.Status.Name" Title="Status" T="ProjectResponse" TProperty="string" />
-            <PropertyColumn Property="x => x.ProjectNumber" Title="CEC_Name" T="ProjectResponse" TProperty="string">
-            
-            </PropertyColumn>
-            <PropertyColumn Property="x => x.Focus.Name" Title="Focus" T="ProjectResponse" TProperty="string" />
-            <PropertyColumn Property="x => x.CostCenter.Name" Title="Cost Center" T="ProjectResponse" TProperty="string" />
-            <TemplateColumn CellClass="d-flex justify-end" T="ProjectResponse">
-                <CellTemplate Context="template">
-                    <MudStack Row=true Spacing="2" Class="mt-1">
-                        <IconButton ToolTip="@($"Expand {template.Item.Name}")" Size="@Size.Small" Icon="@ExpandIcon" OnClick="@(() => OnExpandedChanged(template.Item))" />
-                        <IconButton ToolTip="@($"Export {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectCharter(template.Item))" />
+                <PropertyColumn Property="x => x.Name" Title="#" T="ProjectResponse" TProperty="string" />
 
-                        @if (template.Item.Status.Id == ProjectStatusEnum.Created.Id)
-                        {
-                            <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
-                            <IconButton ToolTip="@($"Approve {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Check" Variant=Variant.Outlined OnClick="@(() => Approve(template.Item))" />
-                        }
-                        else if (template.Item.Status.Id == ProjectStatusEnum.Approved.Id)
-                        {
-                            <IconButton ToolTip="@($"Un Approve {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Undo" Variant=Variant.Outlined OnClick="@(() => UnApprove(template.Item))" />
-                        }
-                        else
-                        {
+                <PropertyColumn Property="x => x.Status.Name" Title="Status" T="ProjectResponse" TProperty="string" />
+                <PropertyColumn Property="x => x.ProjectNumber" Title="CEC_Name" T="ProjectResponse" TProperty="string">
 
-                        }
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.Focus.Name" Title="Focus" T="ProjectResponse" TProperty="string" />
+                <PropertyColumn Property="x => x.CostCenter.Name" Title="Cost Center" T="ProjectResponse" TProperty="string" />
+                <TemplateColumn CellClass="d-flex justify-end" T="ProjectResponse">
+                    <CellTemplate Context="template">
+                        <MudStack Row=true Spacing="2" Class="mt-1">
+                            <IconButton ToolTip="@($"Expand {template.Item.Name}")" Size="@Size.Small" Icon="@ExpandIcon" OnClick="@(() => OnExpandedChanged(template.Item))" />
+                            <IconButton ToolTip="@($"Export {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectCharter(template.Item))" />
 
-                        <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined OnClick="@(() => Delete(template.Item))" />
-                    </MudStack>
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-       
-        <PagerContent>
-            <MudDataGridPager T="ProjectResponse" />
-        </PagerContent>
-    </MudDataGrid>
+                            @if (template.Item.Status.Id == ProjectStatusEnum.Created.Id)
+                            {
+                                <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                                <IconButton ToolTip="@($"Approve {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Check" Variant=Variant.Outlined OnClick="@(() => Approve(template.Item))" />
+                            }
+                            else if (template.Item.Status.Id == ProjectStatusEnum.Approved.Id)
+                            {
+                                <IconButton ToolTip="@($"Un Approve {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Undo" Variant=Variant.Outlined OnClick="@(() => UnApprove(template.Item))" />
+                            }
+                            else
+                            {
+
+                            }
+
+                            <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined OnClick="@(() => Delete(template.Item))" />
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+
+            <PagerContent>
+                <MudDataGridPager T="ProjectResponse" />
+            </PagerContent>
+        </MudDataGrid>
         <ProjectContainer Project="@FilteredItems[0]"></ProjectContainer>
     }
     else
     {
 
         <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1">
-             <MudTabPanel Text="Project List" >
-                 <MudStack Row=true Spacing="3">
+            <MudTabPanel Text="Project List">
+                <MudStack Row=true Spacing="3">
 
-                <IconButton Size=Size.Small ToolTip="Add new Project" Icon="@Icons.Material.Filled.Add" Variant=Variant.Outlined OnClick="AddNew"></IconButton>
+                    <IconButton Size=Size.Small ToolTip="Add new Project" Icon="@Icons.Material.Filled.Add" Variant=Variant.Outlined OnClick="AddNew"></IconButton>
 
-       
 
-                <MudSpacer></MudSpacer>
-                <TextField Value="@nameFilter" Placeholder="Search" Adornment="Adornment.Start" ValueChanged=onValueSearchChanged
-                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></TextField>
 
-             </MudStack>
+                    <MudSpacer></MudSpacer>
+                    <TextField Value="@nameFilter" Placeholder="Search" Adornment="Adornment.Start" ValueChanged=onValueSearchChanged
+                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></TextField>
 
-             <MudDataGrid T="ProjectResponse"
-                 MultiSelection="true"
-                 Items="@FilteredItems"
-                 Hideable="true"
-                 Dense=true
-                 Bordered=true
-                 Hover=true
-                 RowsPerPage=@(FilteredItems.Count==0?100:FilteredItems.Count)
-                 Outlined=true
-                 Striped=true
-                 Virtualize=true
-                 @bind-SelectedItems="@SelectedItems">
-        <Columns>
-      
-            <PropertyColumn Property="x => x.Name" Title="#" T="ProjectResponse" TProperty="string" />
+                </MudStack>
 
-            <PropertyColumn Property="x => x.Status.Name" Title="Status" T="ProjectResponse" TProperty="string" />
-            <PropertyColumn Property="x => x.ProjectNumber" Title="CEC_Name" T="ProjectResponse" TProperty="string">
-            
-            </PropertyColumn>
-            <PropertyColumn Property="x => x.Focus.Name" Title="Focus" T="ProjectResponse" TProperty="string" />
-            <PropertyColumn Property="x => x.CostCenter.Name" Title="Cost Center" T="ProjectResponse" TProperty="string" />
-            <TemplateColumn CellClass="d-flex justify-end" T="ProjectResponse">
-                <CellTemplate Context="template">
-                    <MudStack Row=true Spacing="2" Class="mt-1">
-                        <IconButton ToolTip="@($"Expand {template.Item.Name}")" Size="@Size.Small" Icon="@ExpandIcon" OnClick="@(() => OnExpandedChanged(template.Item))" />
-                        <IconButton ToolTip="@($"Export {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectCharter(template.Item))" />
+                <MudDataGrid T="ProjectResponse"
+                             MultiSelection="true"
+                             Items="@FilteredItems"
+                             Hideable="true"
+                             Dense=true
+                             Bordered=true
+                             Hover=true
+                             RowsPerPage=@(FilteredItems.Count==0?100:FilteredItems.Count)
+                             Outlined=true
+                             Striped=true
+                             Virtualize=true
+                             @bind-SelectedItems="@SelectedItems">
+                    <Columns>
 
-                        @if (template.Item.Status.Id == ProjectStatusEnum.Created.Id)
-                        {
-                            <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
-                            <IconButton ToolTip="@($"Approve {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Check" Variant=Variant.Outlined OnClick="@(() => Approve(template.Item))" />
-                        }
-                        else if (template.Item.Status.Id == ProjectStatusEnum.Approved.Id)
-                        {
-                            <IconButton ToolTip="@($"Un Approve {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Undo" Variant=Variant.Outlined OnClick="@(() => UnApprove(template.Item))" />
-                        }
-                        else
-                        {
+                        <PropertyColumn Property="x => x.Name" Title="#" T="ProjectResponse" TProperty="string" />
 
-                        }
+                        <PropertyColumn Property="x => x.Status.Name" Title="Status" T="ProjectResponse" TProperty="string" />
+                        <PropertyColumn Property="x => x.ProjectNumber" Title="CEC_Name" T="ProjectResponse" TProperty="string">
 
-                        <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined OnClick="@(() => Delete(template.Item))" />
-                    </MudStack>
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-       
-        <PagerContent>
-            <MudDataGridPager T="ProjectResponse" />
-        </PagerContent>
-    </MudDataGrid>
-                 </MudTabPanel>
-                  <MudTabPanel Text="Monitoring" >
-                      <ProjectsMonitoringExpendingTools></ProjectsMonitoringExpendingTools>
-                 </MudTabPanel>
-                  <MudTabPanel Text="Warnings" >
-                 </MudTabPanel>
-            </MudTabs>
-         
+                        </PropertyColumn>
+                        <PropertyColumn Property="x => x.Focus.Name" Title="Focus" T="ProjectResponse" TProperty="string" />
+                        <PropertyColumn Property="x => x.CostCenter.Name" Title="Cost Center" T="ProjectResponse" TProperty="string" />
+                        <TemplateColumn CellClass="d-flex justify-end" T="ProjectResponse">
+                            <CellTemplate Context="template">
+                                <MudStack Row=true Spacing="2" Class="mt-1">
+                                    <IconButton ToolTip="@($"Expand {template.Item.Name}")" Size="@Size.Small" Icon="@ExpandIcon" OnClick="@(() => OnExpandedChanged(template.Item))" />
+                                    <IconButton ToolTip="@($"Export {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectCharter(template.Item))" />
+
+                                    @if (template.Item.Status.Id == ProjectStatusEnum.Created.Id)
+                                    {
+                                        <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                                        <IconButton ToolTip="@($"Approve {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Check" Variant=Variant.Outlined OnClick="@(() => Approve(template.Item))" />
+                                    }
+                                    else if (template.Item.Status.Id == ProjectStatusEnum.Approved.Id)
+                                    {
+                                        <IconButton ToolTip="@($"Un Approve {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Undo" Variant=Variant.Outlined OnClick="@(() => UnApprove(template.Item))" />
+                                    }
+                                    else
+                                    {
+
+                                    }
+
+                                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined OnClick="@(() => Delete(template.Item))" />
+                                </MudStack>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+
+                    <PagerContent>
+                        <MudDataGridPager T="ProjectResponse" />
+                    </PagerContent>
+                </MudDataGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="Monitoring">
+                <TemplateProjectContainer Title="Total Expending Tool" ShowContentChanged="MonitoringShowAllChanged" ShowAll=@MonitoringShowAll>
+                    <Content>
+                        <ProjectsMonitoringExpendingTools></ProjectsMonitoringExpendingTools>
+                    </Content>
+                </TemplateProjectContainer>
+                <TemplateProjectContainer Title="Total Monitoring Logs" ShowContentChanged="MonitoringShowAllChanged" ShowAll=@MonitoringShowAll>
+                    <Content>
+                        <TotalProjectsMonitoringLogs></TotalProjectsMonitoringLogs>
+                    </Content>
+                </TemplateProjectContainer>
+                <TemplateProjectContainer Title="Total Warnings" ShowContentChanged="MonitoringShowAllChanged" ShowAll=@MonitoringShowAll>
+                    <Content>
+                        <WarningsGetAll></WarningsGetAll>
+                    </Content>
+                </TemplateProjectContainer>
+            </MudTabPanel>
+            <MudTabPanel Text="Warnings">
+            </MudTabPanel>
+        </MudTabs>
+
     }
 </MudStack>
 
@@ -146,4 +160,10 @@
 @code {
     string ExpandIcon => _selectedProjectId == Guid.Empty ? Icons.Material.Outlined.ExpandMore : Icons.Material.Outlined.ExpandLess;
     HashSet<ProjectResponse> SelectedItems = null!;
+    bool MonitoringShowAll = true;
+    void MonitoringShowAllChanged()
+    {
+        MonitoringShowAll = !MonitoringShowAll;
+
+    }
 }
