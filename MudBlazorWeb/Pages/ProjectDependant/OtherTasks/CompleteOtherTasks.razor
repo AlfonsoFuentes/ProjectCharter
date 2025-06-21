@@ -1,0 +1,34 @@
+﻿<TableTemplate TValue="OtherTaskResponse"
+              ShowAdd=false
+               @bind-NameFilter=@nameFilter
+            
+               Items="FilteredItems"
+               ShowOrderUpDown="true"
+               OnRowClicked="RowClicked"
+               
+               DisableDownButton="@DisableDownButton"
+               DisableUpButton="@DisableUpButton"
+               @bind-SelectedItems=@SelecteItems>
+    <ColumnsTemplate>
+        <SelectColumn T="OtherTaskResponse" />
+        <PropertyColumn Property="x => x.CECName" Title="CEC Name" T="OtherTaskResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.ProjectName" Title="Project Name" T="OtherTaskResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.Name" Title="Task Name" T="OtherTaskResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.sStartDate" Title="Created date" T="OtherTaskResponse" TProperty="string" />
+        <PropertyColumn Property="x => x.sEndDate" Title="Closed date" T="OtherTaskResponse" TProperty="string" />
+
+        <TemplateColumn CellClass="d-flex justify-end" T="OtherTaskResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+}

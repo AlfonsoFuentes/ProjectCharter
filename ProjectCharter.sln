@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitSystem", "UnitSystem\Un
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudBlazorWeb", "MudBlazorWeb\MudBlazorWeb.csproj", "{7A8EC788-8317-460C-A3EF-7BE782B03425}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caldera", "Caldera\Caldera.csproj", "{3DF0496A-9218-4833-8BD5-A9C3161E8D0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{7A8EC788-8317-460C-A3EF-7BE782B03425}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A8EC788-8317-460C-A3EF-7BE782B03425}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A8EC788-8317-460C-A3EF-7BE782B03425}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DF0496A-9218-4833-8BD5-A9C3161E8D0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DF0496A-9218-4833-8BD5-A9C3161E8D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DF0496A-9218-4833-8BD5-A9C3161E8D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DF0496A-9218-4833-8BD5-A9C3161E8D0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

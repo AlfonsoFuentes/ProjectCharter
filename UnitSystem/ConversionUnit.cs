@@ -646,6 +646,29 @@ namespace UnitSystem
 
         }
     }
+    public class MolarFlow : Amount
+    {
+        public MolarFlow() : this(0)
+        {
+
+        }
+        public MolarFlow(double dvalue) : base(dvalue, MolarFlowUnits.Kgmol_hr)
+        {
+
+        }
+        public MolarFlow(double dvalue, UnitMeasure u) : base(dvalue, u)
+        {
+
+        }
+        public MolarFlow(UnitMeasure u) : this(0, u)
+        {
+
+        }
+        public MolarFlow(double dvalue, string u) : base(dvalue, u)
+        {
+
+        }
+    }
     public class HeatSurfaceFlow : Amount
     {
         public HeatSurfaceFlow() : this(0)

@@ -23,7 +23,12 @@ namespace Server.Database.Configurations
             .IsRequired()
            .OnDelete(DeleteBehavior.Cascade);
 
-
+            builder.HasKey(ci => ci.Id);
+            builder.HasMany(x => x.OtherTasks)
+            .WithOne(t => t.Project)
+            .HasForeignKey(e => e.ProjectId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasKey(ci => ci.Id);
             builder.HasMany(x => x.Assumptions)

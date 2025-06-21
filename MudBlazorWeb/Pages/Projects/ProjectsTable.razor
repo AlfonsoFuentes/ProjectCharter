@@ -146,12 +146,24 @@
                         <WarningsGetAll></WarningsGetAll>
                     </Content>
                 </TemplateProjectContainer>
+                <TemplateProjectContainer Title="Total Manual Tasks" ShowContentChanged="MonitoringShowAllChanged" ShowAll=@MonitoringShowAll>
+                    <Content>
+                        <CompleteOtherTasks></CompleteOtherTasks>
+                    </Content>
+                </TemplateProjectContainer>
+                <TemplateProjectContainer Title="Vapor" ShowContentChanged="MonitoringShowAllChanged" ShowAll=@MonitoringShowAll>
+                    <Content>
+                        <SteamCalculations></SteamCalculations>
+               
+                    </Content>
+                </TemplateProjectContainer>
             </MudTabPanel>
-            <MudTabPanel Text="Warnings">
-            </MudTabPanel>
+         
+
         </MudTabs>
 
     }
+  
 </MudStack>
 
 

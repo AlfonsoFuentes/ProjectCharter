@@ -64,6 +64,8 @@ namespace Server.Database.Entities
         #region Resources
         public List<Resource> Resources { get; set; } = new();
         #endregion
+
+        public List<OtherTask> OtherTasks { get; set; } = new();
         public List<Meeting> Meetings { get; set; } = new();
         public List<PurchaseOrder> PurchaseOrders { get; set; } = new();
         public List<Acquisition> Acquisitions { get; set; } = new();

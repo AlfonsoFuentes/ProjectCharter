@@ -82,8 +82,7 @@ namespace Server.Interfaces.Database
         DbSet<BasicValveItem> BasicValveItems { get; set; }
         DbSet<BasicPipeItem> BasicPipeItems { get; set; }
         DbSet<MonitoringLog> MonitoringLogs { get; set; }
-
-
+        DbSet<OtherTask> OtherTasks { get; set; }
 
         Task<int> SaveChangesAndRemoveCacheAsync(params string[] cacheKeys);
         Task<T> GetOrAddCacheAsync<T>(string key, Func<Task<T>> addItemFactory);

@@ -12,6 +12,7 @@ namespace UnitSystem
     {
         public static readonly UnitType Diameter = new UnitType("diameter");
         public static readonly UnitType Length = new UnitType("metre");
+        public static readonly UnitType Mol = new UnitType("Kg-mol");
         public static readonly UnitType Mass = new UnitType("kilogram");
         public static readonly UnitType Time = new UnitType("second");
         public static readonly UnitType ElectricCurrent = new UnitType("ampere");
@@ -198,6 +199,14 @@ namespace UnitSystem
 
         public static readonly UnitMeasure Pound = new UnitMeasure("Pound", "lib", KiloGram / 2.2, "Mass");
         public static readonly UnitMeasure Onze = new UnitMeasure("Onze", "Oz", KiloGram / 35.27394095, "Mass");
+    }
+    [UnitDefinitionClass]
+    public static class MolUnits
+    {
+        public static readonly UnitMeasure kgMol = new UnitMeasure("kg-mol", "Kmol", SIUnitTypes.Mol, "Mol");
+
+        public static readonly UnitMeasure grmol = new UnitMeasure("gr-mol", "gmol", 0.001 * kgMol, "Mol");
+    
     }
 
     [UnitDefinitionClass]
@@ -554,6 +563,19 @@ namespace UnitSystem
         public static readonly UnitMeasure Kg_Year = new UnitMeasure("Kg/Year", "Kg/yr",
          MassUnits.KiloGram / TimeUnits.Year, "MassFlow");
 
+        public static readonly UnitMeasure g_min = new UnitMeasure("g/min", "Kg/min",
+        MassUnits.Gram / TimeUnits.Minute, "MassFlow");
+        public static readonly UnitMeasure g_sg = new UnitMeasure("g/sg", "Kg/sg",
+        MassUnits.Gram / TimeUnits.Second, "MassFlow");
+        public static readonly UnitMeasure g_hr = new UnitMeasure("g/hr", "Kg/hr",
+         MassUnits.Gram / TimeUnits.Hour, "MassFlow");
+        public static readonly UnitMeasure g_day = new UnitMeasure("g/day", "Kg/day",
+         MassUnits.Gram / TimeUnits.Day, "MassFlow");
+        public static readonly UnitMeasure g_Month = new UnitMeasure("g/month", "Kg/mo",
+         MassUnits.Gram / TimeUnits.Month, "MassFlow");
+        public static readonly UnitMeasure g_Year = new UnitMeasure("g/Year", "Kg/yr",
+         MassUnits.Gram / TimeUnits.Year, "MassFlow");
+
         public static readonly UnitMeasure Ton_min = new UnitMeasure("Ton/min", "Ton/min",
         MassUnits.KiloGram / TimeUnits.Minute, "MassFlow");
         public static readonly UnitMeasure Ton_sg = new UnitMeasure("Ton/sg", "Ton/sg",
@@ -581,6 +603,23 @@ namespace UnitSystem
          MassUnits.Pound / TimeUnits.Hour, "MassFlow");
         public static readonly UnitMeasure lb_Year = new UnitMeasure("lb/Year", "lb/yr",
          MassUnits.Pound / TimeUnits.Year, "MassFlow");
+    }
+    [UnitDefinitionClass]
+    public static class MolarFlowUnits
+    {
+        public static readonly UnitMeasure Kgmol_min = new UnitMeasure("Kg-mol/min", "Kg-mol/min",
+        MolUnits.kgMol / TimeUnits.Minute, "MolarFlow");
+        public static readonly UnitMeasure Kgmol_sg = new UnitMeasure("Kg-mol/sg", "Kg-mol/sg",
+       MolUnits.kgMol / TimeUnits.Second, "MolarFlow");
+        public static readonly UnitMeasure Kgmol_hr = new UnitMeasure("Kg-mol/hr", "Kg-mol/hr",
+        MolUnits.kgMol / TimeUnits.Second, "MolarFlow");
+
+        public static readonly UnitMeasure gmol_min = new UnitMeasure("g-mol/min", "g-mol/min",
+       MolUnits.grmol / TimeUnits.Minute, "MolarFlow");
+        public static readonly UnitMeasure gmol_sg = new UnitMeasure("g-mol/sg", "g-mol/sg",
+       MolUnits.grmol / TimeUnits.Second, "MolarFlow");
+        public static readonly UnitMeasure gmol_hr = new UnitMeasure("g-mol/hr", "g-mol/hr",
+        MolUnits.grmol / TimeUnits.Second, "MolarFlow");
     }
     [UnitDefinitionClass]
     public static class HeatSurfaceFlowUnits

@@ -19,6 +19,7 @@ namespace Server.DatabaseImplementations.Databases
             _tenantId = currentUserService.Email;
             _cache = cache;
         }
+        public DbSet<OtherTask> OtherTasks { get; set; } = null!;
         public DbSet<App> Apps { get; set; } = null!;
         public DbSet<Project> Projects { get; set; } = null!;
         public DbSet<BackGround> BackGrounds { get; set; } = null!;
@@ -112,7 +113,7 @@ namespace Server.DatabaseImplementations.Databases
             builder.Entity<Requirement>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);
             builder.Entity<Assumption>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);
             builder.Entity<MonitoringLog>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);
-            
+            builder.Entity<OtherTask>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);
             builder.Entity<Constrainst>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);
 
             builder.Entity<ExpertJudgement>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);

@@ -1,4 +1,6 @@
+using Caldera;
 using MudBlazor;
+using MudBlazorWeb.Templates;
 using Shared.Models.Apps.Records;
 using Shared.Models.Apps.Requests;
 using Shared.Models.Apps.Responses;
@@ -7,7 +9,6 @@ using Shared.Models.Projects.Records;
 using Shared.Models.Projects.Reponses;
 using Shared.Models.Projects.Request;
 using Web.Infrastructure.Managers.Projects;
-using MudBlazorWeb.Templates;
 namespace MudBlazorWeb.Pages.Projects;
 public partial class ProjectsTable
 {
@@ -266,4 +267,5 @@ public partial class ProjectsTable
             _snackBar.ShowError($"Project Charter for {response.Name} not created succesfully");
         }
     }
+   
 }
