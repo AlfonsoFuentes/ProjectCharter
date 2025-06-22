@@ -1,7 +1,6 @@
 using Caldera;
-using Caldera.Nueva_clases;
 
-namespace MudBlazorWeb.Pages;
+namespace MudBlazorWeb.Pages.SteamTables;
 public partial class SteamCalculations
 {
     MassEnergyBalance balance = new();
