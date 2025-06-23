@@ -62,13 +62,13 @@ namespace Caldera
             if (molarflow != null)
             {
                 MolarFlow = molarflow;
-                localmolarflow = MolarFlow.GetValue(MolarFlowUnits.gmol_hr);
+                localmolarflow = MolarFlow.GetValue(MolarFlowUnits.Kgmol_hr);
 
             }
 
 
             double massflow = localmolarflow * MolecularWeight;
-            MassFlow.SetValue(massflow, MassFlowUnits.g_hr);
+            MassFlow.SetValue(massflow, MassFlowUnits.Kg_hr);
             var (C, H, _) = ParsearFormula(Formula);
 
             if (C > 0 && H > 0)
@@ -76,9 +76,9 @@ namespace Caldera
                 double o2_requerido = localmolarflow * (C + H / 4.0);
                 double co2_producido = localmolarflow * C;
                 double h2o_producido = localmolarflow * H / 2.0;
-                O2Required.SetValue(o2_requerido, MolarFlowUnits.gmol_hr);
-                CO2Produced.SetValue(co2_producido, MolarFlowUnits.gmol_hr);
-                H2OProduced.SetValue(h2o_producido, MolarFlowUnits.gmol_hr);
+                O2Required.SetValue(o2_requerido, MolarFlowUnits.Kgmol_hr);
+                CO2Produced.SetValue(co2_producido, MolarFlowUnits.Kgmol_hr);
+                H2OProduced.SetValue(h2o_producido, MolarFlowUnits.Kgmol_hr);
 
             }
         }

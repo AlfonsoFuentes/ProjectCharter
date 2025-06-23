@@ -11,7 +11,7 @@
             double tolerancia = 1e-4;
             int maxIteraciones = 100;
             double temp = tempInicialK;
-            double ftemp;
+            double ftemp=0;
 
             for (int i = 0; i < maxIteraciones; i++)
             {
@@ -25,7 +25,7 @@
             }
 
             tempSolucionK = temp;
-            errorFinal = Math.Abs(funcionObjetivo(temp));
+            errorFinal = ftemp;
         }
     }
 }

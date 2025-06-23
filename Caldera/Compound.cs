@@ -14,7 +14,7 @@ namespace Caldera
         public double MolecularWeight { get; set; } // Peso molecular en g/mol
         public Pressure Pressure { get; set; } = new Pressure(PressureUnits.Atmosphere);
         public MassDensity Density { get; private set; } = new MassDensity(MassDensityUnits.Kg_m3);
-        public VolumetricFlow VolumetricFlow { get; private set; } = new VolumetricFlow(VolumetricFlowUnits.m3_hr);
+        public VolumetricFlow VolumetricFlow { get;  set; } = new VolumetricFlow(VolumetricFlowUnits.m3_hr);
         public abstract void CalculateEnergyChanges();
         public virtual void SetMolarFlow(double kgmolhr)
         {
@@ -22,12 +22,12 @@ namespace Caldera
         }
         public virtual void SetMassFlow(double kghr)
         {
-           
+
         }
     }
     public class Compound : CompoundBase
     {
-        int temperatureformula = 0;
+        public int temperatureformula = 0;
 
         public string Formula { get; init; } = string.Empty;
 
@@ -98,5 +98,71 @@ namespace Caldera
         }
 
 
+    }
+    public class CompundH2O : Compound
+    {
+        WaterProperties wp = new();
+        public double AL { get; set; } = 18.2964;
+        public double BL { get; set; } = 47.212 * 1e-2;
+        public double CL { get; set; } = -133.88 * 1e-5;
+        public double DL { get; set; } = 1314.2 * 1e-9;
+        public CompundH2O(string nombre, string formula, double pm, double a, double b, double c, double d, int temperatureformula) : base(nombre, formula, pm, a, b, c, d, temperatureformula)
+        {
+        }
+        public override void CalculateEnergyChanges()
+        {
+            var TempC = Temperature.GetValue(TemperatureUnits.DegreeCelcius);
+            var TempK = Temperature.GetValue(TemperatureUnits.Kelvin);
+            double cpkjmol = 0;
+            double molarenthalpy = 0;
+            double TREFK = 298.15;
+        
+            if (TempC <= 100)
+            {
+
+                cpkjmol = A + B * TempK + C * Math.Pow(TempK, 2) + D * Math.Pow(TempK, 3);
+                molarenthalpy =
+                AL * (TempK - TREFK) +
+                BL * (Math.Pow(TempK, 2) - Math.Pow(TREFK, 2)) / 2 +
+                CL * (Math.Pow(TempK, 3) - Math.Pow(TREFK, 3)) / 3 +
+                DL * (Math.Pow(TempK, 4) - Math.Pow(TREFK, 4)) / 4;
+            }
+            else
+            {
+                double templC = 100;
+                double templK = templC + 273.15;
+                cpkjmol = A + B * TempC + C * Math.Pow(TempC, 2) + D * Math.Pow(TempC, 3);
+                var molarentalpylwp = wp.EnthalpyW(templK, 4) * MolecularWeight;
+               
+                var molarenthalpyl =
+                       AL * (templK - TREFK) +
+                       BL * (Math.Pow(templK, 2) - Math.Pow(TREFK, 2)) / 2 +
+                       CL * (Math.Pow(templK, 3) - Math.Pow(TREFK, 3)) / 3 +
+                       DL * (Math.Pow(templK, 4) - Math.Pow(TREFK, 4)) / 4;
+                var me = (wp.EnthalpySatVapTW(templK) - wp.EnthalpySatLiqTW(templK));
+                var molarenthalpyv = me * MolecularWeight;
+
+                var molarenthalpyg =
+                A * (TempC - templC) +
+                B * (Math.Pow(TempC, 2) - Math.Pow(templC, 2)) / 2 +
+                C * (Math.Pow(TempC, 3) - Math.Pow(templC, 3)) / 3 +
+                D * (Math.Pow(TempC, 4) - Math.Pow(templC, 4)) / 4;
+                var molarentalpygwp = wp.EnthalpyW(150 + 273.15, 1.03215) * MolecularWeight; 
+                molarenthalpy = molarenthalpyl + molarenthalpyv + molarenthalpyg;
+
+            }
+
+
+            double cpkjgr = cpkjmol / MolecularWeight;
+
+            SpecificHeat.SetValue(cpkjgr, MassEntropyUnits.KJ_Kg_C);
+
+
+
+            double massenthalpy = molarenthalpy / MolecularWeight;
+            MassEntalpy.SetValue(massenthalpy, MassEnergyUnits.KJ_Kg);
+
+
+        }
     }
 }

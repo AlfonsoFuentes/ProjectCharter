@@ -31,11 +31,14 @@ namespace Caldera
         public void CalculateMassPercentage()
         {
             double massflow = List.Sum(x => x.MassFlow.GetValue(MassFlowUnits.Kg_hr));
+            double molarflow = List.Sum(x => x.MolarFlow.GetValue(MolarFlowUnits.Kgmol_hr));
             List.ForEach(x =>
             {
                 x.Mass_Percentage = x.MassFlow.GetValue(MassFlowUnits.Kg_hr) / massflow;
+                x.Molar_Percentage = x.MolarFlow.GetValue(MolarFlowUnits.Kgmol_hr) / molarflow;
             });
             MassFlow.SetValue(massflow, MassFlowUnits.Kg_hr);
+            MolarFlow.SetValue(molarflow, MolarFlowUnits.Kgmol_hr);
         }
         public void CalculateDensity()
         {
