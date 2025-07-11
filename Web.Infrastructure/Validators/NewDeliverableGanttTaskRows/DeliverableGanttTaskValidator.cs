@@ -5,6 +5,7 @@ using Web.Infrastructure.Managers.Generic;
 
 namespace Web.Infrastructure.Validators.NewDeliverableGanttTaskRows
 {
+    
     public class DeliverableGanttTaskValidator : AbstractValidator<DeliverableGanttTaskResponse>
     {
         private readonly IGenericService Service;
@@ -26,8 +27,8 @@ namespace Web.Infrastructure.Validators.NewDeliverableGanttTaskRows
                 order.RuleFor(x => x.BudgetAssignedUSD).GreaterThan(0).When(order => order.BudgetItemId != Guid.Empty)
               .WithMessage("Pending Budget must be greater than zero");
 
-                order.RuleFor(x => x.SelectedEngineeringItemsBudget).NotNull().When(order => order.BudgetItemId != Guid.Empty && order.BudgetItem!.HasSubItems)
-                .WithMessage("Must define sub item");
+                //order.RuleFor(x => x.SelectedEngineeringItemsBudget).NotNull().When(order => order.BudgetItemId != Guid.Empty && order.BudgetItem!.HasSubItems)
+                //.WithMessage("Must define sub item");
 
             });
         }

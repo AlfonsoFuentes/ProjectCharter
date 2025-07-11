@@ -7,7 +7,7 @@ namespace MudBlazorWeb.Pages.PurchaseOrders.Dialogs;
 public partial class PurchaseOrderDialog
 {
     [Inject]
-    public ICurrencyRate _CurrencyService { get; set; } = null!;
+    public INewCurrency _CurrencyService { get; set; } = null!;
     [Parameter]
     public PurchaseOrderResponse Model { get; set; } = null!;
     [Parameter]

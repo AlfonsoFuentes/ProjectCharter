@@ -17,9 +17,9 @@ namespace Web.Infrastructure.Validators.PurchaseOrders
             RuleFor(x => x.ValueUSD).GreaterThan(0).WithMessage("PO Value must be defined");
 
        
-        RuleFor(x => x.Name).Must(ReviewNameExist)
-                .When(x => !string.IsNullOrEmpty(x.Name))
-                .WithMessage(x => $"{x.Name} already exist"); ;
+        //RuleFor(x => x.Name).Must(ReviewNameExist)
+        //        .When(x => !string.IsNullOrEmpty(x.Name))
+        //        .WithMessage(x => $"{x.Name} already exist"); ;
 
             RuleFor(X => X.PONumber)
               .Must(x => x.StartsWith("850"))

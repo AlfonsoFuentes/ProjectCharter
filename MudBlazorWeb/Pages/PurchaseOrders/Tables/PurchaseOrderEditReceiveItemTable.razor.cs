@@ -1,8 +1,5 @@
 using MudBlazorWeb.Services.CurrencyServices;
-using Shared.Commons;
 using Shared.Enums.CurrencyEnums;
-using Shared.Models.BudgetItems.Responses;
-using Shared.Models.PurchaseOrders.Requests;
 using Shared.Models.PurchaseOrders.Responses;
 
 namespace MudBlazorWeb.Pages.PurchaseOrders.Tables;
@@ -31,7 +28,7 @@ public partial class PurchaseOrderEditReceiveItemTable
     [Parameter]
     public EventCallback SelectItemChanged { get; set; }
     [Inject]
-    public ICurrencyRate _CurrencyService { get; set; } = null!;
+    public INewCurrency _CurrencyService { get; set; } = null!;
     public ConversionRate RateList { get; set; } = null!;
     async Task ChangeDate(PurchaseOrderItemReceivedResponse item)
     {

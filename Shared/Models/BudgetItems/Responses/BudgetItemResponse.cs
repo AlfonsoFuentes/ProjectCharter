@@ -23,9 +23,9 @@ namespace Shared.Models.BudgetItems.Responses
         [JsonIgnore]
         public bool IsAvailableToAssignedToTask => BudgetUSD - BudgetAssigned > 0;
 
-        public virtual List<BasicResponse> BasicEngineeringItems { get; set; } = new List<BasicResponse>();     
-      
-        public bool HasSubItems=> BasicEngineeringItems.Any();
+        public virtual List<BasicResponse> BasicEngineeringItems { get; set; } = new List<BasicResponse>();
+
+        public bool HasSubItems => BasicEngineeringItems.Any();
 
 
     }

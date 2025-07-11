@@ -40,7 +40,7 @@ namespace Shared.Models.MonitoringTask.Helpers
                     }
                 }
             }
-
+            
 
         }
 
@@ -138,7 +138,7 @@ namespace Shared.Models.MonitoringTask.Helpers
             {
                 duration = (row.PlannedEndDate.Value - row.PlannedStartDate.Value).TotalDays;
             }
-           
+
             switch (row.DurationUnit)
             {
                 case "d":
@@ -221,5 +221,135 @@ namespace Shared.Models.MonitoringTask.Helpers
 
 
         }
+        //real
+
+        public static void CalculateRealDuration(this MonitoringGanttTaskResponse row)
+        {
+            if (row.RealStartDate.HasValue && row.RealEndDate.HasValue)
+            {
+                row.RealDurationInDays = (row.RealEndDate.Value - row.RealStartDate.Value).TotalDays;
+            }
+            else
+            {
+                row.RealDurationInDays = 0;
+            }
+            switch (row.RealDurationUnit)
+            {
+                case "d":
+                    row.RealDurationInUnit = row.DurationInDays;
+                    break;
+                case "w":
+                    row.RealDurationInUnit = Math.Round(row.RealDurationInDays / 7, 1);
+                    break;
+                case "m":
+                    row.RealDurationInUnit = Math.Round(row.RealDurationInDays / 30, 1);
+                    break;
+                case "y":
+                    row.RealDurationInUnit = Math.Round(row.RealDurationInDays / 365, 1);
+                    break;
+                case "":
+                    row.RealDurationInUnit = row.RealDurationInDays;
+
+                    break;
+                default:
+                    row.RealDurationInUnit = row.RealDurationInDays;
+
+                    break;
+            }
+        }
+        //public static void CalculatePlannedRealDuration(this MonitoringGanttTaskResponse row)
+        //{
+        //    double duration = 0;
+        //    if (row.PlannedStartDate == null || row.PlannedEndDate == null) return;
+
+        //    if (row.StartDate.HasValue && row.EndDate.HasValue)
+        //    {
+        //        duration = (row.PlannedEndDate.Value - row.PlannedStartDate.Value).TotalDays;
+        //    }
+
+        //    switch (row.DurationUnit)
+        //    {
+        //        case "d":
+        //            row.DurationInUnit = row.DurationInDays;
+        //            break;
+        //        case "w":
+        //            row.DurationInUnit = Math.Round(row.DurationInDays / 7, 1);
+        //            break;
+        //        case "m":
+        //            row.DurationInUnit = Math.Round(row.DurationInDays / 30, 1);
+        //            break;
+        //        case "y":
+        //            row.DurationInUnit = Math.Round(row.DurationInDays / 365, 1);
+        //            break;
+        //        case "":
+        //            row.DurationInUnit = row.DurationInDays;
+
+        //            break;
+        //        default:
+        //            row.DurationInUnit = row.DurationInDays;
+
+        //            break;
+        //    }
+        //}
+        public static string GetRealDuration(this MonitoringGanttTaskResponse row)
+        {
+
+            return $"{row.RealDurationInUnit}{row.RealDurationUnit}";
+        }
+        public static void SetRealDuration(this MonitoringGanttTaskResponse task, string? newduration)
+        {
+            var rawinput = newduration;
+            if (string.IsNullOrWhiteSpace(rawinput))
+            {
+                rawinput = "1d";
+            }
+            var input = rawinput.Trim();
+
+            var match = System.Text.RegularExpressions.Regex.Match(input, @"^(\d+)\s*([dwmy]?)$");
+            if (!match.Success)
+            {
+                return;
+            }
+            if (!int.TryParse(match.Groups[1].Value, out var numericValue) || numericValue < 0)
+            {
+                return;
+            }
+            task.RealDurationInUnit = numericValue;
+
+            var newdurationunits = match.Groups[2].Value.ToLower();
+            if (string.IsNullOrEmpty(newdurationunits))
+            {
+                newdurationunits = task.RealDurationUnit;
+            }
+            task.DurationUnit = newdurationunits;
+            task.RealDurationUnit = newdurationunits;
+            switch (task.RealDurationUnit)
+            {
+                case "d":
+                    task.RealDurationInDays = numericValue;
+                    break;
+                case "w":
+                    task.RealDurationInDays = numericValue * 7;
+                    break;
+                case "m":
+                    task.RealDurationInDays = numericValue * 30;
+                    break;
+                case "y":
+                    task.RealDurationInDays = numericValue * 365;
+                    break;
+                case "":
+                    task.RealDurationInDays = numericValue;
+
+                    break;
+                default:
+                    task.RealDurationInDays = numericValue;
+
+                    break;
+            }
+
+
+        }
+
+
     }
 }

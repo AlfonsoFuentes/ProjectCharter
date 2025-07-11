@@ -1,4 +1,249 @@
 ﻿@using Shared.Enums.TaskStatus
+
+<style>
+    .fixed-column {
+        position: sticky;
+        left: 0;
+        background-color: white;
+        z-index: 2;
+        box-shadow: 1px 0 0 #ccc;
+        padding: 0 8px !important;
+        height: 34px !important;
+        display: flex;
+        align-items: center;
+        font-size: 0.75rem;
+    }
+
+    .gantt-progress-cell {
+        position: relative;
+        height: 34px !important;
+        padding: 0;
+        overflow: visible;
+    }
+
+    .gantt-task-bar,
+    .gantt-task-barred,
+    .gantt-task-barblack {
+        position: absolute;
+        height: 10px;
+        border-radius: 4px;
+        left: 0;
+        width: 100%;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .gantt-task-bar {
+        background-color: #2196F3; /* Azul */
+        top: 5px;
+    }
+
+    .gantt-task-barred {
+        background-color: red; /* Rojo */
+        top: 20px;
+    }
+
+    .gantt-task-barblack {
+        background-color: black; /* Negro */
+        top: 35px;
+    }
+
+    /* Tooltip común para todas las barras */
+    .tooltip-gantt {
+        visibility: hidden;
+        width: max-content;
+        min-width: 150px;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 4px 8px;
+        position: absolute;
+        z-index: 10;
+        bottom: 125%; /* Aparece arriba */
+        left: 50%;
+        margin-left: -75px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .gantt-task-bar:hover .tooltip-gantt,
+    .gantt-task-barred:hover .tooltip-gantt,
+    .gantt-task-barblack:hover .tooltip-gantt {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Encabezados fijos */
+    .mud-table thead th {
+        position: sticky;
+        top: 0;
+        background-color: white !important;
+        z-index: 3;
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Meses como encabezados visuales */
+    .month-header {
+        background-color: transparent !important;
+        text-align: center;
+        font-weight: bold;
+        font-size: 12px;
+        padding: 4px 2px;
+        border-left: 1px solid #ccc;
+        width: 80px !important;
+        min-width: 80px !important;
+        max-width: 80px !important;
+        white-space: normal;
+        word-wrap: break-word;
+        color: transparent;
+        border: none !important;
+        visibility: hidden;
+        position: relative;
+    }
+
+        .month-header::before {
+            content: attr(data-label);
+            display: block;
+            color: #555;
+            text-align: center;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            white-space: normal;
+            word-wrap: break-word;
+            visibility: visible;
+        }
+
+    /* Altura uniforme de filas */
+    .mud-table tr,
+    .mud-table td,
+    .mud-table th {
+        height: 34px !important;
+        min-height: 34px !important;
+        max-height: 34px !important;
+        padding: 2px 8px !important;
+        font-size: 0.75rem;
+    }
+</style>
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+    <!-- Contenedor con scroll único -->
+    <div style="overflow-y: auto; max-height: 70vh; width: 100%;">
+        <MudSimpleTable Dense="true"
+                        Hover="true"
+                        Bordered="true"
+                        Striped="true"
+                        Style="min-width: 1200px; width: max-content;">
+            <thead>
+                <tr>
+                    <th class="fixed-column" style="width: 50px;">ID</th>
+                    <th class="fixed-column" style="width: 80px;">WBS</th>
+                    <th class="fixed-column" style="width: 300px;">Name</th>
+                    <th class="fixed-column" style="width: 120px;">Start Date</th>
+                    <th class="fixed-column" style="width: 120px;">End Date</th>
+                    <th style="width: 100px;">Status</th>
+                    @foreach (var month in timeline)
+                    {
+                        <th class="month-header" data-label="@month.Label"></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var context in Response.OrderedItems)
+                {
+                    <tr>
+                        <td class="fixed-column">@context.MainOrder</td>
+                        <td class="fixed-column">@context.WBS</td>
+                        <td class="fixed-column">@context.Name</td>
+                        <td class="fixed-column">@context.stringStartDate</td>
+                        <td class="fixed-column">@context.stringEndDate</td>
+                        <td>
+                            @if (!context.HasSubTask)
+                            {
+                                <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                                    <MudSelect Value="@context.TaskStatus"
+                                               ValueChanged="@(arg => OnChangeStatus(context, arg))"
+                                               T="GanttTaskStatusEnum"
+                                               FullWidth="true"
+                                               Variant="Variant.Outlined"
+                                               FitContent="true"
+                                               Margin="Margin.Dense"
+                                               Dense="true"
+                                               Disabled="@context.HasSubTask">
+                                        <MudSelectItem Value="GanttTaskStatusEnum.NotInitiated">
+                                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Error" Size="Size.Small" />
+                                        </MudSelectItem>
+                                        <MudSelectItem Value="GanttTaskStatusEnum.OnGoing">
+                                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Warning" Size="Size.Small" />
+                                        </MudSelectItem>
+                                        <MudSelectItem Value="GanttTaskStatusEnum.Closed">
+                                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Success" Size="Size.Small" />
+                                        </MudSelectItem>
+                                    </MudSelect>
+
+                                    <IconButton ToolTip="@($"Edit {context.Name}")"
+                                                Size="@Size.Small"
+                                                Icon="@Icons.Material.Outlined.Edit"
+                                                OnClick="() => Edit(context)" />
+
+                                </MudStack>
+                            }
+                        </td>
+                        @for (int i = 0; i < timeline.Count; i++)
+                        {
+                            <td style="padding: 0; position: relative;" class="gantt-progress-cell">
+                                @{
+                                    if (i == context.StartPositionIndex)
+                                    {
+                                        <div class="gantt-task-bar" style="width:@(context.DurationInMonths * 80)px;">
+                                            <span class="tooltip-gantt">
+                                                @context.Name
+                                                @context.StartDate?.ToString("MMM yyyy") - @context.EndDate?.ToString("MMM yyyy")
+                                            </span>
+                                        </div>
+                                    }
+
+                                    if (i == context.RealStartPositionIndex)
+                                    {
+                                        <div class="gantt-task-barred" style="width:@(context.RealDurationInMonths * 80)px;">
+                                            <span class="tooltip-gantt">
+                                                Real Task
+                                                @context.RealStartDate?.ToString("MMM yyyy") - @context.RealEndDate?.ToString("MMM yyyy")
+                                            </span>
+                                        </div>
+                                    }
+
+                                    if (context.HasPlanned && i == context.PlannedStartPositionIndex)
+                                    {
+                                        <div class="gantt-task-barblack" style="width:@(context.PlannedDurationInMonths * 80)px;">
+                                            <span class="tooltip-gantt">
+                                                Planned Task
+                                                @context.PlannedStartDate?.ToString("MMM yyyy") - @context.PlannedEndDate?.ToString("MMM yyyy")
+                                            </span>
+                                        </div>
+                                    }
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </div>
+</MudContainer>
+
+
+
+@code {
+
+}
+@* 
 <style>
     .fixed-column {
         position: sticky;
@@ -15,66 +260,132 @@
         overflow: visible;
     }
 
-    .gantt-barblue {
+    .gantt-task-bar,
+    .gantt-task-barred,
+    .gantt-task-barblack {
         position: absolute;
         height: 10px;
+        border-radius: 4px;
+        left: 0;
+        width: 100%;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .gantt-task-bar {
         background-color: #2196F3;
-        border-radius: 4px;
-        top: 20%;
-        transform: translateY(-20%);
-        z-index: 2;
+        top: 5px;
     }
 
-    .gantt-barred {
-        position: absolute;
-        height: 10px;
-        background-color: palevioletred;
-        border-radius: 4px;
-        top: 60%;
-        transform: translateY(-60%);
-        z-index: 2;
-    }
-
-    .gantt-timeline {
-        display: flex;
-        white-space: nowrap;
-        border-bottom: 1px solid #ccc;
-        margin-bottom: 4px;
-        position: relative;
-        height: 24px;
-    }
-
-    .gantt-scale-unit {
-        width: 30px;
-        text-align: center;
-        font-size: 0.75rem;
-        float: left;
-        height: 24px;
-        position: relative;
-    }
-
-    .weekend-line {
-        position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 1px;
+    .gantt-task-barred {
         background-color: red;
-        z-index: 1;
+        top: 20px;
+    }
+
+    .gantt-task-barblack {
+        background-color: black;
+        top: 35px;
+    }
+
+    /* Tooltip común para todas las barras */
+    .tooltip-gantt {
+        visibility: hidden;
+        width: max-content;
+        min-width: 150px;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 4px 8px;
+        position: absolute;
+        z-index: 10;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -75px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .gantt-task-bar:hover .tooltip-gantt,
+    .gantt-task-barred:hover .tooltip-gantt,
+    .gantt-task-barblack:hover .tooltip-gantt {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Encabezados fijos */
+    .mud-table thead th {
+        position: sticky;
+        top: 0;
+        background-color: white !important;
+        z-index: 3;
+        box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);
+    }
+
+    .mud-table-fixed-header th {
+        position: sticky !important;
+        top: 0 !important;
+        background-color: white !important;
+        z-index: 4;
+    }
+
+    /* Meses como encabezados */
+    .month-header {
+        background-color: transparent !important;
+        text-align: center;
+        font-weight: bold;
+        font-size: 12px;
+        padding: 4px 2px;
+        border-left: 1px solid #ccc;
+        width: 80px !important;
+        min-width: 80px !important;
+        max-width: 80px !important;
+        white-space: normal;
+        word-wrap: break-word;
+        color: transparent;
+        border: none !important;
+        visibility: hidden;
+        position: relative;
+    }
+
+        .month-header::before {
+            content: attr(data-label);
+            display: block;
+            color: #555;
+            text-align: center;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            white-space: normal;
+            word-wrap: break-word;
+            visibility: visible;
+        }
+
+    /* Altura reducida de filas */
+    .mud-table tr,
+    .mud-table td,
+    .mud-table th {
+        height: 52px !important;
+        padding: 2px 8px !important;
+        font-size: 0.75rem;
     }
 </style>
 
-
 <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
-
-
-
-    <!-- Contenedor general con scroll único -->
-    <div style="overflow-x: auto; width: 100%;overflow-y: auto;">
+    <!-- Solo un scroll vertical aquí -->
+    <div style="overflow-y: auto; max-height: 70vh; width: 100%;">
         @if (loaded)
         {
-            <MudSimpleTable Dense="true" Hover="true" Bordered="true" Striped="true"
-                            Style="overflow-y: auto;min-width: 1200px; width: max-content;" FixedHeader=true>
+            <MudSimpleTable Dense="true"
+                            Hover="true"
+                            Bordered="true"
+                            Striped="true"
+                            Style="min-width: 1200px; width: max-content;">
                 <thead>
                     <tr>
                         <th class="fixed-column" style="width: 50px;">ID</th>
@@ -82,90 +393,93 @@
                         <th class="fixed-column" style="width: 300px;">Name</th>
                         <th class="fixed-column" style="width: 120px;">Start Date</th>
                         <th class="fixed-column" style="width: 120px;">End Date</th>
-                        <th style="width: 80px;">Duration</th>
-                        <th style="width: 100px;">Dependencies</th>
                         <th style="width: 100px;">Status</th>
-                        <th style="width: 150px;">Planned, USD</th>
-                        <th style="width: 150px;">Assigned, USD</th>
-                        <th style="width: 150px;">Actual, USD</th>
-                        <th style="width: 150px;">Commitment, USD</th>
-                        <th style="width: 150px;">To Commit, USD</th>
-
+                        @foreach (var month in timeline)
+                        {
+                            <th class="month-header" data-label="@month.Label"></th>
+                        }
                     </tr>
                 </thead>
-
                 <tbody>
                     @foreach (var context in Response.OrderedItems)
                     {
-
-
                         <tr>
-                            <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.MainOrder.ToString()" /></td>
-                            <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.WBS" /></td>
-                            <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.Name" /></td>
-                            <td class="fixed-column"> <SimpleText IsBold="@context.HasSubTask" Text="@context.stringStartDate" /></td>
-                            <td class="fixed-column"> <SimpleText IsBold="@context.HasSubTask" Text="@context.stringEndDate" /></td>
-                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.Duration"></SimpleText></td>
-
-                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.DependencyList"></SimpleText></td>
+                            <td class="fixed-column">@context.MainOrder</td>
+                            <td class="fixed-column">@context.WBS</td>
+                            <td class="fixed-column">@context.Name</td>
+                            <td class="fixed-column">@context.stringStartDate</td>
+                            <td class="fixed-column">@context.stringEndDate</td>
                             <td>
-                                <MudSelect Value="@context.DaBaseTaskStatus" Dense=true ValueChanged="@((arg) => OnChangeStatus(context, arg))" T="GanttTaskStatusEnum" FullWidth=true
-                                           Variant="Variant.Outlined" FitContent=true Margin="Margin.Dense" Disabled=@context.HasSubTask>
-                                    <MudSelectItem Value="GanttTaskStatusEnum.NotInitiated">
-
-                                        <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Error">
-
-                                        </MudIcon>
-                                    </MudSelectItem>
-                                    <MudSelectItem Value="GanttTaskStatusEnum.OnGoing">
-
-                                        <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Warning">
-
-                                        </MudIcon>
-                                    </MudSelectItem>
-                                    <MudSelectItem Value="GanttTaskStatusEnum.Closed">
-                                        <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Success">
-
-                                        </MudIcon>
-
-                                    </MudSelectItem>
-                                </MudSelect>
-
-
-
+                                <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                                    <MudSelect Value="@context.DaBaseTaskStatus"
+                                               ValueChanged="@(arg => OnChangeStatus(context, arg))"
+                                               T="GanttTaskStatusEnum"
+                                               FullWidth="true"
+                                               Variant="Variant.Outlined"
+                                               FitContent="true"
+                                               Margin="Margin.Dense"
+                                              
+                                               Dense="true"
+                                               Disabled="@context.HasSubTask">
+                                        <MudSelectItem Value="GanttTaskStatusEnum.NotInitiated" >
+                                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Error" Size="Size.Small" />
+                                        </MudSelectItem>
+                                        <MudSelectItem Value="GanttTaskStatusEnum.OnGoing">
+                                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Warning" Size="Size.Small" />
+                                        </MudSelectItem>
+                                        <MudSelectItem Value="GanttTaskStatusEnum.Closed">
+                                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Success" Size="Size.Small" />
+                                        </MudSelectItem>
+                                    </MudSelect>
+                                    @if (!context.HasSubTask)
+                                    {
+                                        <IconButton ToolTip="@($"Edit {context.Name}")"
+                                                    Size="@Size.Small"
+                                                    Icon="@Icons.Material.Outlined.Edit"
+                                                    OnClick="() => Edit(context)" />
+                                    }
+                                </MudStack>
                             </td>
-                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sBudgetPlannedUSD"></SimpleText></td>
-                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sBudgetAssignedUSD"></SimpleText></td>
-                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sBudgetAssignedActualUSD"></SimpleText></td>
-                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sBudgetAssignedCommitmentUSD"></SimpleText></td>
-                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sToCommitUSD"></SimpleText></td>
+                            @for (int i = 0; i < timeline.Count; i++)
+                            {
+                                <td style="padding: 0; position: relative;" class="gantt-progress-cell">
+                                    @{
+                                        if (i == context.StartPositionIndex)
+                                        {
+                                            <div class="gantt-task-bar" style="width:@(context.DurationInMonths * 80)px;">
+                                                <span class="tooltip-gantt">
+                                                    @context.Name
+                                                    @context.StartDate?.ToString("MMM yyyy") - @context.EndDate?.ToString("MMM yyyy")
+                                                </span>
+                                            </div>
+                                        }
 
+                                        if (i == context.RealStartPositionIndex)
+                                        {
+                                            <div class="gantt-task-barred" style="width:@(context.RealDurationInMonths * 80)px;">
+                                                <span class="tooltip-gantt">
+                                                    Real Task
+                                                    @context.RealStartDate?.ToString("MMM yyyy") - @context.RealEndDate?.ToString("MMM yyyy")
+                                                </span>
+                                            </div>
+                                        }
 
-
+                                        if (context.HasPlanned && i == context.PlannedStartPositionIndex)
+                                        {
+                                            <div class="gantt-task-barblack" style="width:@(context.PlannedDurationInMonths * 80)px;">
+                                                <span class="tooltip-gantt">
+                                                    Planned Task
+                                                    @context.PlannedStartDate?.ToString("MMM yyyy") - @context.PlannedEndDate?.ToString("MMM yyyy")
+                                                </span>
+                                            </div>
+                                        }
+                                    }
+                                </td>
+                            }
                         </tr>
-
                     }
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>@Response.OrderedItems.Sum(x => x.BudgetPlannedUSD).ToCurrencyCulture()</strong></td>
-                        <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedUSD).ToCurrencyCulture()</strong></td>
-                        <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedActualUSD).ToCurrencyCulture()</strong></td>
-                        <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedCommitmentUSD).ToCurrencyCulture()</strong></td>
-                        <td><strong>@Response.OrderedItems.Sum(x => x.ToCommitUSD).ToCurrencyCulture()</strong></td>
-                    </tr>
                 </tbody>
             </MudSimpleTable>
         }
     </div>
-</MudContainer>
-
-@code {
-
-}
+</MudContainer> *@

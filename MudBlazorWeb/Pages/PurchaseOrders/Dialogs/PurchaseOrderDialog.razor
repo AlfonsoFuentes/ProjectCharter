@@ -180,16 +180,7 @@
 
 <MudGrid>
     <MudItem xs="12">
-          <PurchaseOrderItemTable @bind-Items="@Model.PurchaseOrderItems"
-                                    MainBudgetItemId="Model.MainBudgetItemId"
-                                    ChangeName="ChangeBudgetItemName"
-                                    NonSelectedBudgetItems="NonSelectedBudgetItems"
-                                    QuoteCurrency="Model.QuoteCurrency"
-                                    PurchaseOrderCurrency="Model.PurchaseOrderCurrency"
-                                    SelectItemChanged="AddBudgetItem"
-                                    DeleteItem="DeleteItem"
-                                 
-                                    ValidateAsync="ValidateAsync"></PurchaseOrderItemTable>
+        
         @if (ShowReceive)
         {
             <PurchaseOrderReceiveItemTable Items="@Model.PurchaseOrderItems"
@@ -206,7 +197,15 @@
         }
         else
         {
-          
+            <PurchaseOrderItemTable @bind-Items="@Model.PurchaseOrderItems"
+                                    MainBudgetItemId="Model.MainBudgetItemId"
+                                    ChangeName="ChangeBudgetItemName"
+                                    NonSelectedBudgetItems="NonSelectedBudgetItems"
+                                    QuoteCurrency="Model.QuoteCurrency"
+                                    PurchaseOrderCurrency="Model.PurchaseOrderCurrency"
+                                    SelectItemChanged="AddBudgetItem"
+                                    DeleteItem="DeleteItem"
+                                    ValidateAsync="ValidateAsync"></PurchaseOrderItemTable>
         }
 
 

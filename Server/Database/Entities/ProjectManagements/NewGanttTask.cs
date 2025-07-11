@@ -16,6 +16,7 @@ namespace Server.Database.Entities.ProjectManagements
         [NotMapped]
         public string WBS => $"{ParentWBS}.{InternalOrder}";
         public int MainOrder { get; set; }
+      
         public static NewGanttTask Create(Guid DeliverableId)
         {
             return new()
@@ -45,12 +46,18 @@ namespace Server.Database.Entities.ProjectManagements
         public NewGanttTask Parent { get; set; } = null!;
         [ForeignKey("ParentId")]
         public List<NewGanttTask> SubTasks { get; set; } = new List<NewGanttTask>(); // Colección de subtareas
-
+        public bool IsMilestone { get; set; } = false;
         public string? DurationUnit { get; set; } = string.Empty;
         public double DurationInDays { get; set; } = 0;
         public double DurationInUnit { get; set; } = 0;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+
+        public string? RealDurationUnit { get; set; } = string.Empty;
+        public double RealDurationInDays { get; set; } = 0;
+        public double RealDurationInUnit { get; set; } = 0;
+        public DateTime? RealStartDate { get; set; }
+        public DateTime? RealEndDate { get; set; }
 
         public ICollection<BudgetItemNewGanttTask> BudgetItemNewGanttTasks { get; set; } = new List<BudgetItemNewGanttTask>();
         public double TotalBudgetAssigned => BudgetItemNewGanttTasks == null || BudgetItemNewGanttTasks.Count == 0 ? 0 : BudgetItemNewGanttTasks.Sum(x => x.GanttTaskBudgetAssigned);

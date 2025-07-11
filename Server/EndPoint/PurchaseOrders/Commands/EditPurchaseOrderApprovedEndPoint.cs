@@ -50,17 +50,17 @@ namespace Server.EndPoint.PurchaseOrders.Commands
                             rowitem.Quantity = item.Quantity;
                             rowitem.BudgetItemId = item.BudgetItemId;
                             rowitem.Order = item.Order;
-                            if (item.BasicResponse != null)
-                            {
-                                rowitem.BasicEngineeringItemId = item.BasicResponse.Id;
+                            //if (item.BasicResponse != null)
+                            //{
+                            //    rowitem.BasicEngineeringItemId = item.BasicResponse.Id;
 
-                            }
+                            //}
                         }
 
 
                     }
 
-                    List<string> cache = [.. StaticClass.PurchaseOrders.Cache.KeyEditApproved(row.Id, row.ProjectId)];
+                    List<string> cache = [.. StaticClass.PurchaseOrders.Cache.KeyEditApproved(row.Id, row.ProjectId, row.MainBudgetItemId)];
 
                     var result = await Repository.Context.SaveChangesAndRemoveCacheAsync(cache.ToArray());
 

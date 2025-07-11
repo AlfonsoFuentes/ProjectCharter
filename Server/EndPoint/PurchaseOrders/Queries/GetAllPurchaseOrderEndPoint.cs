@@ -25,7 +25,7 @@ namespace Server.EndPoint.PurchaseOrders.Queries
                     Func<IQueryable<PurchaseOrder>, IIncludableQueryable<PurchaseOrder, object>> Includes = x => x
                     .Include(x => x.Project)
                     .Include(p => p.PurchaseOrderItems).ThenInclude(x => x.BudgetItem!)
-                    .Include(p => p.PurchaseOrderItems).ThenInclude(x => x.BasicEngineeringItem!)
+                    //.Include(p => p.PurchaseOrderItems).ThenInclude(x => x.BasicEngineeringItem!)
                     .Include(p => p.PurchaseOrderItems).ThenInclude(x => x.PurchaseOrderReceiveds)
                     .Include(x => x.Supplier!);
                     var cache = Data.Status.Id == PurchaseOrderStatusEnum.Created.Id ?

@@ -33,7 +33,8 @@
                     <CellTemplate Context="template">
                         <MudStack Row=true Spacing="2" Class="mt-1">
                             <IconButton ToolTip="@($"Expand {template.Item.Name}")" Size="@Size.Small" Icon="@ExpandIcon" OnClick="@(() => OnExpandedChanged(template.Item))" />
-                            <IconButton ToolTip="@($"Export {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectCharter(template.Item))" />
+                            <IconButton ToolTip="@($"Export Project Charter {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectCharter(template.Item))" />
+                            <IconButton ToolTip="@($"Export Execution Plan {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectExecution(template.Item))" />
 
                             @if (template.Item.Status.Id == ProjectStatusEnum.Created.Id)
                             {
@@ -104,7 +105,8 @@
                             <CellTemplate Context="template">
                                 <MudStack Row=true Spacing="2" Class="mt-1">
                                     <IconButton ToolTip="@($"Expand {template.Item.Name}")" Size="@Size.Small" Icon="@ExpandIcon" OnClick="@(() => OnExpandedChanged(template.Item))" />
-                                    <IconButton ToolTip="@($"Export {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectCharter(template.Item))" />
+                                    <IconButton ToolTip="@($"Export Project Charter {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectCharter(template.Item))" />
+                                    <IconButton ToolTip="@($"Export Execution Plan {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.PictureAsPdf" Variant=Variant.Outlined OnClick="@(() => ExportProjectExecution(template.Item))" />
 
                                     @if (template.Item.Status.Id == ProjectStatusEnum.Created.Id)
                                     {

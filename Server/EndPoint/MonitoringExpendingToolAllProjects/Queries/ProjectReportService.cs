@@ -24,7 +24,7 @@ namespace Server.EndPoint.MonitoringExpendingToolAllProjects.Queries
             {
                 Name = item.Name,
                 ProjectNumber = item.ProjectNumber ?? string.Empty,
-
+                Id = item.Id,
                 BudgetUSD = item.BudgetItems.Sum(x => x.BudgetUSD),
                 MonthlyData = new(),
                 GanttItems = GenerateGanttItems(item),
@@ -41,7 +41,7 @@ namespace Server.EndPoint.MonitoringExpendingToolAllProjects.Queries
             var result = ganttTask.Select(b => new BudgetItemGantMonitoringReportDto
             {
                 BudgetItemId = b.BudgetItem.Id,
-                BasicEngineeringItemId = b.SelectedBasicEngineeringItemId,
+                //BasicEngineeringItemId = b.SelectedBasicEngineeringItemId,
                 GanttTaskId = b.NewGanttTask.Id,
                 BudgetPlannedUSD = b.NewGanttTask.TotalBudgetAssigned,
                 EndDate = b.NewGanttTask.EndDate,

@@ -8,9 +8,8 @@ using Shared.Models.PurchaseOrders.Responses;
 namespace MudBlazorWeb.Pages.PurchaseOrders.Dialogs;
 public partial class CreatePurchaseOrderSalaryDialog
 {
-    [Inject]
-    public ICurrencyRate _CurrencyService { get; set; } = null!;
-    public ConversionRate RateList { get; set; } = null!;
+ 
+  
     FluentValidationValidator _fluentValidationValidator = null!;
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; } = null!;
@@ -26,11 +25,14 @@ public partial class CreatePurchaseOrderSalaryDialog
     [Parameter]
     public BudgetItemWithPurchaseOrderResponseList ResponseList { get; set; } = new();
     public List<BudgetItemWithPurchaseOrdersResponse> OriginalBudgetItems => ResponseList.SalariesWithPurchaseOrderss;
+    public ConversionRate ConversionRate { get; set; } = null!;
+    [Inject]
+    public INewCurrency _CurrencyService { get; set; } = null!;
     protected override async Task OnInitializedAsync()
     {
-        RateList = await _CurrencyService.GetRates(DateTime.UtcNow);
-        var USDCOP = RateList == null ? 4000 : Math.Round(RateList.COP, 2);
-        var USDEUR = RateList == null ? 1 : Math.Round(RateList.EUR, 2);
+        ConversionRate = await _CurrencyService.GetRates(DateTime.UtcNow);
+        var USDCOP = Math.Round(ConversionRate.COP, 2);
+        var USDEUR = Math.Round(ConversionRate.EUR, 2);
 
         Model.IsProductiveAsset = ResponseList.IsProductiveAsset;
         Model.CostCenter = ResponseList.CostCenter;

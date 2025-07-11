@@ -15,8 +15,8 @@ namespace Server.Database.Entities.PurchaseOrders
         public Guid? BudgetItemId { get; set; }
         public BudgetItem? BudgetItem { get; set; } = null!;
 
-        public BasicEngineeringItem? BasicEngineeringItem { get; set; } = null!;
-        public Guid? BasicEngineeringItemId { get; set; }
+        //public BasicEngineeringItem? BasicEngineeringItem { get; set; } = null!;
+        //public Guid? BasicEngineeringItemId { get; set; }
         public bool IsTaxNoProductive { get; set; } = false;
         public bool IsTaxAlteration { get; set; } = false;
         [NotMapped]

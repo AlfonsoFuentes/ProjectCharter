@@ -1,0 +1,91 @@
+﻿@using Shared.Enums.TaskStatus
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <MudGrid>
+                <MudItem sm="12" xs="10">
+                    <Field Label="Name">@Model.Name
+                    </Field>
+                </MudItem>
+
+            </MudGrid>
+            <MudGrid>
+                <MudItem sm="3" xs="12">
+                 @*    <Select @bind-Value="@Model.TaskStatus"
+                            Items="@GanttTaskStatusEnum.List"
+                            Label="Task Status"
+                            Property="@(p => p.Name)"
+                            For="() => Model.TaskStatus"
+                           
+                            ValidateAsync="ValidateAsync"
+                            Clearable="false">
+                    </Select> *@
+                    <MudSelect Value="@Model.TaskStatus"
+                               ValueChanged="@(arg => OnChangeStatus(Model, arg))"
+                               T="GanttTaskStatusEnum"
+                               FullWidth="true"
+                               Variant="Variant.Outlined"
+                               FitContent="true"
+                               Margin="Margin.Dense"
+                               Dense="true"
+                             >
+                        <MudSelectItem Value="GanttTaskStatusEnum.NotInitiated">
+                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Error" Size="Size.Small" />
+                        </MudSelectItem>
+                        <MudSelectItem Value="GanttTaskStatusEnum.OnGoing">
+                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Warning" Size="Size.Small" />
+                        </MudSelectItem>
+                        <MudSelectItem Value="GanttTaskStatusEnum.Closed">
+                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Success" Size="Size.Small" />
+                        </MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+               
+
+                <MudItem sm="3" xs="12">
+                    <DatePicker @bind-Value="@Model.RealStartDate"
+                                ValidateAsync="ValidateAsync"
+                                ChangePrior="OnChangeStartDate"
+                                Label="Start Date"
+                                For="@(() => Model.RealStartDate)">
+                    </DatePicker>
+                </MudItem>
+                <MudItem sm="3" xs="12">
+                    <DatePicker Value="@Model.RealEndDate"
+                                ValueChanged="ChangeEndDate"
+                                ValidateAsync="ValidateAsync"
+                             
+                                Label="End Date"
+                                For="@(() => Model.RealEndDate)">
+                    </DatePicker>
+                </MudItem>
+                <MudItem sm="3" xs="12">
+                    <TextField @bind-Value="@Model.RealDuration"
+                               Change="OnChangeDuration"
+                               ValidateAsync="ValidateAsync"
+                               Label="Duration"
+                               For="@(() => Model.RealDuration)">
+                    </TextField>
+                </MudItem>
+
+
+
+            </MudGrid>
+
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+
+@code {
+
+}

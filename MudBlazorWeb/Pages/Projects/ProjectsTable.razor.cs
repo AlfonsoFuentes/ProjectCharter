@@ -254,17 +254,17 @@ public partial class ProjectsTable
               resultExport.Data.Data, contentType: resultExport.Data.ContentType);
             if (downloadresult.Succeeded)
             {
-                _snackBar.ShowSuccess($"Project Charter for {response.Name} exported succesfully");
+                _snackBar.ShowSuccess($"Execution plan for {response.Name} exported succesfully");
 
             }
             else
             {
-                _snackBar.ShowError($"Project Charter for {response.Name} not exported succesfully");
+                _snackBar.ShowError($"Execution plan for {response.Name} not exported succesfully");
             }
         }
         else
         {
-            _snackBar.ShowError($"Project Charter for {response.Name} not created succesfully");
+            _snackBar.ShowError($"Execution plan for {response.Name} not created succesfully");
         }
     }
    

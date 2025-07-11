@@ -4,6 +4,7 @@ using Shared.Models.BudgetItems.Responses;
 
 namespace Server.EndPoint.BudgetItems.Queries
 {
+    
     public static class GetAllBudgetItemWithPurchaseOrdersByIdEndPoint
     {
         public class EndPoint : IEndPoint

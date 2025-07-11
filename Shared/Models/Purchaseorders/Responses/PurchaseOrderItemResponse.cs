@@ -23,23 +23,23 @@ namespace Shared.Models.PurchaseOrders.Responses
                 }
             }
         }
-        public Guid BasicReponseId { get; set; } = Guid.Empty;
+        //public Guid BasicReponseId { get; set; } = Guid.Empty;
 
-        BasicResponse? _BasicReponse;
-        public BasicResponse? BasicResponse
-        {
-            get { return _BasicReponse; }
-            set
-            {
-                _BasicReponse = value;
-                if (_BasicReponse != null)
-                {
-                    BasicReponseId = _BasicReponse.Id;
+        //BasicResponse? _BasicReponse;
+        //public BasicResponse? BasicResponse
+        //{
+        //    get { return _BasicReponse; }
+        //    set
+        //    {
+        //        _BasicReponse = value;
+        //        if (_BasicReponse != null)
+        //        {
+        //            BasicReponseId = _BasicReponse.Id;
 
-                }
-            }
-        }
-        public string BasicResponseName => BasicResponse == null ? string.Empty : BasicResponse.Name;
+        //        }
+        //    }
+        ////}
+        //public string BasicResponseName => BasicResponse == null ? string.Empty : BasicResponse.Name;
         public string NomenclatoreName => BudgetItem == null ? string.Empty : BudgetItem.NomenclatoreName;
         public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.None;
         public CurrencyEnum QuoteCurrency { get; set; } = CurrencyEnum.None;

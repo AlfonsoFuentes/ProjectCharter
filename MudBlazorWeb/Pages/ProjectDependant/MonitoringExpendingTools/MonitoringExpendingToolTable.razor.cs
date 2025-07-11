@@ -1,3 +1,5 @@
+using Shared.Models.BudgetItems.Records;
+using Shared.Models.BudgetItems.Responses;
 using Shared.Models.ExpendingTools.Records;
 using Shared.Models.ExpendingTools.Responses;
 using Shared.Models.MonitoringExpendingTools.Responses;
@@ -25,9 +27,48 @@ public partial class MonitoringExpendingToolTable
         if (result.Succeeded)
         {
             Response = result.Data;
+            if (SelectedbudgetItem != null && selectmonth != null!)
+            {
+                await ShowPurchaseOrders(new() { Id = SelectedbudgetItem.Id }, selectmonth);
+            }
+
+        }
+
+    }
+    BudgetItemWithPurchaseOrdersResponse SelectedbudgetItem = null!;
+    MonthlyMonitoringData selectmonth = null!;
+    async Task ShowPurchaseOrders(BudgetItemMonitoringReportDto budgetItem, MonthlyMonitoringData month)
+    {
+        if(SelectedbudgetItem != null && budgetItem.Id == SelectedbudgetItem.Id && selectmonth.Month == month.Month && selectmonth.Year == month.Year)
+        {
+            SelectedbudgetItem = null!;
+            return;
+        }
+
+        selectmonth = month;
+        var result = await GenericService.GetById<BudgetItemWithPurchaseOrdersResponse, BudgetItemWithPurchaseOrderGetByIdAndDate>(new BudgetItemWithPurchaseOrderGetByIdAndDate
+        {
+            Id = budgetItem.Id,
+            Year = month.Year,
+            Month = month.Month,
+            ProjectId = Project.Id
+        });
+        if (result.Succeeded)
+        {
+            SelectedbudgetItem = result.Data;
+
+        }
+        else
+        {
+            SelectedbudgetItem = null!;
 
         }
 
 
+
+    }
+    void CancelSelectedbudgetItem()
+    {
+        SelectedbudgetItem = null!;
     }
 }

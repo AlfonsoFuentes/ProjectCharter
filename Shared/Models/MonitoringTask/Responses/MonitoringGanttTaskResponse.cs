@@ -9,13 +9,22 @@ namespace Shared.Models.MonitoringTask.Responses
 {
     public class MonitoringGanttTaskResponse
     {
+        public int MainOrder { get; set; }
+        public string WBS { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public DateTime? PlannedStartDate => BudgetItemGanttTasks.Count == 0 ? null : BudgetItemGanttTasks.Min(x => x.PlannedStartDate);
+        public DateTime? PlannedEndDate => BudgetItemGanttTasks.Count == 0 ? null : BudgetItemGanttTasks.Max(x => x.PlannedEndDate);
+       
         public Guid ProjectId { get; set; }
         public bool IsParentDeliverable { get; set; }
         public string ParentWBS { get; set; } = string.Empty;
         public int InternalOrder { get; set; }
         public Guid? TaskParentId { get; set; } // Referencia al padre (opcional)
         public Guid DeliverableId { get; set; } // Referencia al deliverable
-        public Guid Id { get; set; } = Guid.Empty;
+  
         public bool IsDeliverable { get; set; } = false;
 
         public bool IsTask => !IsDeliverable;
@@ -23,24 +32,17 @@ namespace Shared.Models.MonitoringTask.Responses
         public List<MonitoringGanttTaskResponse> SubTasks { get; set; } = new(); // Colección de subtareas
         public List<BudgetItemMonitoringNewGanttTaskResponse> BudgetItemGanttTasks { get; set; } = new();
 
-        public DateTime? PlannedStartDate => BudgetItemGanttTasks.Count == 0 ? null : BudgetItemGanttTasks.Min(x => x.PlannedStartDate);
-
-        public DateTime? PlannedEndDate => BudgetItemGanttTasks.Count == 0 ? null : BudgetItemGanttTasks.Max(x => x.PlannedEndDate);
+        
         public double DurationPlannedInDays => PlannedEndDate == null || PlannedStartDate == null ? 0 : (PlannedEndDate - PlannedStartDate)!.Value.Days;
 
-        public int MainOrder { get; set; }
-        public string WBS { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+        
         public string Dependencies { get; set; } = string.Empty;
         public bool HasSubTask => SubTasks.Count > 0;
-        public DateTime? StartDate { get; set; }
-        public GanttTaskStatusEnum DaBaseTaskStatus { get; set; } = GanttTaskStatusEnum.NotInitiated;
-        public GanttTaskStatusEnum TaskStatus => !HasSubTask ? DaBaseTaskStatus :
-            SubTasks.All(x => x.TaskStatus.Id == GanttTaskStatusEnum.Closed.Id) ? GanttTaskStatusEnum.Closed :
-            SubTasks.Any(x => x.TaskStatus.Id == GanttTaskStatusEnum.OnGoing.Id) ? GanttTaskStatusEnum.OnGoing :
-            GanttTaskStatusEnum.NotInitiated;
+      
+        public GanttTaskStatusEnum TaskStatus { get; set; } = GanttTaskStatusEnum.NotInitiated;
+      
 
-        public DateTime? EndDate { get; set; }
+  
         public string stringStartDate => StartDate == null ? string.Empty : StartDate.Value.ToString("d");
         public string stringEndDate => EndDate == null ? string.Empty : EndDate.Value.ToString("d");
         public bool HasDependencies => NewDependencies.Where(x => x.DependencyTask != null).Any();
@@ -98,6 +100,46 @@ namespace Shared.Models.MonitoringTask.Responses
                 _textLines = TextHelper.SplitTextIntoLines($"{WBS} - {Name}", maxWidth, averageCharWidth);
             }
             return _textLines;
+        }
+        public int StartPositionIndex { get; set; }
+        public int DurationInMonths => EndDate == null || EndDate == null ? 0 : ((EndDate!.Value.Year - EndDate!.Value.Year) * 12 + EndDate!.Value.Month - StartDate!.Value.Month) + 1;
+
+        public int RealStartPositionIndex { get; set; }
+        public int RealDurationInMonths => RealEndDate == null || RealStartDate == null ? 0 : ((RealEndDate!.Value.Year - RealStartDate!.Value.Year) * 12 + RealEndDate!.Value.Month - RealStartDate!.Value.Month) + 1;
+        public int PlannedStartPositionIndex { get; set; }
+        public int PlannedDurationInMonths => PlannedEndDate == null || PlannedStartDate == null ? 0 : ((PlannedEndDate!.Value.Year - PlannedStartDate!.Value.Year) * 12 + PlannedEndDate!.Value.Month - PlannedStartDate!.Value.Month) + 1;
+        public bool HasPlanned { get; set; } = false;
+        public string? RealDurationUnit { get; set; } = string.Empty;
+        public double RealDurationInDays { get; set; } = 0;
+        public double RealDurationInUnit { get; set; } = 0;
+        DateTime? _RealStartDate;
+        DateTime? _RealEndDate;
+        public DateTime? RealStartDate
+        {
+            get
+            {
+                if (HasSubTask)
+                {
+                    _RealStartDate = SubTasks.Min(x => x.RealStartDate);
+                }
+
+                return _RealStartDate;
+            }
+            set { _RealStartDate = value; }
+        }
+
+
+        public DateTime? RealEndDate
+        {
+            get
+            {
+                if (HasSubTask)
+                {
+                    _RealEndDate = SubTasks.Max(x => x.RealEndDate);
+                }
+                return _RealEndDate;
+            }
+            set { _RealEndDate = value; }
         }
     }
 

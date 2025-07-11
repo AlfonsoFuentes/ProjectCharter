@@ -1,9 +1,4 @@
-﻿
-
-
-
-
-<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1">
+﻿<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1">
     <MudTabPanel Text="Start" OnClick="@(() => StartShowAll=true)">
         <TemplateProjectContainer Title="Stakeholders" ShowContentChanged="StartShowAllChanged" ShowAll=@StartShowAll>
             <Content>
@@ -73,21 +68,7 @@
             </Content>
         </TemplateProjectContainer>
 
-        <TemplateProjectContainer Title="Resources" ShowContentChanged="StartShowAllChanged" ShowAll=@StartShowAll>
-            <Content>
-                <ResourcesTable Project="@Project"></ResourcesTable>
-            </Content>
-        </TemplateProjectContainer>
-        <TemplateProjectContainer Title="Communications" ShowContentChanged="StartShowAllChanged" ShowAll=@StartShowAll>
-            <Content>
-                <CommunicationsTable Project="@Project"></CommunicationsTable>
-            </Content>
-        </TemplateProjectContainer>
-        <TemplateProjectContainer Title="Acquisitions" ShowContentChanged="StartShowAllChanged" ShowAll=@StartShowAll>
-            <Content>
-                <AcquisitionsTable Project="@Project"></AcquisitionsTable>
-            </Content>
-        </TemplateProjectContainer>
+       
        
     </MudTabPanel>
     <MudTabPanel Text="Planning" OnClick="@(() => PlanningShowAll = true)">
@@ -96,14 +77,35 @@
                 <NewGanttTaskTable Project=@Project></NewGanttTaskTable>
             </Content>
         </TemplateProjectContainer>
+ @*        <TemplateProjectContainer Title="Execution Plan" ShowContentChanged="PlanningShowAllChanged" ShowAll=@PlanningShowAll>
+            <Content>
+                <ExecutionPlanPage Project=@Project></ExecutionPlanPage>
+            </Content>
+        </TemplateProjectContainer> *@
+        <TemplateProjectContainer Title="Expending Tool" ShowContentChanged="PlanningShowAllChanged" ShowAll=@PlanningShowAll>
+            <Content>
+                <ProjectExpendingTool Project=@Project></ProjectExpendingTool>
+            </Content>
+        </TemplateProjectContainer>
         <TemplateProjectContainer Title="Work BreakDown Structure" ShowContentChanged="PlanningShowAllChanged" ShowAll=@PlanningShowAll>
             <Content>
                 <WbsChartSvg Project=@Project></WbsChartSvg>
             </Content>
         </TemplateProjectContainer>
-        <TemplateProjectContainer Title="Expending Tool" ShowContentChanged="PlanningShowAllChanged" ShowAll=@PlanningShowAll>
+        
+        <TemplateProjectContainer Title="Resources" ShowContentChanged="PlanningShowAllChanged" ShowAll=@PlanningShowAll>
             <Content>
-                <ProjectExpendingTool Project=@Project></ProjectExpendingTool>
+                <ResourcesTable Project="@Project"></ResourcesTable>
+            </Content>
+        </TemplateProjectContainer>
+        <TemplateProjectContainer Title="Communications" ShowContentChanged="PlanningShowAllChanged" ShowAll=@PlanningShowAll>
+            <Content>
+                <CommunicationsTable Project="@Project"></CommunicationsTable>
+            </Content>
+        </TemplateProjectContainer>
+        <TemplateProjectContainer Title="Acquisitions" ShowContentChanged="PlanningShowAllChanged" ShowAll=@PlanningShowAll>
+            <Content>
+                <AcquisitionsTable Project="@Project"></AcquisitionsTable>
             </Content>
         </TemplateProjectContainer>
     </MudTabPanel>
@@ -121,6 +123,11 @@
     </MudTabPanel>
     <MudTabPanel Text="Monitoring" OnClick="@(() => MonitoringShowAll = true)" Disabled="@(Project.Status.Id != ProjectStatusEnum.Approved.Id)">
         
+        <TemplateProjectContainer Title="Gantt Task Monitoring By Budget" ShowContentChanged="MonitoringShowAllChanged" ShowAll=@MonitoringShowAll>
+            <Content>
+                <MonitoringGanttTaskTableBudget Project=@Project></MonitoringGanttTaskTableBudget>
+            </Content>
+        </TemplateProjectContainer>
         <TemplateProjectContainer Title="Gantt Task Monitoring" ShowContentChanged="MonitoringShowAllChanged" ShowAll=@MonitoringShowAll>
             <Content>
                 <MonitoringGanttTaskTable Project=@Project></MonitoringGanttTaskTable>

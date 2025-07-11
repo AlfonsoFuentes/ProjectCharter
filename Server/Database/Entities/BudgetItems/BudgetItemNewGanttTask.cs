@@ -27,10 +27,10 @@ namespace Server.Database.Entities.BudgetItems
             };
         }
 
-        public BasicEngineeringItem? SelectedBasicEngineeringItem { get; set; } = null!;
-        public Guid? SelectedBasicEngineeringItemId { get; set; }
+        //public BasicEngineeringItem? SelectedBasicEngineeringItem { get; set; } = null!;
+        //public Guid? SelectedBasicEngineeringItemId { get; set; }
 
-        public double ToCommitUSD => SelectedBasicEngineeringItem == null ? BudgetItem == null ? 0 : BudgetItem.ToCommitUSD : SelectedBasicEngineeringItem.ToCommitUSD;
+        //public double ToCommitUSD => SelectedBasicEngineeringItem == null ? BudgetItem == null ? 0 : BudgetItem.ToCommitUSD : SelectedBasicEngineeringItem.ToCommitUSD;
 
     }
 

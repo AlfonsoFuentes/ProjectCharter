@@ -76,13 +76,11 @@ namespace Server.EndPoint.Projects.Exports
                     .Include(x => x.LearnedLessons.OrderBy(x => x.Order))
                     .Include(x => x.ExpertJudgements.OrderBy(x => x.Order)).ThenInclude(x => x.Expert!)
                     .Include(x => x.Qualitys.OrderBy(x => x.Order))
-                    .Include(x => x.KnownRisks.OrderBy(x => x.Order))
-                    .Include(x => x.Resources.OrderBy(x => x.Order))
-                    .Include(x => x.Acquisitions.OrderBy(x => x.Order))
+                    
                    ;
 
                     Expression<Func<Project, bool>> Criteria = x => x.Id == request.ProjectId;
-                    string CacheKey = StaticClass.Projects.Cache.GetById(request.ProjectId);
+                    string CacheKey = StaticClass.Projects.Cache.GetByIdProjectCharter(request.ProjectId);
                     var project = await Repository.GetAsync(Cache: CacheKey, Criteria: Criteria, Includes: Includes);
 
                     if (project == null) return Result<Shared.Models.FileResults.FileResult>.Fail();
@@ -194,32 +192,13 @@ namespace Server.EndPoint.Projects.Exports
                             col1.Item().Element((ele) => Assumptions(ele, response));
                             col1.Item().Element((ele) => LearnedLessons(ele, response));
                             col1.Item().Element((ele) => ExpertJudgements(ele, response));
+                            
                             col1.Item().Padding(10).Column(col2 =>
                             {
-                                col2.Item().Text("C) Timeline Management").FontSize(10).Bold();
-                            });
-                            col1.Item().Element((ele) => Deliverables(ele, response));
-                            //col1.Item().Element((ele) => Milestones(ele, response));
-                            col1.Item().Padding(10).Column(col2 =>
-                            {
-                                col2.Item().Text("D) Quality Management").FontSize(10).Bold();
+                                col2.Item().Text("C) Quality Management").FontSize(10).Bold();
                             });
                             col1.Item().Element((ele) => Qualitys(ele, response));
-                            col1.Item().Padding(10).Column(col2 =>
-                            {
-                                col2.Item().Text("E) Risks Management").FontSize(10).Bold();
-                            });
-                            col1.Item().Element((ele) => KnownRisks(ele, response));
-                            col1.Item().Padding(10).Column(col2 =>
-                            {
-                                col2.Item().Text("F) Resources Management").FontSize(10).Bold();
-                            });
-                            col1.Item().Element((ele) => Resources(ele, response));
-                            col1.Item().Padding(10).Column(col2 =>
-                            {
-                                col2.Item().Text("G) Acquisition Management").FontSize(10).Bold();
-                            });
-                            col1.Item().Element((ele) => Acquisitions(ele, response));
+                            
 
 
                             col1.Item().LineHorizontal(0.5f);

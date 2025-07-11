@@ -2,10 +2,8 @@ using Blazored.FluentValidation;
 using MudBlazor;
 using MudBlazorWeb.Pages.Suppliers;
 using MudBlazorWeb.Services.CurrencyServices;
-using Newtonsoft.Json.Linq;
 using Shared.Models.BudgetItems.Records;
 using Shared.Models.BudgetItems.Responses;
-using Shared.Models.FileResults.Generics.Reponses;
 using Shared.Models.PurchaseOrders.Mappers;
 using Shared.Models.PurchaseOrders.Records;
 using Shared.Models.PurchaseOrders.Requests;
@@ -17,7 +15,7 @@ namespace MudBlazorWeb.Pages.PurchaseOrders.Dialogs;
 public partial class EditPurchaseOrderClosedDialog
 {
     [Inject]
-    public ICurrencyRate _CurrencyService { get; set; } = null!;
+    public INewCurrency _CurrencyService { get; set; } = null!;
     public ConversionRate RateList { get; set; } = null!;
     FluentValidationValidator _fluentValidationValidator = null!;
     [CascadingParameter]

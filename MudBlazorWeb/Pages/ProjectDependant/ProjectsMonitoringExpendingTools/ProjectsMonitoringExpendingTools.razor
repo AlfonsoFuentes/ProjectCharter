@@ -1,16 +1,52 @@
-﻿<div style="overflow-x: auto; width: 100%;overflow-y: auto;">
+﻿<style>
+    .fixed-table {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
+    .col-nomenclatore {
+        min-width: 150px;
+        white-space: nowrap;
+    }
+
+    .col-name {
+        min-width: 200px;
+        white-space: nowrap;
+    }
+
+    .col-budget {
+        min-width: 120px;
+        text-align: right;
+    }
+
+    .col-month {
+        min-width: 120px;
+        text-align: right;
+    }
+
+    .nested-table-cell {
+        padding: 0 !important;
+    }
+
+    .nested-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+</style>
+<div class="fixed-table">
 
     <MudSimpleTable Dense="true" Hover="true" Bordered="true" Striped="true"
                     Style="overflow-y: auto;min-width: 1200px; width: max-content;" FixedHeader=true>
         <thead>
             <tr>
-                <th>CECName</th>
-                <th>Name</th>
-                <th>Budget, USD</th>
-                <th>Pending, USD</th>
+                <th class="col-nomenclatore">CECName</th>
+                <th class="col-Name">Name</th>
+                <th class="col-budget">Budget, USD</th>
+                <th class="col-budget">Pending, USD</th>
                 @foreach (var context in Response.OrderedColumns)
                 {
-                    <th>@context.Name</th>
+                    <th class="col-month">@context.Name</th>
                 }
 
             </tr>
@@ -22,16 +58,27 @@
             {
 
                 <tr>
-                    <td>@context.CECName</td>
-                    <td>@context.Name</td>
-                    <td>@context.BudgetUSD.ToCurrencyCulture()</td>
-                    <td>@context.PendingBudgetUSD.ToCurrencyCulture()</td>
+                    <td class="col-nomenclatore" @onclick=@(() => CancelSelectedbudgetItem())>@context.CECName</td>
+                    <td class="col-Name" @onclick=@(() => CancelSelectedbudgetItem())>@context.Name</td>
+                    <td class="col-budget" @onclick=@(() => CancelSelectedbudgetItem())>@context.BudgetUSD.ToCurrencyCulture()</td>
+                    <td class="col-budget" @onclick=@(() => CancelSelectedbudgetItem())>@context.PendingBudgetUSD.ToCurrencyCulture()</td>
                     @foreach (var column in context.MonthlyData)
                     {
-                        <td>@column.ValueUSD.ToCurrencyCulture()</td>
+                        <td class="col-month" @onclick="@(() => ShowPurchaseOrders(context, column))">@column.ValueUSD.ToCurrencyCulture()</td>
                     }
                 </tr>
-
+                @if (SelectedProject != null && SelectedProject.Id == context.Id && SelectedProject.PurchaseOrders.Count > 0)
+                {
+                    <tr>
+                        <td class="nested-table-cell" colspan="@(Response.OrderedColumns.Count)">
+                            <div class="nested-table-wrapper">
+                                <PurchaseOrdersTable HideAccount="true" ShowPrint="false"
+                                                     Items="@SelectedProject.PurchaseOrders"
+                                                     ShowToolbar="false" GetAll="GetAll" />
+                            </div>
+                        </td>
+                    </tr>
+                }
             }
             <tr>
                 <td></td>

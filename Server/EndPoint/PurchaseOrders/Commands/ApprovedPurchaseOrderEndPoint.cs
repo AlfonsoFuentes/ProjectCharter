@@ -25,7 +25,7 @@ namespace Server.EndPoint.PurchaseOrders.Commands
                     Data.Map(row);
 
 
-                    List<string> cache = [.. StaticClass.PurchaseOrders.Cache.KeyApproved(row.Id, row.ProjectId)];
+                    List<string> cache = [.. StaticClass.PurchaseOrders.Cache.KeyApproved(row.Id, row.ProjectId, row.MainBudgetItemId)];
 
                     var result = await Repository.Context.SaveChangesAndRemoveCacheAsync(cache.ToArray());
 

@@ -19,7 +19,7 @@ namespace Server.EndPoint.PurchaseOrders.Queries
 
                     Func<IQueryable<PurchaseOrder>, IIncludableQueryable<PurchaseOrder, object>> Includes = x => x
                     .Include(p => p.PurchaseOrderItems).ThenInclude(x => x.BudgetItem!)
-                    .Include(p => p.PurchaseOrderItems).ThenInclude(x => x.BasicEngineeringItem!)
+                    //.Include(p => p.PurchaseOrderItems).ThenInclude(x => x.BasicEngineeringItem!)
                     .Include(p => p.PurchaseOrderItems).ThenInclude(x => x.PurchaseOrderReceiveds)
                     .Include(x => x.Supplier!);
                     var cache = StaticClass.PurchaseOrders.Cache.GetById(Data.Id);
@@ -69,7 +69,39 @@ namespace Server.EndPoint.PurchaseOrders.Queries
 
             };
         }
+        public static PurchaseOrderResponse SingleMap(this PurchaseOrder row)
+        {
+            return new()
+            {
+                ProjectAccount = row.ProjectAccount,
+                CurrencyDate = row.CurrencyDate,
+                Id = row.Id,
+                IsAlteration = row.IsAlteration,
+                IsCapitalizedSalary = row.IsCapitalizedSalary,
+                IsTaxEditable = row.IsTaxEditable,
+                Name = row.PurchaseorderName,
+                PurchaseOrderCurrency = row.PurchaseOrderCurrencyEnum,
+                PurchaseOrderStatus = row.PurchaseOrderStatusEnum,
+                CostCenter = row.CostCenterEnum,
+                IsProductiveAsset = row.IsProductiveAsset,
+                QuoteCurrency = row.QuoteCurrencyEnum,
+                PurchaseRequisition = row.PurchaseRequisition,
+                QuoteNo = row.QuoteNo,
 
+                USDCOP = row.USDCOP,
+                USDEUR = row.USDEUR,
+                ApprovedDate = row.ApprovedDate,
+                ClosedDate = row.ClosedDate,
+                ExpectedDate = row.ExpectedDate,
+                PONumber = row.PONumber,
+                ProjectId = row.ProjectId,
+                MainBudgetItemId = row.MainBudgetItemId,
+                Supplier = row.Supplier == null ? null! : row.Supplier.Map(),
+
+               
+
+            };
+        }
         public static PurchaseOrderItemResponse Map(this PurchaseOrderItem row)
         {
             return new()
@@ -86,8 +118,31 @@ namespace Server.EndPoint.PurchaseOrders.Queries
                 USDEUR = row.USDEUR,
                 Order = row.Order,
                 PurchaseOrderItemReceiveds = row.PurchaseOrderReceiveds.Select(x => x.Map()).ToList(),
-                BasicResponse = row.BasicEngineeringItem == null ? null! : row.BasicEngineeringItem.Map(),
-                BasicReponseId = row.BasicEngineeringItemId.HasValue ? row.BasicEngineeringItemId.Value : Guid.Empty,
+                //BasicResponse = row.BasicEngineeringItem == null ? null! : row.BasicEngineeringItem.Map(),
+                //BasicReponseId = row.BasicEngineeringItemId.HasValue ? row.BasicEngineeringItemId.Value : Guid.Empty,
+
+
+
+            };
+        }
+        public static PurchaseOrderItemResponse SingleMap(this PurchaseOrderItem row)
+        {
+            return new()
+            {
+                Id = row.Id,
+                Name = row.Name,
+                BudgetItemId = row.BudgetItemId!.Value,
+                Quantity = row.Quantity,
+                PurchaseOrderCurrency = row.PurchaseOrderCurrency,
+                QuoteCurrency = row.QuoteCurrency,
+                UnitaryQuoteCurrency = row.UnitaryValueQuoteCurrency,
+                PurchaseOrderStatus = row.PurchaseOrderStatus,
+                USDCOP = row.USDCOP,
+                USDEUR = row.USDEUR,
+                Order = row.Order,
+            
+                //BasicResponse = row.BasicEngineeringItem == null ? null! : row.BasicEngineeringItem.Map(),
+                //BasicReponseId = row.BasicEngineeringItemId.HasValue ? row.BasicEngineeringItemId.Value : Guid.Empty,
 
 
 

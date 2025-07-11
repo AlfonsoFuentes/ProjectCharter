@@ -19,11 +19,11 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
                 app.MapPost(StaticClass.MonitoringExpendingTools.EndPoint.GetAll,
                     async (GetAllMonitoringExpendingTool request, IQueryRepository repository) =>
                     {
-                        string cacheKey = StaticClass.BudgetItems.Cache.GetAllWithPurchaseOrder(request.ProjectId);
+                        string cacheKey = StaticClass.BudgetItems.Cache.GetAllWithPurchaseOrder(Guid.Empty, request.ProjectId);
                         Func<IQueryable<BudgetItem>, IIncludableQueryable<BudgetItem, object>> includes = x => x
                            .Include(x => x.PurchaseOrderItems).ThenInclude(x => x.PurchaseOrderReceiveds)
                            .Include(x => x.PurchaseOrderItems).ThenInclude(x => x.PurchaseOrder)
-                           .Include(x => x.PurchaseOrderItems).ThenInclude(x => x.BasicEngineeringItem)
+                           //.Include(x => x.PurchaseOrderItems).ThenInclude(x => x.BudgetItem)
                            .Include(x => (x as Instrument)!.InstrumentItems!).ThenInclude(x => x.InstrumentTemplate!)
                            .Include(x => (x as Pipe)!.PipeItems!).ThenInclude(x => x.PipeTemplate)
                            .Include(x => (x as Valve)!.ValveItems!).ThenInclude(x => x.ValveTemplate!)

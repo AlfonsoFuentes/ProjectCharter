@@ -36,37 +36,7 @@
 
             </EditTemplate>
         </PropertyColumn>
-         <PropertyColumn Property="x => x.BasicResponseName" Title="#" T="PurchaseOrderItemResponse" 
-            TProperty="string" Sortable="false" Filterable="false">
-            <EditTemplate Context="Context">
-                @if (Context.Item.BudgetItem != null)
-                {
-                    if(Context.Item.BudgetItem.HasSubItems)
-                    {
-                         <Select @bind-Value="@Context.Item.BasicResponse"
-                            Items="@Context.Item.BudgetItem.BasicEngineeringItems"
-                            TValue="BasicResponse"
-                            Property="@(p=>p.Name)"
-                            ValidateAsync="ValidateAsync"
-                           
-                            Clearable="false">
-                        </Select>
-                    }
-                    else
-                    {
-                        @($"No sub items in {Context.Item.BudgetItem.Name}")
-                    }
-
-
-                }
-                else
-                {
-                     @($"Must select Budget Item")
-                }
-
-
-            </EditTemplate>
-        </PropertyColumn>
+      
 
 
         <PropertyColumn Property="x => x.Name" T="PurchaseOrderItemResponse" Title="Name" 

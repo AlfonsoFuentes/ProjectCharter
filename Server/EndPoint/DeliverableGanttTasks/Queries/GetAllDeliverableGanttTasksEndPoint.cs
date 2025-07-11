@@ -119,7 +119,7 @@ namespace Server.EndPoint.DeliverableGanttTasks.Queries
                 .ThenInclude(x => x.BudgetItemNewGanttTasks).ThenInclude(x => x.BudgetItem)
                 .Include(x => x.Deliverables)
                 .ThenInclude(x => x.NewGanttTasks)
-                .ThenInclude(x => x.BudgetItemNewGanttTasks).ThenInclude(x => x.SelectedBasicEngineeringItem)
+                //.ThenInclude(x => x.BudgetItemNewGanttTasks).ThenInclude(x => x.SelectedBasicEngineeringItem)
                 .Include(x => x.Deliverables)
                 .ThenInclude(x => x.NewGanttTasks)
                 .ThenInclude(x => x.MainTasks)
@@ -144,7 +144,7 @@ namespace Server.EndPoint.DeliverableGanttTasks.Queries
                 EndDate = row.EndDate,
                 DurationInDays = row.DurationInDays,
                 DurationUnit = row.DurationUnit,
-
+                IsMilestone = row.IsMilestone,
                 DurationInUnit = row.DurationInUnit,
 
                 Id = row.Id,
@@ -172,8 +172,8 @@ namespace Server.EndPoint.DeliverableGanttTasks.Queries
 
                 Order = row.Order,
                 BudgetAssignedUSD = row.GanttTaskBudgetAssigned,
-                SelectedEngineeringItemsBudgetId = row.SelectedBasicEngineeringItem == null! ? Guid.Empty : row.SelectedBasicEngineeringItem.Id,
-                SelectedEngineeringItemsBudget = row.SelectedBasicEngineeringItem == null! ? null! : row.SelectedBasicEngineeringItem.Map(),
+                //SelectedEngineeringItemsBudgetId = row.SelectedBasicEngineeringItem == null! ? Guid.Empty : row.SelectedBasicEngineeringItem.Id,
+                //SelectedEngineeringItemsBudget = row.SelectedBasicEngineeringItem == null! ? null! : row.SelectedBasicEngineeringItem.Map(),
 
             };
 

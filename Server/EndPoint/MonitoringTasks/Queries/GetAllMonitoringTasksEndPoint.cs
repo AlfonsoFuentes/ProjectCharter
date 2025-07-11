@@ -115,10 +115,17 @@ namespace Server.EndPoint.MonitoringTasks.Queries
                    .Include(x => x.Deliverables)
                 .ThenInclude(x => x.NewGanttTasks)
                 .ThenInclude(x => x.BudgetItemNewGanttTasks).ThenInclude(x => x.BudgetItem)
-               
+
                 .Include(x => x.Deliverables)
                 .ThenInclude(x => x.NewGanttTasks)
                 .ThenInclude(x => x.MainTasks)
+
+                 .Include(p => p.BudgetItems).ThenInclude(x => (x as Instrument)!.InstrumentItems!).ThenInclude(x => x.InstrumentTemplate!).ThenInclude(x => x.BrandTemplate!)
+                .Include(p => p.BudgetItems).ThenInclude(x => (x as Pipe)!.PipeItems!).ThenInclude(x => x.FluidCode)
+                .Include(p => p.BudgetItems).ThenInclude(x => (x as Pipe)!.PipeItems!).ThenInclude(x => x.PipeTemplate!)
+                .Include(p => p.BudgetItems).ThenInclude(x => (x as Valve)!.ValveItems!).ThenInclude(x => x.ValveTemplate!).ThenInclude(x => x.BrandTemplate!)
+                .Include(p => p.BudgetItems).ThenInclude(x => (x as Equipment)!.EquipmentItems!).ThenInclude(x => x.EquipmentTemplate!).ThenInclude(x => x.BrandTemplate!)
+                .Include(x => x.BudgetItems).ThenInclude(x => x.BudgetItemNewGanttTasks)/*.ThenInclude(x => x.SelectedBasicEngineeringItem!)*/
                 ;
 
 
@@ -136,11 +143,11 @@ namespace Server.EndPoint.MonitoringTasks.Queries
         }
         public static MonitoringGanttTaskResponse MapMonitoringParallel(this NewGanttTask row)
         {
-            return new MonitoringGanttTaskResponse
+            var result= new MonitoringGanttTaskResponse
             {
                 MainOrder = row.MainOrder,
                 WBS = row.WBS,
-                
+
                 Name = row.Name,
                 StartDate = row.StartDate,
                 EndDate = row.EndDate,
@@ -149,8 +156,12 @@ namespace Server.EndPoint.MonitoringTasks.Queries
                 DurationUnit = row.DurationUnit,
                 IsDeliverable = false,
                 Id = row.Id,
-                DaBaseTaskStatus = GanttTaskStatusEnum.GetType(row.TaskStatus),
-
+                TaskStatus = GanttTaskStatusEnum.GetType(row.TaskStatus),
+                RealDurationUnit = row.RealEndDate.HasValue ? row.RealDurationUnit : row.DurationUnit,
+                RealDurationInDays = row.RealEndDate.HasValue ? row.RealDurationInDays : row.DurationInDays,
+                RealDurationInUnit = row.RealEndDate.HasValue ? row.RealDurationInUnit : row.DurationInUnit,
+                RealEndDate = row.RealEndDate.HasValue ? row.RealEndDate.Value : row.EndDate,
+                RealStartDate = row.RealStartDate.HasValue ? row.RealStartDate.Value : row.StartDate,
                 DeliverableId = row.DeliverableId,
                 TaskParentId = row.ParentId == null ? row.DeliverableId : row.ParentId,
                 InternalOrder = row.InternalOrder,
@@ -163,6 +174,7 @@ namespace Server.EndPoint.MonitoringTasks.Queries
                 NewDependencies = row.MainTasks.Select(x => x.MapMonitoring()).ToList(),
 
             };
+            return result;
         }
         public static BudgetItemMonitoringNewGanttTaskResponse MapMonitoring(this BudgetItemNewGanttTask row)
         {
@@ -173,8 +185,8 @@ namespace Server.EndPoint.MonitoringTasks.Queries
 
                 Order = row.Order,
                 BudgetPlannedUSD = row.GanttTaskBudgetAssigned,
-                SelectedEngineeringItemsBudget= row.SelectedBasicEngineeringItem == null ? null! : row.SelectedBasicEngineeringItem.Map(),
-                SelectedEngineeringItemsBudgetId = row.SelectedBasicEngineeringItemId == null ? Guid.Empty : row.SelectedBasicEngineeringItemId.Value,
+                //SelectedEngineeringItemsBudget = row.SelectedBasicEngineeringItem == null ? null! : row.SelectedBasicEngineeringItem.Map(),
+                //SelectedEngineeringItemsBudgetId = row.SelectedBasicEngineeringItemId == null ? Guid.Empty : row.SelectedBasicEngineeringItemId.Value,
 
             };
 

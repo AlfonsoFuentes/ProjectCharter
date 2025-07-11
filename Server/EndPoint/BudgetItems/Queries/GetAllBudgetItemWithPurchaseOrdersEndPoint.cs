@@ -78,7 +78,7 @@ namespace Server.EndPoint.BudgetItems.Queries
 
                 ;
                 Expression<Func<Project, bool>> criteria = x => x.Id == request.ProjectId;
-                string cacheKey = StaticClass.BudgetItems.Cache.GetAllWithPurchaseOrder(request.ProjectId);
+                string cacheKey = StaticClass.BudgetItems.Cache.GetAllWithPurchaseOrder(Guid.Empty,request.ProjectId);
 
                 return await repository.GetAsync(Cache: cacheKey, Includes: includes, Criteria: criteria);
             }

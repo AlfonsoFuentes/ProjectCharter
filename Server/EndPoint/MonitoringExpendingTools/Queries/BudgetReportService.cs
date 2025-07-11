@@ -26,6 +26,7 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
         {
             var dto = new BudgetItemMonitoringReportDto
             {
+                Id = item.Id,
                 Name = item.Name,
                 Order = item.OrderList,
                 Nomenclatore = item.Nomenclatore ?? string.Empty,
@@ -44,7 +45,7 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
                 budgetItem.BudgetItemNewGanttTasks.Select(b => new BudgetItemGantMonitoringReportDto
                 {
                     BudgetItemId = b.Id,
-                    BasicEngineeringItemId = b.SelectedBasicEngineeringItemId,
+                    //BasicEngineeringItemId = b.SelectedBasicEngineeringItemId,
                     GanttTaskId = b.NewGanttTask.Id,
                     BudgetPlannedUSD = b.NewGanttTask.TotalBudgetAssigned,
                     EndDate = b.NewGanttTask.EndDate,

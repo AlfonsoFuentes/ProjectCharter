@@ -305,9 +305,6 @@ namespace Server.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("SelectedBasicEngineeringItemId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("TenantId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -317,8 +314,6 @@ namespace Server.Migrations
                     b.HasIndex("BudgetItemId");
 
                     b.HasIndex("NewGanttTaskId");
-
-                    b.HasIndex("SelectedBasicEngineeringItemId");
 
                     b.ToTable("BudgetItemNewGantTasks");
                 });
@@ -1902,6 +1897,9 @@ namespace Server.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsMilestone")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(128)");
 
@@ -1924,6 +1922,21 @@ namespace Server.Migrations
                     b.Property<string>("ParentWBS")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("RealDurationInDays")
+                        .HasColumnType("float");
+
+                    b.Property<double>("RealDurationInUnit")
+                        .HasColumnType("float");
+
+                    b.Property<string>("RealDurationUnit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RealEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RealStartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -2463,9 +2476,6 @@ namespace Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BasicEngineeringItemId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("BudgetItemId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2514,8 +2524,6 @@ namespace Server.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BasicEngineeringItemId");
 
                     b.HasIndex("BudgetItemId");
 
@@ -3230,16 +3238,9 @@ namespace Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.EngineeringItems.BasicEngineeringItem", "SelectedBasicEngineeringItem")
-                        .WithMany("BudgetItemNewGanttTasks")
-                        .HasForeignKey("SelectedBasicEngineeringItemId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("BudgetItem");
 
                     b.Navigation("NewGanttTask");
-
-                    b.Navigation("SelectedBasicEngineeringItem");
                 });
 
             modelBuilder.Entity("Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.EngineeringItems.BasicEngineeringItem", b =>
@@ -3701,11 +3702,6 @@ namespace Server.Migrations
 
             modelBuilder.Entity("Server.Database.Entities.PurchaseOrders.PurchaseOrderItem", b =>
                 {
-                    b.HasOne("Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.EngineeringItems.BasicEngineeringItem", "BasicEngineeringItem")
-                        .WithMany("PurchaseOrderItems")
-                        .HasForeignKey("BasicEngineeringItemId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Server.Database.Entities.BudgetItems.BudgetItem", "BudgetItem")
                         .WithMany("PurchaseOrderItems")
                         .HasForeignKey("BudgetItemId")
@@ -3716,8 +3712,6 @@ namespace Server.Migrations
                         .HasForeignKey("PurchaseOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("BasicEngineeringItem");
 
                     b.Navigation("BudgetItem");
 
@@ -3824,13 +3818,9 @@ namespace Server.Migrations
 
             modelBuilder.Entity("Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.EngineeringItems.BasicEngineeringItem", b =>
                 {
-                    b.Navigation("BudgetItemNewGanttTasks");
-
                     b.Navigation("ItemConnecteds");
 
                     b.Navigation("Nozzles");
-
-                    b.Navigation("PurchaseOrderItems");
                 });
 
             modelBuilder.Entity("Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.Pipings.EngineeringFluidCode", b =>

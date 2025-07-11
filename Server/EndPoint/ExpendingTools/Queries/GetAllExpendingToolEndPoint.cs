@@ -26,7 +26,7 @@ namespace Server.EndPoint.ExpendingTools.Queries
                             .ThenInclude(x => x.NewGanttTask)
                             .Include(x => x.BudgetItems)
                             .ThenInclude(x => x.BudgetItemNewGanttTasks)
-                            .ThenInclude(x => x.SelectedBasicEngineeringItem!)
+                            //.ThenInclude(x => x.SelectedBasicEngineeringItem!)
 
                     ;
                         Expression<Func<Project, bool>> criteria = x => x.Id == (request.ProjectId);

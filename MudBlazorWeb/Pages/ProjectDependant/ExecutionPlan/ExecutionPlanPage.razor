@@ -1,0 +1,288 @@
+﻿@page "/gantt-table"
+@using System.Globalization
+@using MudBlazor
+
+<style>
+    /* Estilo general de la tabla */
+    .custom-gantt-table {
+        table-layout: fixed;
+        width: max-content;
+        min-width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+        /* Encabezados generales (th) */
+        .custom-gantt-table th {
+            background-color: #f1f1f1 !important;
+            font-weight: bold !important;
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 2px solid #aaa;
+            border-top: 1px solid #ccc;
+            font-size: 14px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+    /* Meses como encabezados (solo para mostrar texto, sin afectar diseño) */
+    .month-header {
+        background-color: transparent !important;
+        text-align: center;
+        font-weight: bold;
+        font-size: 12px;
+        padding: 4px 2px;
+        border-left: 1px solid #ccc;
+        width: 80px !important;
+        min-width: 80px !important;
+        max-width: 80px !important;
+        white-space: normal;
+        word-wrap: break-word;
+        color: transparent;
+        border: none !important;
+        visibility: hidden;
+        position: relative;
+    }
+
+        .month-header::before {
+            content: attr(data-label);
+            display: block;
+            color: #555;
+            text-align: center;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            white-space: normal;
+            word-wrap: break-word;
+            visibility: visible;
+        }
+
+    /* Celdas normales (td) */
+    .custom-gantt-table td {
+        padding: 8px 12px;
+        vertical-align: middle;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+        box-sizing: border-box;
+        white-space: nowrap;
+        font-weight: normal;
+        color: black;
+        background-color: #fff;
+    }
+
+    /* Columnas fijas (ID, WBS, Name, etc.) */
+    .fixed-column {
+        position: sticky;
+        left: 0;
+        background: white !important;
+        z-index: 1;
+        box-shadow: 1px 0px 0px #ddd;
+        padding: 8px 12px !important;
+        white-space: nowrap;
+        font-size: 13px;
+        
+        background-color: white !important;
+        border-bottom: 1px solid #ddd;
+        font-weight: normal !important;
+    }
+
+    /* Barras horizontales del Gantt */
+    .gantt-task-bar {
+        position: absolute;
+        top: 10px;
+        height: 20px;
+        background-color: #2196F3;
+        border-radius: 4px;
+        left: 0;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    /* Tooltip sobre las barras */
+    .tooltip-gantt {
+        visibility: hidden;
+        width: max-content;
+        min-width: 150px;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 4px 8px;
+        position: absolute;
+        z-index: 10;
+        bottom: 125%; /* Aparece arriba */
+        left: 50%;
+        margin-left: -75px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .gantt-task-bar:hover .tooltip-gantt {
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+    <div style="overflow-x: auto; width: 100%;">
+        <table class="custom-gantt-table">
+            <thead>
+                <tr>
+                    <th class="fixed-column" style="width: 50px;">ID</th>
+                    <th class="fixed-column" style="width: 80px;">WBS</th>
+                    <th class="fixed-column" style="width: 300px;">Name</th>
+                    <th class="fixed-column" style="width: 120px;">Start Date</th>
+                    <th class="fixed-column" style="width: 120px;">End Date</th>
+                    <th class="fixed-column" style="width: 120px;">Budget, USD</th>
+
+                    @foreach (var month in timeline)
+                    {
+                        <th class="month-header" data-label="@month.Label"></th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var context in Response.OrderedItems)
+                {
+                    var ganttTask = ganttTasks.FirstOrDefault(t => t.Name == context.Name);
+
+                    <tr>
+                        <td class="fixed-column">@context.MainOrder</td>
+                        <td class="fixed-column">@context.WBS</td>
+                        <td class="fixed-column">@context.Name</td>
+                        <td class="fixed-column">@context.stringStartDate</td>
+                        <td class="fixed-column">@context.stringEndDate</td>
+                        <td class="fixed-column">@context.BudgetAssignedUSDCurrency</td>
+
+                        <!-- Celdas vacías + barra -->
+                        @for (int i = 0; i < timeline.Count; i++)
+                        {
+                            if (ganttTask != null &&
+                            i >= ganttTask.StartPositionIndex &&
+                            i < ganttTask.StartPositionIndex + ganttTask.DurationInMonths)
+                            {
+                                if (i == ganttTask.StartPositionIndex)
+                                {
+                                    <td style="padding: 0; position: relative;">
+                                        <div class="gantt-task-bar" style="left: 0;width:@(ganttTask.DurationInMonths * 80)px;">
+                                            <span class="tooltip-gantt">
+                                                @ganttTask.Name<br />
+                                                @ganttTask.StartDate.ToString("MMM yyyy") - @ganttTask.EndDate.ToString("MMM yyyy")
+                                            </span>
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="padding: 0;"></td>
+                                }
+                            }
+                            else
+                            {
+                                <td style="padding: 0;"></td>
+                            }
+                        }
+                    </tr>
+                }
+
+                <!-- Fila total -->
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedUSD).ToString("C")</strong></td>
+
+                    @for (int i = 0; i < timeline.Count; i++)
+                    {
+                        <td></td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</MudContainer>
+@* <div style="overflow-x: auto; width: 100%;">
+    <MudSimpleTable Dense="true" Hover="true" Bordered="true" Striped="true"
+                            Style="overflow-y: auto;min-width: 500px; width: max-content;" FixedHeader=true>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>WBS</th>
+                <th>Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Budget</th>
+                @foreach (var month in timeline)
+                {
+                    <th class="month-header">@month.Label</th>
+                }
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var context in Response.OrderedItems)
+            {
+                var ganttTask = ganttTasks.FirstOrDefault(t => t.Name == context.Name);
+                <tr>
+                    <td>@context.MainOrder</td>
+                    <td>@context.WBS</td>
+                    <td>@context.Name</td>
+                    <td>@context.stringStartDate</td>
+                    <td>@context.stringEndDate</td>
+                    <td>@context.BudgetAssignedUSDCurrency</td>
+
+                    @for (int i = 0; i < timeline.Count; i++)
+                    {
+                        if (ganttTask != null && i >= ganttTask.StartPositionIndex && i < ganttTask.StartPositionIndex + ganttTask.DurationInMonths)
+                        {
+                            if (i == ganttTask.StartPositionIndex)
+                            {
+                                <td style="padding: 0; position: relative;">
+                                    <div class="gantt-task-bar"
+                                         style="width: @(ganttTask.DurationInMonths * 80)px;">
+                                        <span class="tooltip-gantt">
+                                            @ganttTask.Name
+                                            @ganttTask.StartDate.ToString("MMM yyyy") - @ganttTask.EndDate.ToString("MMM yyyy")
+                                        </span>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="padding: 0;"></td>
+                            }
+                        }
+                        else
+                        {
+                            <td style="padding: 0;"></td>
+                        }
+                    }
+                </tr>
+            }
+
+            <!-- Fila total -->
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedUSD).ToString("C")</strong></td>
+                @for (int i = 0; i < timeline.Count; i++)
+                {
+                    <td></td>
+                }
+            </tr>
+        </tbody>
+    </MudSimpleTable>
+</div> *@

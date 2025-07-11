@@ -1,6 +1,10 @@
-﻿using Shared.Models.MonitoringExpendingTools.Responses;
-using Server.Database.Entities.PurchaseOrders;
+﻿using Server.Database.Entities.PurchaseOrders;
+using Server.EndPoint.PurchaseOrders.Queries;
+using Shared.Enums.PurchaseOrderStatusEnums;
+using Shared.Models.MonitoringExpendingTools.Responses;
+using Shared.Models.PurchaseOrders.Responses;
 using System.Globalization;
+using static MudBlazorWeb.Pages.ProjectDependant.ExecutionPlan.ExecutionPlanPage;
 
 namespace Server.EndPoint.MonitoringExpendingTools.Queries
 {
@@ -13,70 +17,11 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
 
             dto.GetNextYears(item, date, culture);
         }
-        public static void GetMonthlyData2(this ProjectMonitoringReportDto dto, Project item, DateTime date, CultureInfo culture)
-        {
-            int currentYear = date.Year;
-            int previousMonthsCount = date.Month - 1;
-            var OrdenesdeCompra = item.PurchaseOrders;
-            for (int i = 1; i <= 12; i++)
-            {
-                MonthlyMonitoringData monthData = new()
-                {
-                    Order = i,
-                    ColumnName = $"{culture.DateTimeFormat.GetAbbreviatedMonthName(i)}-{currentYear}",
-                    ValueUSD = 0,
-
-                };
-                dto.MonthlyData.Add(monthData);
-                var recibidasEsteMes = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                    .SelectMany(poi => poi.PurchaseOrderReceiveds)
-                    .Where(r => r.CurrencyDate.HasValue && r.CurrencyDate.Value.Year == currentYear && r.CurrencyDate.Value.Month == i)
-                    .ToList().Sum(x => x.ReceivedUSD);
-                monthData.ValueUSD = recibidasEsteMes;
-                var esperadasEsteMes = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                    .Where(poi => poi.PurchaseOrder != null && poi.PurchaseOrder.ExpectedDate.HasValue &&
-                                  poi.PurchaseOrder.ExpectedDate.Value.Year == currentYear && poi.PurchaseOrder.ExpectedDate.Value.Month == i)
-                    .ToList().Sum(x => x.CommitmentItemUSD);
-                monthData.ValueUSD += esperadasEsteMes;
-                foreach (var ganttTask in dto.GanttItems)
-                {
-                    var ordenesDeCompraEsperadaPorBasicItem = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                           .Where(poi => poi.BasicEngineeringItemId == ganttTask.BasicEngineeringItemId &&
-                                         poi.PurchaseOrder != null && poi.PurchaseOrder.ExpectedDate.HasValue &&
-                                         poi.PurchaseOrder.ExpectedDate.Value.Year == currentYear &&
-                                         poi.PurchaseOrder.ExpectedDate.Value.Month == i)
-                           .ToList().Sum(x => x.CommitmentItemUSD);
-                    var ordenesDeCompraRecibidasPorBasicItem = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                       .Where(r => r.BasicEngineeringItemId == ganttTask.BasicEngineeringItemId)
-                       .SelectMany(x => x.PurchaseOrderReceiveds.Where(x => x.CurrencyDate.HasValue && x.CurrencyDate.Value.Month == i && x.CurrencyDate.Value.Year == currentYear))
-                        .ToList().Sum(x => x.ReceivedUSD);
-                    ganttTask.AssignedUSD += ordenesDeCompraEsperadaPorBasicItem + ordenesDeCompraRecibidasPorBasicItem;
-                    if (ganttTask.EndDate.Month == i && ganttTask.EndDate.Year == currentYear)
-                    {
-                        var OrdenesdeCompraEsperadasLosSiguientesMeses = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                           .Where(poi => poi.BasicEngineeringItemId == ganttTask.BasicEngineeringItemId &&
-                                         poi.PurchaseOrder != null && poi.PurchaseOrder.ExpectedDate.HasValue &&
-                                         poi.PurchaseOrder.ExpectedDate.Value.Year == currentYear &&
-                                         poi.PurchaseOrder.ExpectedDate.Value.Month > i)
-                           .ToList();
-                        var ordenesdeCompraRecibidasLosSiguientesMeses = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                            .Where(r => r.BasicEngineeringItemId == ganttTask.BasicEngineeringItemId)
-                            .SelectMany(x => x.PurchaseOrderReceiveds.Where(x => x.CurrencyDate.HasValue && x.CurrencyDate.Value.Month > i && x.CurrencyDate.Value.Year == currentYear))
-                            .ToList();
-                        if (OrdenesdeCompraEsperadasLosSiguientesMeses.Count == 0 && ordenesdeCompraRecibidasLosSiguientesMeses.Count == 0)
-                        {
-                            monthData.ValueUSD += ganttTask.TaskPendingBudgetUSD;
-                        }
-                    }
-                }
-            }
-
-
-        }
 
 
         public static void GetMonthlyData(this ProjectMonitoringReportDto dto, Project item, DateTime date, CultureInfo culture)
         {
+            DateTime QueryDate = DateTime.Now;
             int currentYear = date.Year;
             int previousMonthsCount = date.Month - 1;
             var OrdenesdeCompra = item.PurchaseOrders;
@@ -87,53 +32,46 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
                     Order = i,
                     ColumnName = $"{culture.DateTimeFormat.GetAbbreviatedMonthName(i)}-{currentYear}",
                     ValueUSD = 0,
-
+                    Month = i,
+                    Year = currentYear
                 };
                 dto.MonthlyData.Add(monthData);
-                var recibidasEsteMes = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                    .SelectMany(poi => poi.PurchaseOrderReceiveds)
-                    .Where(r => r.CurrencyDate.HasValue && r.CurrencyDate.Value.Year == currentYear && r.CurrencyDate.Value.Month == i)
-                    .ToList().Sum(x => x.ReceivedUSD);
+                var recibidasEsteMes = OrdenesdeCompra
+
+                   .SelectMany(po => po.PurchaseOrderItems)
+                   .SelectMany(poi => poi.PurchaseOrderReceiveds)
+                   .Where(r => r.CurrencyDate.HasValue && r.CurrencyDate.Value.Year == currentYear && r.CurrencyDate.Value.Month == i)
+                   .ToList().Sum(x => x.ReceivedUSD);
                 monthData.ValueUSD = recibidasEsteMes;
-                var esperadasEsteMes = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                    .Where(poi => poi.PurchaseOrder != null && poi.PurchaseOrder.ExpectedDate.HasValue &&
-                                  poi.PurchaseOrder.ExpectedDate.Value.Year == currentYear && poi.PurchaseOrder.ExpectedDate.Value.Month == i)
-                    .ToList().Sum(x => x.CommitmentItemUSD);
-                monthData.ValueUSD += esperadasEsteMes;
-                foreach (var ganttTask in dto.GanttItems)
+                monthData.Actuals = OrdenesdeCompra.Where(x => x.PurchaseOrderItems
+                 .Any(y => y.PurchaseOrderReceiveds
+                 .Any(z => z.CurrencyDate.HasValue && z.CurrencyDate.Value.Year == currentYear &&
+                          z.CurrencyDate.Value.Month == i))).Select(selector => selector.Map()).ToList();
+
+        
+                if (i >= QueryDate.Month)
                 {
-                    var ordenesDeCompraEsperadaPorBasicItem = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                           .Where(poi => poi.BasicEngineeringItemId == ganttTask.BasicEngineeringItemId &&
-                           poi.BudgetItemId == ganttTask.BudgetItemId &&
-                                         poi.PurchaseOrder != null && poi.PurchaseOrder.ExpectedDate.HasValue &&
-                                         poi.PurchaseOrder.ExpectedDate.Value.Year == currentYear &&
-                                         poi.PurchaseOrder.ExpectedDate.Value.Month == i)
-                           .ToList().Sum(x => x.CommitmentItemUSD);
-                    var ordenesDeCompraRecibidasPorBasicItem = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                       .Where(r => r.BasicEngineeringItemId == ganttTask.BasicEngineeringItemId &&
-                           r.BudgetItemId == ganttTask.BudgetItemId)
-                       .SelectMany(x => x.PurchaseOrderReceiveds.Where(x => x.CurrencyDate.HasValue && x.CurrencyDate.Value.Month == i && x.CurrencyDate.Value.Year == currentYear))
-                        .ToList().Sum(x => x.ReceivedUSD);
-                    ganttTask.AssignedUSD += ordenesDeCompraEsperadaPorBasicItem + ordenesDeCompraRecibidasPorBasicItem;
-                    if (ganttTask.EndDate.Month == i && ganttTask.EndDate.Year == currentYear)
+
+                    var esperadasEsteMesList = OrdenesdeCompra
+                        .Where(x => x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Closed.Id && x.ExpectedDate.HasValue &&
+                                     x.ExpectedDate.Value.Year == currentYear && x.ExpectedDate.Value.Month == i)
+                        .SelectMany(po => po.PurchaseOrderItems).ToList();
+
+                    var esperadasEsteMes = esperadasEsteMesList.Sum(x => x.CommitmentItemUSD);
+
+                    monthData.Commitmments = OrdenesdeCompra
+                        .Where(x => x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Closed.Id && x.ExpectedDate.HasValue &&
+                                     x.ExpectedDate.Value.Year == currentYear && x.ExpectedDate.Value.Month == i).Select(x => x.Map()).ToList();
+                  
+                    monthData.ValueUSD += esperadasEsteMes;
+                    if (esperadasEsteMesList.Count == 0)
                     {
-                        var OrdenesdeCompraEsperadasLosSiguientesMeses = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                           .Where(poi => poi.BasicEngineeringItemId == ganttTask.BasicEngineeringItemId &&
-                           poi.BudgetItemId == ganttTask.BudgetItemId &&
-                                         poi.PurchaseOrder != null && poi.PurchaseOrder.ExpectedDate.HasValue &&
-                                         poi.PurchaseOrder.ExpectedDate.Value.Year == currentYear &&
-                                         poi.PurchaseOrder.ExpectedDate.Value.Month > i)
-                           .ToList();
-                        var ordenesdeCompraRecibidasLosSiguientesMeses = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                            .Where(r => r.BasicEngineeringItemId == ganttTask.BasicEngineeringItemId && r.BudgetItemId == ganttTask.BudgetItemId)
-                            .SelectMany(x => x.PurchaseOrderReceiveds.Where(x => x.CurrencyDate.HasValue && x.CurrencyDate.Value.Month > i && x.CurrencyDate.Value.Year == currentYear))
-                            .ToList();
-                        if (OrdenesdeCompraEsperadasLosSiguientesMeses.Count == 0 && ordenesdeCompraRecibidasLosSiguientesMeses.Count == 0)
-                        {
-                            monthData.ValueUSD += ganttTask.TaskPendingBudgetUSD;
-                        }
+                        var ganttTasksAssigned = dto.GanttItems.Where(x => x.EndDate.Year == currentYear && x.EndDate.Month == i).ToList();
+                        monthData.ValueUSD += ganttTasksAssigned.Sum(x => x.TaskPendingBudgetUSD);
                     }
+                    
                 }
+
             }
 
 
@@ -154,7 +92,9 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
                 Order = 0, // Representa datos del año anterior o históricos
                 ColumnName = $"{currentYear - 1}-", // Formato "Año-"
                 ValueUSD = receivedPriorYears,
-                //ValueByPOUSD = receivedPriorYears // Si solo vienen de POs recibidos
+
+                Month = -1,
+                Year = currentYear - 1,
             };
 
             dto.MonthlyData.Add(result);
@@ -170,6 +110,8 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
                 Order = 13,
                 ColumnName = $"{currentYear + 1}+",
                 ValueUSD = 0,
+                Month = -1,
+                Year = currentYear + 1
 
             };
 
@@ -184,7 +126,7 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
             foreach (var ganttTask in ganttTasksAssigned)
             {
                 var ordenesDeCompraEsperadaPorBasicItem = OrdenesdeCompra.SelectMany(po => po.PurchaseOrderItems)
-                       .Where(poi => poi.BasicEngineeringItemId == ganttTask.BasicEngineeringItemId &&
+                       .Where(poi => poi.BudgetItemId == ganttTask.BudgetItemId &&
                                         poi.BudgetItemId == ganttTask.BudgetItemId &&
                                      poi.PurchaseOrder != null && poi.PurchaseOrder.ExpectedDate.HasValue &&
                                      poi.PurchaseOrder.ExpectedDate.Value.Year > currentYear

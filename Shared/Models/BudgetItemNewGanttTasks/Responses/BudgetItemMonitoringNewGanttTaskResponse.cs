@@ -55,13 +55,13 @@ namespace Shared.Models.BudgetItemNewGanttTasks.Responses
         [JsonIgnore]
         public double ToCommitUSD => BudgetPlannedUSD - BudgetAssignedUSD;
         public int Order { get; set; } = 0;
-        public Guid SelectedEngineeringItemsBudgetId { get; set; } = Guid.Empty;
-        public BasicResponse SelectedEngineeringItemsBudget { get; set; } = null!;
+        //public Guid SelectedEngineeringItemsBudgetId { get; set; } = Guid.Empty;
+        //public BasicResponse SelectedEngineeringItemsBudget { get; set; } = null!;
         [JsonIgnore]
         public List<PurchaseOrderResponse> PurchaseOrders =>
-            _BudgetItem == null ? new List<PurchaseOrderResponse>() :
-            SelectedEngineeringItemsBudgetId == Guid.Empty ? _BudgetItem.PurchaseOrders :
-            _BudgetItem.PurchaseOrders.Select(x => x).Where(y => y.PurchaseOrderItems.Any(z => z.BasicReponseId == SelectedEngineeringItemsBudgetId)).ToList();
+            _BudgetItem == null ? new List<PurchaseOrderResponse>() : _BudgetItem.PurchaseOrders;
+            //SelectedEngineeringItemsBudgetId == Guid.Empty ? _BudgetItem.PurchaseOrders :
+            //_BudgetItem.PurchaseOrders.Select(x => x).Where(y => y.PurchaseOrderItems.Any(z => z.BasicReponseId == SelectedEngineeringItemsBudgetId)).ToList();
     }
 
 }

@@ -34,7 +34,7 @@
 
         </PropertyColumn>
 
-        <PropertyColumn Property="x => x.BasicResponseName" Title="Sub Item" CellStyle="width:400px">
+    @*     <PropertyColumn Property="x => x.BasicResponseName" Title="Sub Item" CellStyle="width:400px">
             <CellTemplate Context="row">
                 @if (row.Item.BudgetItem != null)
                 {
@@ -61,7 +61,7 @@
 
             </CellTemplate>
 
-        </PropertyColumn>
+        </PropertyColumn> *@
         <PropertyColumn Property="x => x.BudgetUSD" Title="Item Budget, USD" />
         <PropertyColumn Property="x => x.BudgetAssignedUSD" Title="Assigned, USD">
             <CellTemplate Context="row">

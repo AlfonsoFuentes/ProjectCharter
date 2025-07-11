@@ -26,16 +26,16 @@ namespace Server.EndPoint.PurchaseOrders.Commands
                         rowitem.UnitaryValueQuoteCurrency = item.UnitaryQuoteCurrency;
                         rowitem.Quantity = item.Quantity;
                         rowitem.Order = item.Order;
-                        if(item.BasicResponse != null)
-                        {
-                            rowitem.BasicEngineeringItemId = item.BasicResponse.Id;
+                        //if(item.BasicResponse != null)
+                        //{
+                        //    rowitem.BasicEngineeringItemId = item.BasicResponse.Id;
                         
-                        }
+                        //}
 
                         await Repository.AddAsync(rowitem);
                     }
 
-                    List<string> cache = [.. StaticClass.PurchaseOrders.Cache.KeyCreated(row.Id, row.ProjectId)];
+                    List<string> cache = [.. StaticClass.PurchaseOrders.Cache.KeyCreated(row.Id, row.ProjectId, row.MainBudgetItemId)];
 
                     var result = await Repository.Context.SaveChangesAndRemoveCacheAsync(cache.ToArray());
 

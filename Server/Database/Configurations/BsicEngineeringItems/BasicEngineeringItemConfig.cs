@@ -14,18 +14,18 @@ namespace Server.Database.Configurations.BsicEngineeringItems
                  .IsRequired()
                  .OnDelete(DeleteBehavior.Cascade);
 
-            builder
-                .HasMany(m => m.BudgetItemNewGanttTasks) // Un hito tiene un padre
-                .WithOne(m => m.SelectedBasicEngineeringItem) // Un padre puede tener muchos subhitos
-                .HasForeignKey(m => m.SelectedBasicEngineeringItemId) // Clave foránea
-                .OnDelete(DeleteBehavior.Restrict); // Evita la eliminación en cascada para evitar problemas
+            //builder
+            //    .HasMany(m => m.BudgetItemNewGanttTasks) // Un hito tiene un padre
+            //    .WithOne(m => m.SelectedBasicEngineeringItem) // Un padre puede tener muchos subhitos
+            //    .HasForeignKey(m => m.SelectedBasicEngineeringItemId) // Clave foránea
+            //    .OnDelete(DeleteBehavior.Restrict); // Evita la eliminación en cascada para evitar problemas
 
 
 
-            builder.HasMany(x => x.PurchaseOrderItems)
-                .WithOne(x => x.BasicEngineeringItem)
-                .HasForeignKey(x => x.BasicEngineeringItemId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //builder.HasMany(x => x.PurchaseOrderItems)
+            //    .WithOne(x => x.BasicEngineeringItem)
+            //    .HasForeignKey(x => x.BasicEngineeringItemId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
         }
     }

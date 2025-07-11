@@ -91,7 +91,7 @@ namespace Server.EndPoint.BudgetItems.Queries
                 .Include(p => p.BudgetItems).ThenInclude(x => (x as Pipe)!.PipeItems!).ThenInclude(x => x.PipeTemplate!)
                 .Include(p => p.BudgetItems).ThenInclude(x => (x as Valve)!.ValveItems!).ThenInclude(x => x.ValveTemplate!).ThenInclude(x => x.BrandTemplate!)
                 .Include(p => p.BudgetItems).ThenInclude(x => (x as Equipment)!.EquipmentItems!).ThenInclude(x => x.EquipmentTemplate!).ThenInclude(x => x.BrandTemplate!)
-                .Include(x => x.BudgetItems).ThenInclude(x => x.BudgetItemNewGanttTasks).ThenInclude(x => x.SelectedBasicEngineeringItem!)
+                .Include(x => x.BudgetItems).ThenInclude(x => x.BudgetItemNewGanttTasks)/*.ThenInclude(x => x.SelectedBasicEngineeringItem!)*/
 
                 ;
 

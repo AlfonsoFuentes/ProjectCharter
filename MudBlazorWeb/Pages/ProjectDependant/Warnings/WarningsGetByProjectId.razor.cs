@@ -1,6 +1,4 @@
 using Shared.Models.Projects.Reponses;
-using Shared.Models.Scopes.Records;
-using Shared.Models.Scopes.Responses;
 using Shared.Models.Warnings.Records;
 using Shared.Models.Warnings.Responses;
 
@@ -9,11 +7,10 @@ public partial class WarningsGetByProjectId
 {
     [Parameter]
     public ProjectResponse Project { get; set; } = null!;
-    public List<WarningResponse> Items { get; set; } = new();
-    string nameFilter = string.Empty;
-    public Func<WarningResponse, bool> Criteria => x => x.WarningText.Contains(nameFilter, StringComparison.InvariantCultureIgnoreCase);
-    public List<WarningResponse> FilteredItems => string.IsNullOrEmpty(nameFilter) ? Items :
-        Items.Where(Criteria).ToList();
+
+    WarningResponseList Response = new();
+   
+   
     protected override async Task OnParametersSetAsync()
     {
         await GetAll();
@@ -27,7 +24,8 @@ public partial class WarningsGetByProjectId
         });
         if (result.Succeeded)
         {
-            Items = result.Data.Items;
+            Response = result.Data;
         }
     }
+    
 }

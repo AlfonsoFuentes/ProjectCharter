@@ -6,12 +6,16 @@
             <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1">
                 <MudTabPanel Text="Task Definition">
                     <MudGrid>
-                        <MudItem sm="12" xs="12">
+                        <MudItem sm="12" xs="10">
                             <TextField @bind-Value="@Model.Name"
                                        ValidateAsync="ValidateAsync"
                                        Label="Name"
                                        For="@(() => Model.Name)">
                             </TextField>
+                        </MudItem> 
+                        <MudItem sm="12" xs="2">
+                            <Switch Label="Is Milestone?" @bind-Value=@Model.IsMilestone></Switch>
+                 
                         </MudItem>
                     </MudGrid>
                     @if (Model.IsTask)

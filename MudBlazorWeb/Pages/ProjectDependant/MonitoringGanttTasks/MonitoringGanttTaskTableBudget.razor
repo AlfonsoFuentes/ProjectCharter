@@ -1,0 +1,176 @@
+﻿@using Shared.Enums.TaskStatus
+<style>
+    .fixed-column {
+        position: sticky;
+        left: 0;
+        background-color: white;
+        z-index: 1;
+        box-shadow: 1px 0 0 #ccc;
+    }
+
+    .gantt-progress-cell {
+        position: relative;
+        height: 40px;
+        padding: 0;
+        overflow: visible;
+    }
+
+    .gantt-barblue {
+        position: absolute;
+        height: 10px;
+        background-color: #2196F3;
+        border-radius: 4px;
+        top: 20%;
+        transform: translateY(-20%);
+        z-index: 2;
+    }
+
+    .gantt-barred {
+        position: absolute;
+        height: 10px;
+        background-color: palevioletred;
+        border-radius: 4px;
+        top: 60%;
+        transform: translateY(-60%);
+        z-index: 2;
+    }
+
+    .gantt-timeline {
+        display: flex;
+        white-space: nowrap;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 4px;
+        position: relative;
+        height: 24px;
+    }
+
+    .gantt-scale-unit {
+        width: 30px;
+        text-align: center;
+        font-size: 0.75rem;
+        float: left;
+        height: 24px;
+        position: relative;
+    }
+
+    .weekend-line {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background-color: red;
+        z-index: 1;
+    }
+</style>
+
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+
+
+
+    <!-- Contenedor general con scroll único -->
+    <div style="overflow-x: auto; width: 100%;overflow-y: auto;">
+        @if (loaded)
+        {
+            <MudSimpleTable Dense="true" Hover="true" Bordered="true" Striped="true"
+                            Style="overflow-y: auto;min-width: 1200px; width: max-content;" FixedHeader=true>
+                <thead>
+                    <tr>
+                        <th class="fixed-column" style="width: 50px;">ID</th>
+                        <th class="fixed-column" style="width: 80px;">WBS</th>
+                        <th class="fixed-column" style="width: 300px;">Name</th>
+                        <th class="fixed-column" style="width: 120px;">Start Date</th>
+                        <th class="fixed-column" style="width: 120px;">End Date</th>
+                        <th style="width: 80px;">Duration</th>
+                        <th style="width: 100px;">Dependencies</th>
+                        <th style="width: 100px;">Status</th>
+                        <th style="width: 150px;">Planned, USD</th>
+                        <th style="width: 150px;">Assigned, USD</th>
+                        <th style="width: 150px;">Actual, USD</th>
+                        <th style="width: 150px;">Commitment, USD</th>
+                        <th style="width: 150px;">To Commit, USD</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var context in Response.OrderedItems)
+                    {
+
+
+                        <tr>
+                            <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.MainOrder.ToString()" /></td>
+                            <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.WBS" /></td>
+                            <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.Name" /></td>
+                            <td class="fixed-column"> <SimpleText IsBold="@context.HasSubTask" Text="@context.stringStartDate" /></td>
+                            <td class="fixed-column"> <SimpleText IsBold="@context.HasSubTask" Text="@context.stringEndDate" /></td>
+                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.Duration"></SimpleText></td>
+
+                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.DependencyList"></SimpleText></td>
+                            <td>
+                                @if(!context.HasSubTask)
+                                {
+                                    <MudSelect Value="@context.TaskStatus" Dense=true ValueChanged="@((arg) => OnChangeStatus(context, arg))" T="GanttTaskStatusEnum" FullWidth=true
+                                               Variant="Variant.Outlined" FitContent=true Margin="Margin.Dense" Disabled=@context.HasSubTask>
+                                        <MudSelectItem Value="GanttTaskStatusEnum.NotInitiated">
+
+                                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Error">
+
+                                            </MudIcon>
+                                        </MudSelectItem>
+                                        <MudSelectItem Value="GanttTaskStatusEnum.OnGoing">
+
+                                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Warning">
+
+                                            </MudIcon>
+                                        </MudSelectItem>
+                                        <MudSelectItem Value="GanttTaskStatusEnum.Closed">
+                                            <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Success">
+
+                                            </MudIcon>
+
+                                        </MudSelectItem>
+                                    </MudSelect>
+                                }
+        
+                      
+
+
+
+                            </td>
+                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sBudgetPlannedUSD"></SimpleText></td>
+                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sBudgetAssignedUSD"></SimpleText></td>
+                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sBudgetAssignedActualUSD"></SimpleText></td>
+                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sBudgetAssignedCommitmentUSD"></SimpleText></td>
+                            <td><SimpleText IsBold=@context.HasSubTask Text="@context.sToCommitUSD"></SimpleText></td>
+
+
+
+                        </tr>
+
+                    }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>@Response.OrderedItems.Sum(x => x.BudgetPlannedUSD).ToCurrencyCulture()</strong></td>
+                        <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedUSD).ToCurrencyCulture()</strong></td>
+                        <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedActualUSD).ToCurrencyCulture()</strong></td>
+                        <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedCommitmentUSD).ToCurrencyCulture()</strong></td>
+                        <td><strong>@Response.OrderedItems.Sum(x => x.ToCommitUSD).ToCurrencyCulture()</strong></td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+        }
+    </div>
+</MudContainer>
+
+@code {
+
+}

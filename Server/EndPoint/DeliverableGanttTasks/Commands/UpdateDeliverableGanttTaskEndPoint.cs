@@ -1,9 +1,6 @@
-﻿using Server.Database.Entities.BudgetItems;
-using Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.EngineeringItems;
-using Shared.Models.BudgetItemNewGanttTasks.Responses;
+﻿using Shared.Models.BudgetItemNewGanttTasks.Responses;
 using Shared.Models.DeliverableGanttTasks.Responses;
 using Shared.Models.MainTaskDependencys;
-using static Shared.StaticClasses.StaticClass;
 
 namespace Server.EndPoint.DeliverableGanttTasks.Commands
 {
@@ -79,7 +76,7 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
                     {
                         await RemoveSubTask(Data, task.SubTasks, Repository);
                     }
-                    
+
                 }
             }
             async Task UpdateRows(DeliverableGanttTaskResponseList Data, IRepository Repository)
@@ -153,7 +150,7 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
             async Task UpdateTask(DeliverableGanttTaskResponse data, IRepository Repository)
             {
                 Func<IQueryable<NewGanttTask>, IIncludableQueryable<NewGanttTask, object>> includes = x => x
-                .Include(x => x.BudgetItemNewGanttTasks).ThenInclude(x => x.SelectedBasicEngineeringItem)
+                .Include(x => x.BudgetItemNewGanttTasks)/*.ThenInclude(x => x.SelectedBasicEngineeringItem)*/
                 .Include(x => x.MainTasks);
 
                 Expression<Func<NewGanttTask, bool>> criteria = x => x.Id == data.Id;
@@ -175,11 +172,11 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
                         budget.Map(item);
 
                         await Repository.AddAsync(item);
-                        if (budget.SelectedEngineeringItemsBudgetId != Guid.Empty)
-                        {
-                            item.SelectedBasicEngineeringItemId = budget.SelectedEngineeringItemsBudgetId;
+                        //if (budget.SelectedEngineeringItemsBudgetId != Guid.Empty)
+                        //{
+                        //    item.SelectedBasicEngineeringItemId = budget.SelectedEngineeringItemsBudgetId;
 
-                        }
+                        //}
 
                     }
 
@@ -195,10 +192,10 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
                     if (data.BudgetItemGanttTasks.Any(x => x.BudgetItemId == budgetitemItemNewGanttTasks.BudgetItemId && x.GanttTaskId == budgetitemItemNewGanttTasks.NewGanttTaskId))
                     {
                         var datafiltered = data.BudgetItemGanttTasks.Where(x => x.BudgetItemId == budgetitemItemNewGanttTasks.BudgetItemId && x.GanttTaskId == budgetitemItemNewGanttTasks.NewGanttTaskId).ToList();
-                        if (!datafiltered.Any(x => x.SelectedEngineeringItemsBudgetId == budgetitemItemNewGanttTasks.SelectedBasicEngineeringItemId))
-                        {
-                            await Repository.RemoveAsync(budgetitemItemNewGanttTasks);
-                        }
+                        //if (!datafiltered.Any(x => x.SelectedEngineeringItemsBudgetId == budgetitemItemNewGanttTasks.SelectedBasicEngineeringItemId))
+                        //{
+                        //    await Repository.RemoveAsync(budgetitemItemNewGanttTasks);
+                        //}
                     }
                     else
                     {
@@ -216,33 +213,34 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
 
                 foreach (var budget in data.OrderedBudgetItemGanttTasks)
                 {
-                    if (budget.SelectedEngineeringItemsBudget != null)
-                    {
-                        if (row!.BudgetItemNewGanttTasks.Any(x => x.BudgetItemId == budget.BudgetItemId && x.NewGanttTaskId == budget.GanttTaskId && x.SelectedBasicEngineeringItemId == budget.SelectedEngineeringItemsBudget.Id))
-                        {
-                            var budgetItemNewGanttTasks = row.BudgetItemNewGanttTasks.FirstOrDefault(x => x.BudgetItemId == budget.BudgetItemId && x.NewGanttTaskId == budget.GanttTaskId && x.SelectedBasicEngineeringItemId == budget.SelectedEngineeringItemsBudget.Id);
-                            if (budgetItemNewGanttTasks != null)
-                            {
-                                budget.Map(budgetItemNewGanttTasks);
-                                await Repository.UpdateAsync(budgetItemNewGanttTasks);
+                    //if (budget.SelectedEngineeringItemsBudget != null)
+                    //{
+                    //    if (row!.BudgetItemNewGanttTasks.Any(x => x.BudgetItemId == budget.BudgetItemId && x.NewGanttTaskId == budget.GanttTaskId /*&& x.SelectedBasicEngineeringItemId == budget.SelectedEngineeringItemsBudget.Id*/))
+                    //    {
+                    //        var budgetItemNewGanttTasks = row.BudgetItemNewGanttTasks.FirstOrDefault(x => x.BudgetItemId == budget.BudgetItemId && x.NewGanttTaskId == budget.GanttTaskId
+                    //        /*&& x.SelectedBasicEngineeringItemId == budget.SelectedEngineeringItemsBudget.Id*/);
+                    //        if (budgetItemNewGanttTasks != null)
+                    //        {
+                    //            budget.Map(budgetItemNewGanttTasks);
+                    //            await Repository.UpdateAsync(budgetItemNewGanttTasks);
 
-                            }
-                        }
-                        else
-                        {
-                            if (budget.BudgetItemId != Guid.Empty && row != null)
-                            {
-                                var item = BudgetItemNewGanttTask.Create(budget.BudgetItemId, row.Id);
-                                budget.Map(item);
-                                item.SelectedBasicEngineeringItemId = budget.SelectedEngineeringItemsBudget.Id;
-                                await Repository.AddAsync(item);
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        if (budget.BudgetItemId != Guid.Empty && row != null)
+                    //        {
+                    //            var item = BudgetItemNewGanttTask.Create(budget.BudgetItemId, row.Id);
+                    //            budget.Map(item);
+                    //            //item.SelectedBasicEngineeringItemId = budget.SelectedEngineeringItemsBudget.Id;
+                    //            await Repository.AddAsync(item);
 
-                            }
+                    //        }
 
-                        }
+                    //    }
 
-                    }
-                    else if (row!.BudgetItemNewGanttTasks.Any(x => x.BudgetItemId == budget.BudgetItemId && x.NewGanttTaskId == budget.GanttTaskId))
+                    //}
+                     if (row!.BudgetItemNewGanttTasks.Any(x => x.BudgetItemId == budget.BudgetItemId && x.NewGanttTaskId == budget.GanttTaskId))
                     {
                         var budgetItemNewGanttTasks = row.BudgetItemNewGanttTasks.FirstOrDefault(x => x.BudgetItemId == budget.BudgetItemId && x.NewGanttTaskId == budget.GanttTaskId);
                         if (budgetItemNewGanttTasks != null)
@@ -328,8 +326,8 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
             row.InternalOrder = request.InternalOrder;
             row.MainOrder = request.MainOrder;
             row.Name = request.Name;
-            row.EndDate = request.StartDate;
-            row.StartDate = request.EndDate;
+            row.EndDate = request.EndDate;
+            row.StartDate = request.StartDate;
             row.DurationInUnit = request.DurationInUnit;
             row.DurationInDays = request.DurationInDays;
             row.DurationUnit = request.DurationUnit;
@@ -345,11 +343,12 @@ namespace Server.EndPoint.DeliverableGanttTasks.Commands
             row.MainOrder = response.MainOrder;
             row.StartDate = response.StartDate!.Value;
             row.EndDate = response.EndDate!.Value;
-
+            row.IsMilestone = response.IsMilestone;
             row.DurationInDays = response.DurationInDays;
 
             row.DurationUnit = response.DurationUnit;
             row.DurationInUnit = response.DurationInUnit;
+            
 
             row.ParentWBS = response.ParentWBS;
             row.ParentId = response.IsParentDeliverable ? null : response.TaskParentId;

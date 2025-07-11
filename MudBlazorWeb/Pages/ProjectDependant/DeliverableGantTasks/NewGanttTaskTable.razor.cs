@@ -10,6 +10,7 @@ using Shared.Models.DeliverableGanttTasks.Records;
 using Shared.Models.DeliverableGanttTasks.Responses;
 using Shared.Models.Projects.Reponses;
 using System.Globalization;
+using static MudBlazorWeb.Pages.ProjectDependant.ExecutionPlan.ExecutionPlanPage;
 
 namespace MudBlazorWeb.Pages.ProjectDependant.DeliverableGantTasks;
 public partial class NewGanttTaskTable
@@ -24,7 +25,7 @@ public partial class NewGanttTaskTable
     protected override async Task OnInitializedAsync()
     {
         await GetAll();
-      
+
         loaded = true;
     }
     bool loaded = false;
@@ -46,6 +47,12 @@ public partial class NewGanttTaskTable
             Response = result.Data;
             Response.UpdateSubTaskAndDependencies();
             Response.UpdateBudgetItems(BudgetItemResponse);
+            if (Response.Items.Count > 0)
+            {
+                GenerateTimeline();
+
+            }
+
         }
 
 
@@ -60,7 +67,7 @@ public partial class NewGanttTaskTable
         if (result.Succeeded)
         {
             BudgetItemResponse = result.Data;
-           
+
             BudgetItemResponse.OrderedItems.ForEach(x =>
             {
                 x.BudgetItemGanttTasks.ForEach(y =>
@@ -72,7 +79,7 @@ public partial class NewGanttTaskTable
         }
 
     }
-    
+
     string LegendAdd => SelectedRow == null ? $"Add new deliverable to {Project.Name}" : $"Add Subtask to {SelectedRow.Name}";
     public async Task AddRow()
     {
@@ -121,7 +128,7 @@ public partial class NewGanttTaskTable
                 { x => x.Model, EditRow },
                 { x => x.Response, Response },
                 { x => x.BudgetItemResponse, BudgetItemResponse },
-        
+
             };
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraLarge };
             var dialog = await DialogService.ShowAsync<GantTaskDialog>(EditRow.IsDeliverable ? "Add Deliverable" : "Add Task", parameters, options);
@@ -182,7 +189,7 @@ public partial class NewGanttTaskTable
                 { x => x.Model, editrow },
                 { x => x.Response, Response },
                 { x => x.BudgetItemResponse, BudgetItemResponse },
-            
+
             };
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraLarge };
             var dialog = await DialogService.ShowAsync<GantTaskDialog>(editrow.IsDeliverable ? "Edit Deliverable" : "Edit Task", parameters, options);
@@ -370,98 +377,60 @@ public partial class NewGanttTaskTable
     {
 
     }
-    #region Blazor
-    private string GetDayStyle(bool isWeekend)
+    private List<GanttMonth> timeline = new();
+
+    class GanttMonth
     {
-        if (isWeekend)
+        public string Label { get; set; } = "";
+        public DateTime StartDate { get; set; }
+        public int PositionIndex { get; set; }
+    }
+    private (DateTime MinDate, DateTime MaxDate) GetGlobalDateRange(IEnumerable<DeliverableGanttTaskResponse> items)
+    {
+        var allDates = items.SelectMany(x => new[] { x.StartDate!.Value, x.EndDate!.Value });
+        return (allDates.Min(), allDates.Max());
+    }
+    private void GenerateTimeline()
+    {
+        var result = GetGlobalDateRange(Response.Items);
+        var months = new List<GanttMonth>();
+        var current = new DateTime(result.MinDate.Year, result.MinDate.Month, 1);
+        var end = new DateTime(result.MaxDate.Year, result.MaxDate.Month, 1);
+        int index = 0;
+
+        while (current <= end)
         {
-            return "background-color: #ffebee;";
+            months.Add(new GanttMonth
+            {
+                Label = $"{current:MMM}{current:yyyy}",
+                StartDate = current,
+                PositionIndex = index++
+            });
+
+            current = current.AddMonths(1);
         }
-        return "";
+        timeline = months;
+        MapTasksToGantt(Response.Items, timeline);
     }
-
-    private string GetScaleLabel(DateTime date, TimeScale scale)
+    private void MapTasksToGantt(List<DeliverableGanttTaskResponse> tasks, List<GanttMonth> timeline)
     {
-        return scale switch
+        var result = new List<GanttTask>();
+
+        foreach (var task in tasks)
         {
-            TimeScale.Daily => $"{date.Day}-{date.Month}",
-            TimeScale.Weekly => $"W{GetIso8601WeekOfYear(date)}",
-            TimeScale.Monthly => $"{date.ToString("MMM").ToUpper()}-{date.Year}",
-            TimeScale.Quarterly => $"Q{GetQuarter(date)}-{date.Year}",
-            TimeScale.SemiAnnually => $"S{(date.Month <= 6 ? "1" : "2")}-{date.Year}",
-            TimeScale.Yearly => date.Year.ToString(),
-            _ => date.Day.ToString()
-        };
-    }
+            var taskStart = new DateTime(task.StartDate!.Value.Year, task.StartDate!.Value.Month, 1);
+            var taskEnd = new DateTime(task.EndDate!.Value.Year, task.EndDate!.Value.Month, 1);
 
-    private DateTime GetNextDate(DateTime date, TimeScale scale)
-    {
-        return scale switch
-        {
-            TimeScale.Daily => date.AddDays(1),
-            TimeScale.Weekly => date.AddDays(7),
-            TimeScale.Monthly => new DateTime(date.Year, date.Month, 1).AddMonths(1),
-            TimeScale.Quarterly => new DateTime(date.Year, ((date.Month - 1) / 3 * 3) + 1, 1).AddMonths(3),
-            TimeScale.SemiAnnually => new DateTime(date.Year, (date.Month <= 6 ? 7 : 1), 1),
-            TimeScale.Yearly => new DateTime(date.Year, 1, 1).AddYears(1),
-            _ => date.AddDays(1)
-        };
-    }
+            //  Aseguramos que cuente todos los meses completos entre fechas
+            int durationInMonths = ((taskEnd.Year - taskStart.Year) * 12 + taskEnd.Month - taskStart.Month) + 1;
 
-    private int GetScaleWidth(TimeScale scale) => scale switch
-    {
-        TimeScale.Daily => 30,
-        TimeScale.Weekly => 40,
-        TimeScale.Monthly => 50,
-        TimeScale.Quarterly => 90,
-        TimeScale.SemiAnnually => 120,
-        TimeScale.Yearly => 150,
-        _ => 30
-    };
+            var startPos = timeline.FindIndex(m => m.StartDate >= taskStart);
+            if (startPos == -1 || durationInMonths <= 0) continue;
+            task.StartPositionIndex = startPos;
+            task.DurationInMonths = durationInMonths;
 
-    private int GetQuarter(DateTime date) => (date.Month + 2) / 3;
-
-    private int GetIso8601WeekOfYear(DateTime date)
-    {
-        var day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
-        date = date.AddDays(day - DayOfWeek.Monday == -1 ? 6 : day - DayOfWeek.Monday); // Asegura lunes como inicio de semana
-        return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-    }
-    private string GetScaleUnitStyle(DateTime date, TimeScale scale)
-    {
-        var isWeekend = date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
-
-        string style = $"width: {GetScaleWidth(scale)}px;";
-
-        if (scale == TimeScale.Daily && isWeekend)
-        {
-            style += " background-color: #ffebee;";
         }
 
-        return style;
-    }
 
-    #endregion
-    double scaleFactor => SelectedScale switch
-    {
-        TimeScale.Daily => 1,
-        TimeScale.Weekly => 7,
-        TimeScale.Monthly => 30,
-        TimeScale.Quarterly => 90,
-        TimeScale.SemiAnnually => 180,
-        TimeScale.Yearly => 365,
-        _ => 1
-    };
-    int offsetDays(DeliverableGanttTaskResponse context) => (context.StartDate!.Value.Date - Response.ProjectStart!.Value.Date).Days;
-    int offsetUnits(DeliverableGanttTaskResponse context) => (int)(offsetDays(context) / scaleFactor);
-    string GetLeft(DeliverableGanttTaskResponse context)
-    {
-        return $"{offsetUnits(context) * GetScaleWidth(SelectedScale) + 10}px";
-    }
-    double durationDays(DeliverableGanttTaskResponse context) => context.DurationInDays + 1;
-    int durationUnits(DeliverableGanttTaskResponse context) => (int)(durationDays(context) / scaleFactor);
-    string GetWidth(DeliverableGanttTaskResponse context)
-    {
-        return $"{Math.Max(1, durationUnits(context) * GetScaleWidth(SelectedScale) - 10)}px";
     }
 }

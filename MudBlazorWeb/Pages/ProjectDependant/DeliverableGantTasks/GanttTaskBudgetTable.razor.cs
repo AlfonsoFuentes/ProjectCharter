@@ -38,21 +38,21 @@ public partial class GanttTaskBudgetTable
 
 
     }
-    async Task SelectedBasicItemChanged(BudgetItemNewGanttTaskResponse selected)
-    {
-        if (selected.SelectedEngineeringItemsBudget != null)
-        {
-            selected.SelectedEngineeringItemsBudgetId = selected.SelectedEngineeringItemsBudget!.Id;
+    //async Task SelectedBasicItemChanged(BudgetItemNewGanttTaskResponse selected)
+    //{
+    //    if (selected.SelectedEngineeringItemsBudget != null)
+    //    {
+    //        selected.SelectedEngineeringItemsBudgetId = selected.SelectedEngineeringItemsBudget!.Id;
 
-            if (RecreateItems.HasDelegate)
-            {
-                await RecreateItems.InvokeAsync();
-            }
+    //        if (RecreateItems.HasDelegate)
+    //        {
+    //            await RecreateItems.InvokeAsync();
+    //        }
 
-        }
+    //    }
 
 
-    }
+    //}
 
     public async Task Delete(BudgetItemNewGanttTaskResponse response)
     {

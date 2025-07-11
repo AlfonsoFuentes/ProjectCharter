@@ -43,7 +43,7 @@ namespace Server.EndPoint.PurchaseOrders.Commands
                     }
 
                     await Repository.UpdateAsync(row);
-                    List<string> cache = [.. StaticClass.PurchaseOrders.Cache.KeyClosed(row.Id, row.ProjectId)];
+                    List<string> cache = [.. StaticClass.PurchaseOrders.Cache.KeyClosed(row.Id, row.ProjectId, row.MainBudgetItemId)];
 
                     var result = await Repository.Context.SaveChangesAndRemoveCacheAsync(cache.ToArray());
 

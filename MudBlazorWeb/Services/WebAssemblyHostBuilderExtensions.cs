@@ -19,6 +19,7 @@ namespace MudBlazorWeb.Services
 
         public static WebAssemblyHostBuilder AddClientServices(this WebAssemblyHostBuilder builder)
         {
+           
             builder
                 .Services
 
@@ -45,11 +46,16 @@ namespace MudBlazorWeb.Services
             builder.Services.AddHttpClientInterceptor();
             builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 
-            //builder.Services.CurrencyService();
-            builder.Services.CurrencyRateService();
+      
+            builder.Services.CurrencyService();
             builder.Services.AddScoped<ISnackBarService, SnackBarService>();
-            builder.Services.AddScoped<IModelLocalStorage, ModelLocalStorage>();
 
+            //builder.Services.AddLogging(logging =>
+            //{
+         
+           
+            //    logging.AddDebug();
+            //});
             return builder;
         }
 

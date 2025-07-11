@@ -23,6 +23,7 @@ namespace Shared.Models.DeliverableGanttTasks.Responses
         public int InternalOrder { get; set; } = 0;
         public string Name { get; set; } = string.Empty;
         public string ParentWBS { get; set; } = string.Empty;
+        public bool IsMilestone { get; set; } = false;
         public string WBS => string.IsNullOrEmpty(ParentWBS) ? $"{InternalOrder}" : $"{ParentWBS}.{InternalOrder}";
         DateTime? _StartDate;
         DateTime? _EndDate;
@@ -95,7 +96,7 @@ namespace Shared.Models.DeliverableGanttTasks.Responses
         public string? DurationUnit { get; set; } = string.Empty;
         public double DurationInDays { get; set; }
         public double DurationInUnit { get; set; }
-
+        
        
         string? _DependencyList;
        
@@ -157,5 +158,8 @@ namespace Shared.Models.DeliverableGanttTasks.Responses
             }
             return _textLines;
         }
+        public int StartPositionIndex { get; set; }
+        public int DurationInMonths { get; set; }
     }
+
 }

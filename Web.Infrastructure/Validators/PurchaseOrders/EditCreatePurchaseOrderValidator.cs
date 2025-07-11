@@ -41,8 +41,8 @@ namespace Web.Infrastructure.Validators.PurchaseOrders
 
             RuleFor(x => x.QuoteCurrency).Must(x => x.Id != CurrencyEnum.None.Id).WithMessage("Quote currency must be defined");
 
-            RuleFor(x => x.Name).Must(ReviewNameExist)
-                .When(x => !string.IsNullOrEmpty(x.Name)).WithMessage(x => $"{x.Name} already exist"); ;
+            //RuleFor(x => x.Name).Must(ReviewNameExist)
+            //    .When(x => !string.IsNullOrEmpty(x.Name)).WithMessage(x => $"{x.Name} already exist"); ;
 
             RuleFor(x => x.PurchaseRequisition).MustAsync(ReviewPRExist)
                 .When(x => !string.IsNullOrEmpty(x.PurchaseRequisition)).WithMessage(x => $"{x.PurchaseRequisition} already exist");
@@ -54,7 +54,7 @@ namespace Web.Infrastructure.Validators.PurchaseOrders
                 order.RuleFor(x => x.BudgetItemId).NotEqual(Guid.Empty).WithMessage("Required");
                 order.RuleFor(x => x.Name).NotEmpty().WithMessage("Required");
                 order.RuleFor(x => x.Name).NotNull().WithMessage("Required");
-                order.RuleFor(x => x.BasicResponse).NotNull().When(x => x.BudgetItem != null & x.BudgetItem!.HasSubItems).WithMessage("Required");
+                //order.RuleFor(x => x.BasicResponse).NotNull().When(x => x.BudgetItem != null & x.BudgetItem!.HasSubItems).WithMessage("Required");
             });
 
 

@@ -1,0 +1,56 @@
+﻿<MudCard Style="width:100%">
+    <MudCardContent>
+        <MudDataGrid T="WarningResponse"
+                     MultiSelection="false"
+                     Items="@FilteredItems"
+                     Hideable="false"
+                     Dense=true
+                     Bordered=true
+                     Hover=true
+                     Outlined=true
+                     Filterable=false
+                     RowsPerPage="FilteredItems.Count==0?100:FilteredItems.Count"
+                     Striped=true>
+            <ToolBarContent>
+
+                <MudSpacer />
+                <TextField @bind-Value="@nameFilter" Placeholder="Search" Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></TextField>
+            </ToolBarContent>
+            <Columns>
+
+                <PropertyColumn Property="x => x.WarningText" Title="Warning" T="WarningResponse" TProperty="string" Hideable="false" Sortable="true" Filterable="false" />
+
+
+                <TemplateColumn CellClass="d-flex justify-end" T="WarningResponse">
+                    <CellTemplate Context="template">
+                        <MudStack Row=true Spacing="2">
+                            @if (template.Item.PurchaseOrder != null)
+                            {
+                                <IconButton ToolTip="@($"Edit {template.Item.PurchaseOrder.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => EditPurchaseOrderApproved(template.Item.PurchaseOrder))" />
+                                <IconButton ToolTip="@($"Receive {template.Item.PurchaseOrder.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.AssignmentTurnedIn" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => ReceivePurchaseOrder(template.Item.PurchaseOrder))" />
+
+                            }
+                            @if (template.Item.GanttTask != null)
+                            {
+                                <IconButton ToolTip="@($"Edit {template.Item.GanttTask.Name}")"
+                                            Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => EditGanttTask(template.Item.GanttTask))" />
+                            }
+                            
+
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+
+
+            <PagerContent>
+                <MudDataGridPager T="WarningResponse" />
+            </PagerContent>
+        </MudDataGrid>
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+}

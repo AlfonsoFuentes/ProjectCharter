@@ -1,8 +1,9 @@
 ﻿using Shared.Models.FileResults.Generics.Reponses;
+using Shared.Models.PurchaseOrders.Responses;
 
 namespace Shared.Models.BaseResponses
 {
-    public abstract class BaseResponse : IResponse
+    public abstract class BaseResponse : IResponse, IEqualityComparer<BaseResponse>
     {
         public string Name { get; set; } = string.Empty;
         public Guid Id { get; set; } = Guid.Empty;
@@ -28,7 +29,11 @@ namespace Shared.Models.BaseResponses
             yield return Name;
 
         }
-
+        public bool Equals(BaseResponse? x, BaseResponse? y)
+        {
+            if (x == null || y == null) return false;
+            return x.Id == y.Id;
+        }
         public override bool Equals(object? obj)
         {
             if (obj == null || obj.GetType() != GetType())
@@ -47,7 +52,10 @@ namespace Shared.Models.BaseResponses
                 .Select(x => x != null ? x.GetHashCode() : 0)
                 .Aggregate((x, y) => x ^ y);
         }
-
+        public int GetHashCode(BaseResponse obj)
+        {
+            return obj?.Id.GetHashCode() ?? 0;
+        }
 
     }
 }

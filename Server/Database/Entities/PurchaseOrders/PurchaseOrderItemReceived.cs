@@ -33,7 +33,7 @@ namespace Server.Database.Entities.PurchaseOrders
         [NotMapped]
         public double ReceivedUSD =>
            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? ValueReceivedCurrency :
-           PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? USDCOP==0?0: ValueReceivedCurrency / USDCOP :
+           PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? USDCOP == 0 ? 0 : ValueReceivedCurrency / USDCOP :
            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? USDEUR == 0 ? 0 : ValueReceivedCurrency / USDEUR :
              0;
     }

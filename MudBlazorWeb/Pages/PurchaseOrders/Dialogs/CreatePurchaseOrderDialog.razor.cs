@@ -2,8 +2,6 @@ using Blazored.FluentValidation;
 using MudBlazor;
 using MudBlazorWeb.Pages.Suppliers;
 using MudBlazorWeb.Services.CurrencyServices;
-using Shared.Enums.CurrencyEnums;
-using Shared.Models.BudgetItems.Records;
 using Shared.Models.BudgetItems.Responses;
 using Shared.Models.PurchaseOrders.Requests;
 using Shared.Models.PurchaseOrders.Responses;
@@ -13,9 +11,8 @@ using Shared.Models.Suppliers.Responses;
 namespace MudBlazorWeb.Pages.PurchaseOrders.Dialogs;
 public partial class CreatePurchaseOrderDialog
 {
-    [Inject]
-    public ICurrencyRate _CurrencyService { get; set; } = null!;
-    public ConversionRate RateList { get; set; } = null!;
+    
+ 
     FluentValidationValidator _fluentValidationValidator = null!;
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; } = null!;
@@ -41,11 +38,14 @@ public partial class CreatePurchaseOrderDialog
         }
     }
     List<BudgetItemWithPurchaseOrdersResponse> NonSelectedBudgetItemsOrdered => NonSelectedBudgetItems.OrderBy(x => x.Nomenclatore).ToList();
+    [Inject]
+    public INewCurrency _CurrencyService { get; set; } = null!;
+    public  ConversionRate ConversionRate { get; set; } = null!;
     protected override async Task OnInitializedAsync()
     {
-        RateList = await _CurrencyService.GetRates(DateTime.UtcNow);
-        var USDCOP = RateList == null ? 4000 : Math.Round(RateList.COP, 2);
-        var USDEUR = RateList == null ? 1 : Math.Round(RateList.EUR, 2);
+        ConversionRate=await _CurrencyService.GetRates(DateTime.UtcNow);
+        var USDCOP = Math.Round(ConversionRate.COP, 2);
+        var USDEUR = Math.Round(ConversionRate.EUR, 2);
         await GetSuppliers();
 
         NonSelectedBudgetItems = OriginalBudgetItems;

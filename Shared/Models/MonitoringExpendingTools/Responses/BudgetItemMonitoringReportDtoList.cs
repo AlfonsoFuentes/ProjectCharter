@@ -18,11 +18,16 @@ namespace Shared.Models.MonitoringExpendingTools.Responses
             ValueUSD = OrderedItems.Sum(y => y.MonthlyData.Where(z => z.Order == x.Order).Sum(z => z.ValueUSD))
         }).ToList();
         public List<ColumnMonitoringName> OrderedColumns => Columns.Count == 0 ? new() : Columns.OrderBy(x => x.Order).ToList();
-        public List<BudgetItemGantMonitoringReportDto> GanttItems => Items.Count == 0 ? new() :Items.SelectMany(x => x.GanttItems).ToList();
+        public List<BudgetItemGantMonitoringReportDto> GanttItems => Items.Count == 0 ? new() : Items.SelectMany(x => x.GanttItems).ToList();
 
     }
     public class BudgetItemMonitoringReportDto
     {
+        public override string ToString()
+        {
+            return Name;
+        }
+        public Guid Id { get; set; } = Guid.Empty;
         public int Order { get; set; } = 0;
         public string Name { get; set; } = string.Empty;
         public string Nomenclatore { get; set; } = string.Empty;
@@ -34,34 +39,5 @@ namespace Shared.Models.MonitoringExpendingTools.Responses
         public List<BudgetItemGantMonitoringReportDto> GanttItems { get; set; } = new();
 
 
-    }
-    public class BudgetItemGantMonitoringReportDto
-    {
-        public override string ToString() => $"{TaskName} - {BudgetItemName} (Planned: {BudgetPlannedUSD:C} (Assigned: {AssignedUSD:C} (Pending: {TaskPendingBudgetUSD:C})";
-        public Guid BudgetItemId { get; set; } = Guid.Empty;
-        public Guid? BasicEngineeringItemId { get; set; } = null;
-        public Guid GanttTaskId { get; set; } = Guid.Empty;
-        public double BudgetPlannedUSD { get; set; } = 0;
-        public double AssignedUSD { get; set; } = 0;
-        public DateTime EndDate { get; set; } = DateTime.MinValue;
-        public double TaskPendingBudgetUSD => BudgetPlannedUSD - AssignedUSD > 0 ? BudgetPlannedUSD - AssignedUSD : 0;
-        public string TaskName { get; set; } = string.Empty;
-        public string BudgetItemName { get; set; } = string.Empty;
-    }
-
-    public class MonthlyMonitoringData
-    {
-        public string ColumnName { get; set; } = string.Empty;
-        public int Order { get; set; }
-        public double ValueUSD { get; set; } = 0;
-        //public double ValueByPOUSD { get; set; } = 0;
-
-
-    }
-    public class ColumnMonitoringName
-    {
-        public int Order { get; set; } = 0;
-        public string Name { get; set; } = string.Empty;
-        public double ValueUSD { get; set; } = 0;
     }
 }

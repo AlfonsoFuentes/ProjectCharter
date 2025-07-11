@@ -17,7 +17,7 @@ namespace Server.EndPoint.PurchaseOrders.Commands
                     var cachekey = GetCacheKeys(row);
 
                     await Repository.RemoveAsync(row);
-                   
+
                     var result = await Repository.Context.SaveChangesAndRemoveCacheAsync(cachekey);
                     return Result.EndPointResult(result,
                         Data.Succesfully,
@@ -27,10 +27,10 @@ namespace Server.EndPoint.PurchaseOrders.Commands
             }
             private string[] GetCacheKeys(PurchaseOrder row)
             {
-                
+
                 List<string> cacheKeys = [
-                 ..StaticClass.PurchaseOrders.Cache.Key(row.Id, row.ProjectId),
-               
+                 ..StaticClass.PurchaseOrders.Cache.Key(row.Id, row.ProjectId,row.MainBudgetItemId),
+
                 ];
                 return cacheKeys.Where(key => !string.IsNullOrEmpty(key)).ToArray();
             }

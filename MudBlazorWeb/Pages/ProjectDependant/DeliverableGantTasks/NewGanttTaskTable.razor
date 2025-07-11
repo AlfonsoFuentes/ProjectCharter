@@ -52,6 +52,77 @@
         background-color: red;
         z-index: 1;
     }
+    /* Meses como encabezados (solo para mostrar texto, sin afectar diseño) */
+    .month-header {
+        background-color: transparent !important;
+        text-align: center;
+        font-weight: bold;
+        font-size: 12px;
+        padding: 4px 2px;
+        border-left: 1px solid #ccc;
+        width: 80px !important;
+        min-width: 80px !important;
+        max-width: 80px !important;
+        white-space: normal;
+        word-wrap: break-word;
+        color: transparent;
+        border: none !important;
+        visibility: hidden;
+        position: relative;
+    }
+
+        .month-header::before {
+            content: attr(data-label);
+            display: block;
+            color: #555;
+            text-align: center;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            white-space: normal;
+            word-wrap: break-word;
+            visibility: visible;
+        }
+
+    .gantt-task-bar {
+        position: absolute;
+        top: 10px;
+        height: 20px;
+        background-color: #2196F3;
+        border-radius: 4px;
+        left: 0;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    /* Tooltip sobre las barras */
+    .tooltip-gantt {
+        visibility: hidden;
+        width: max-content;
+        min-width: 150px;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 4px 8px;
+        position: absolute;
+        z-index: 10;
+        bottom: 125%; /* Aparece arriba */
+        left: 50%;
+        margin-left: -75px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .gantt-task-bar:hover .tooltip-gantt {
+        visibility: visible;
+        opacity: 1;
+    }
 </style>
 
 
@@ -72,7 +143,7 @@
 
                 <IconButton ToolTip="@($"Move Rigth to {SelectedRowName}")" Size="@Size.Small" Disabled=@(DisableButtonCanMoveRight())
                             Icon="@Icons.Material.Outlined.ArrowRight" OnClick="()=>MoveRight()" />
-              
+
                 <MudSpacer />
                 <Field Label="Selected row">@SelectedRowName</Field>
 
@@ -98,8 +169,11 @@
                         <th style="width: 100px;">Dependencies</th>
                         <th style="width: 80px;">Actions</th>
                         <th style="width: 150px;">Budget, USD</th>
-                    
-                    
+                        @foreach (var month in timeline)
+                        {
+                            <th class="month-header" data-label="@month.Label"></th>
+                        }
+
 
                     </tr>
                 </thead>
@@ -107,7 +181,7 @@
                 <tbody>
                     @foreach (var context in Response.OrderedItems)
                     {
-                       
+
 
                         <tr @onclick="() => OnSelectRow(context)" @ondblclick="() => OnEditLocalRow(context)">
                             <td class="fixed-column"><SimpleText IsBold="@context.HasSubTask" Text="@context.MainOrder.ToString()" /></td>
@@ -177,10 +251,34 @@
                                 }
                             </td>
                             <td><SimpleText IsBold=@context.HasSubTask Text="@context.BudgetAssignedUSDCurrency"></SimpleText></td>
+                            @for (int i = 0; i < timeline.Count; i++)
+                            {
+                                if (context != null && i >= context.StartPositionIndex && i < context.StartPositionIndex + context.DurationInMonths)
+                                {
+                                    if (i == context.StartPositionIndex)
+                                    {
+                                        <td style="padding: 0; position: relative;">
+                                            <div class="gantt-task-bar" style="left: 0;width:@(context.DurationInMonths * 80)px;">
+                                                <span class="tooltip-gantt">
+                                                    @context.Name
+                                                    @context.StartDate!.Value.ToString("MMM yyyy") - @context.EndDate!.Value.ToString("MMM yyyy")
+                                                </span>
+                                            </div>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="padding: 0;"></td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td style="padding: 0;"></td>
+                                }
+                            }
 
-                          
 
-                          
+
 
                         </tr>
 
@@ -195,7 +293,10 @@
                         <td></td>
                         <td></td>
                         <td><strong>@Response.OrderedItems.Sum(x => x.BudgetAssignedUSD).ToCurrencyCulture()</strong></td>
-                     
+                        @for (int i = 0; i < timeline.Count; i++)
+                        {
+                            <td></td>
+                        }
                     </tr>
                 </tbody>
             </MudSimpleTable>
@@ -204,5 +305,5 @@
 </MudContainer>
 
 @code {
-    TimeScale SelectedScale = TimeScale.Weekly;
+
 }
