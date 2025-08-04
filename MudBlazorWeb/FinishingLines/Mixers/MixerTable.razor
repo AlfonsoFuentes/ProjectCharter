@@ -1,0 +1,33 @@
+﻿@using Shared.Models.FinishingLines.Mixers
+
+
+
+<TableTemplate TValue="MixerResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="Mixers List">
+    <ColumnsTemplate>
+        <SelectColumn T="MixerResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" TProperty="string" T="MixerResponse" />
+       
+        <PropertyColumn Property="x => x.CleaningTime.ToString()" Title="Cleaning time" TProperty="string" T="MixerResponse" />
+        <TemplateColumn CellClass="d-flex justify-end" T="MixerResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Remove" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+
+
+}

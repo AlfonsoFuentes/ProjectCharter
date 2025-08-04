@@ -1,0 +1,52 @@
+﻿@using MudBlazorWeb.FinishingLines.InitialLevelWips
+
+
+
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            @if (loaded)
+            {
+                <Select @bind-Value="Model.ProductionLine"
+                        Items="@ProductionLineResponseList.Items"
+                        Label="Line"
+                        Property="@(p => p.Name)"
+                        Change="LineChange"
+                        For="() => Model.ProductionLine"
+                        ValidateAsync="ValidateAsync"
+                        Clearable="false">
+                </Select>
+                @if(Model.ProductionLine != null)
+                {
+                    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1">
+                        <MudTabPanel Text="Sku Schedule">
+                            <ProductionScheduleItemTable @bind-Items=@Model.ScheduleItems ProductionLineAssigmentId="@Model.Id"
+                                                         ProductiontLineId="@Model.ProductionLinedId"
+                                                         ValidateAsync="ValidateAsync" GetAll="GetById"></ProductionScheduleItemTable>
+                            <ValidationMessage For="() => Model.ScheduleItems.Count" style="color:red; font-size:x-small;" />
+                        </MudTabPanel>
+                        <MudTabPanel Text="Wip initial levels">
+                            <InitialLevelWipTable @bind-Items=@Model.InitialLevelWips ProductionLineAssigmentId="@Model.Id" ValidateAsync="ValidateAsync" GetAll="GetById"></InitialLevelWipTable>
+                        </MudTabPanel>
+                    </MudTabs>
+                }
+
+               
+
+            }
+
+
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

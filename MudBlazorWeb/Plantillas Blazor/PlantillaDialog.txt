@@ -1,0 +1,74 @@
+﻿
+
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <FluentValidationValidator @ref="_fluentValidationValidator" />
+    <DataAnnotationsValidator />
+
+    <MudCard>
+        <MudCardContent>
+
+            <TextField @bind-Value="@Model.Name"
+                       Label="Name"
+                       ValidateAsync="ValidateAsync"
+                       For="() => Model.Name" />
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel"
+                           OnClick="Cancel"
+                           Color="Color.Transparent"
+                           Variant="Variant.Outlined" />
+
+            <MudIconButton Icon="@Icons.Material.Filled.Save"
+                           Disabled="!Validated"
+                           ButtonType="ButtonType.Submit"
+                           Variant="Variant.Outlined" />
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter]
+    public TEntityResponse Model { get; set; } = default!;
+
+    private bool Validated { get; set; } = false;
+    private FluentValidationValidator _fluentValidationValidator = null!;
+
+    private async Task ValidateAsync()
+    {
+        Validated = _fluentValidationValidator == null
+            ? false
+            : await _fluentValidationValidator.ValidateAsync(options => options.IncludeAllRuleSets());
+    }
+
+    private async Task Submit()
+    {
+        Result result;
+
+        if (Model is { Id: Guid.Empty })
+        {
+            result = await GenericService.Create(Model);
+        }
+        else
+        {
+            result = await GenericService.Update(Model);
+        }
+
+        if (result.Succeeded)
+        {
+            _snackBar.ShowSuccess(result.Messages);
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        else
+        {
+            _snackBar.ShowError(result.Messages);
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

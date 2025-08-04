@@ -1,0 +1,27 @@
+﻿@using Shared.FinshingLines
+@code {
+    [Parameter] public BigWipTankStatusDto Tank { get; set; } = null!;
+}
+<MudCard Class="@GetBackboneClass(Tank.BackBoneName)" Style="margin: 4px 0;">
+    <MudCardContent>
+        <MudStack>
+            <MudText>@Tank.TankName</MudText>
+
+            <MudText>@Tank.CurrentLevelKg / @Tank.CapacityKg kg</MudText>
+            <MudText>To receive @Tank.PendingToReceivedMass kg</MudText>
+            <MudProgressLinear Color="Color.Success" Value="@Tank.UsagePercentage" />
+            <!-- ✅ Mostrar mezclador de origen -->
+            <MudText Typo="Typo.caption">From: @Tank.CurrentSourceMixerName</MudText>
+
+            <!-- ✅ Mostrar tanque WIP de destino -->
+            <MudText Typo="Typo.caption">To: @Tank.CurrentDestinationWipTankName</MudText>
+        </MudStack>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private string GetBackboneClass(string backBoneName)
+    {
+        return $"bigwip-tank-card backbone-{backBoneName.ToLower().Replace(" ", "-")}";
+    }
+}

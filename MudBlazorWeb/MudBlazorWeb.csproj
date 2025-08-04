@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Caldera\Caldera.csproj" />
+    <ProjectReference Include="..\Shared.FinshingLines\Shared.FinshingLines.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
     <ProjectReference Include="..\UnitSystem\UnitSystem.csproj" />
     <ProjectReference Include="..\Web.Infrastructure\Web.Infrastructure.csproj" />

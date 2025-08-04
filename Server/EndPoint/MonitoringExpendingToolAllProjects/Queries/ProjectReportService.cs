@@ -1,5 +1,4 @@
-﻿using Server.EndPoint.MonitoringExpendingTools.Queries;
-using Server.EndPoint.MonitoringExpendingTools.Queries.BudgetMonitoring;
+﻿using Server.EndPoint.MonitoringExpendingTools.Queries.BudgetMonitoring;
 using Shared.Models.MonitoringExpendingTools.Responses;
 using System.Globalization;
 namespace Server.EndPoint.MonitoringExpendingToolAllProjects.Queries
@@ -41,7 +40,7 @@ namespace Server.EndPoint.MonitoringExpendingToolAllProjects.Queries
             var result = ganttTask.Select(b => new BudgetItemGantMonitoringReportDto
             {
                 BudgetItemId = b.BudgetItem.Id,
-                //BasicEngineeringItemId = b.SelectedBasicEngineeringItemId,
+              
                 GanttTaskId = b.NewGanttTask.Id,
                 BudgetPlannedUSD = b.NewGanttTask.TotalBudgetAssigned,
                 EndDate = b.NewGanttTask.EndDate,

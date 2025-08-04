@@ -1,0 +1,39 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+          
+            <Field Label="Name">
+                @Model.BigWipTankname
+            </Field>
+           
+            <MudStack Row=true>
+                <DoubleNumericField Label="Initial Level"
+                              
+                                 @bind-Value="@Model.InitialLevelValue"
+                                 ValidateAsync="ValidateAsync"
+                         
+                                 For="() => Model.InitialLevelValue"></DoubleNumericField>
+                <Field Label="Units">@Model.InitialLevel.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+          
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+    
+}

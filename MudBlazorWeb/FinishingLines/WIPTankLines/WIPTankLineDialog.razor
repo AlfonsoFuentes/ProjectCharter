@@ -1,0 +1,54 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <TextField @bind-Value="@Model.Name"
+                       Label="Name"
+                       ValidateAsync="ValidateAsync"
+                       For="()=>Model.Name">
+            </TextField>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Capacity"
+                                    @bind-Value="@Model.CapacityValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.CapacityValue"></DoubleNumericField>
+                <Field Label="Units">@Model.Capacity.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Cleaning Time"
+                                    @bind-Value="@Model.CleaningTimeValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.CleaningTimeValue"></DoubleNumericField>
+                <Field Label="Units">@Model.CleaningTime.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <DoubleNumericField Label="%Minimun level"
+                                @bind-Value="@Model.MinimumLevelPercentage"
+                                ValidateAsync="ValidateAsync"
+                                For="() => Model.MinimumLevelPercentage"></DoubleNumericField>
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

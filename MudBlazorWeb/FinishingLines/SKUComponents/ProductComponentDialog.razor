@@ -1,0 +1,35 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <AutoCompleteIconButton @bind-Value="@Model.Backbone"
+                                    TValue="BackBoneResponse"
+                                    Label="BackBone"
+                                    ValidateAsync="ValidateAsync"
+                                    For="()=>Model.Backbone"
+                                    Clearable="true"
+                                    SearchFunc="SearchBackBone"
+                                    ToStringFunc="@(e=> e==null?null : $"{e.Name} ")"
+                                    Icon="@Icons.Material.Filled.Add"
+                                    ButtonClick="AddBackBone"
+                                    ToolTip="Add new Backbone">
+
+            </AutoCompleteIconButton>
+            <DoubleNumericField Label="Percentage"
+                                @bind-Value="@Model.Percentage"
+                                ValidateAsync="ValidateAsync"
+                                For="() => Model.Percentage"></DoubleNumericField>
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

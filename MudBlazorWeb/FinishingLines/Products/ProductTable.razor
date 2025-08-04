@@ -1,0 +1,30 @@
+﻿@using Shared.Models.FinishingLines.Products
+
+
+
+<TableTemplate TValue="ProductResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="Product componente List">
+    <ColumnsTemplate>
+        <SelectColumn T="ProductResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" TProperty="string" T="ProductResponse" />
+     
+        <TemplateColumn CellClass="d-flex justify-end" T="ProductResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Remove" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+@code {
+
+}

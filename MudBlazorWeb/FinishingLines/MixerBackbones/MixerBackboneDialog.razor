@@ -1,0 +1,54 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <AutoCompleteIconButton @bind-Value="@Model.Backbone"
+                                    TValue="BackBoneResponse"
+                                    Label="BackBone"
+                                    ValidateAsync="ValidateAsync"
+                                    For="()=>Model.Backbone"
+                                    Clearable="true"
+                                    SearchFunc="SearchBackBone"
+                                    ToStringFunc="@(e=> e==null?null : $"{e.Name} ")"
+                                    Icon="@Icons.Material.Filled.Add"
+                                    ButtonClick="AddBackBone"
+                                    ToolTip="Add new Backbone"
+                                    >
+
+            </AutoCompleteIconButton>
+
+            <MudStack Row=true>
+                <DoubleNumericField Label="Batch cycle time"
+                                    @bind-Value="@Model.BatchCycleTimeValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.BatchCycleTimeValue"></DoubleNumericField>
+                <Field Label="Units">@Model.BatchCycleTime.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Capacity"
+                                    @bind-Value="@Model.CapacityValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.CapacityValue"></DoubleNumericField>
+                <Field Label="Units">@Model.Capacity.UnitName</Field>
+
+            </MudStack>
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

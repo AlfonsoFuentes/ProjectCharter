@@ -19,7 +19,10 @@ namespace UnitSystem
         private bool isNamed;
         private string family;
         #region Constructor methods
+        public UnitMeasure()
+        {
 
+        }
         public UnitMeasure(string name, string symbol, UnitType unitType, string family)
             : this(name, symbol, 1.0, unitType, true, family)
         {

@@ -7,7 +7,7 @@ using Shared.Models.Suppliers.Responses;
 using Shared.Models.Warnings.Records;
 using Shared.Models.Warnings.Responses;
 
-namespace Server.EndPoint.Suppliers.Queries
+namespace Server.EndPoint.Warnings.Queries
 {
     public static class GetAllWarningsEndPoint
     {
@@ -33,7 +33,7 @@ namespace Server.EndPoint.Suppliers.Queries
             {
                 DateTime now = DateTime.Now;
                 Expression<Func<PurchaseOrder, bool>> Criteria = x =>
-                    (x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Approved.Id || x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Receiving.Id);
+                    x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Approved.Id || x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Receiving.Id;
 
                 Func<IQueryable<PurchaseOrder>, IIncludableQueryable<PurchaseOrder, object>> Includes = x => x
                 .Include(x => x.Project)

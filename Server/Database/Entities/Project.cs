@@ -68,6 +68,12 @@ namespace Server.Database.Entities
         public List<OtherTask> OtherTasks { get; set; } = new();
         public List<Meeting> Meetings { get; set; } = new();
         public List<PurchaseOrder> PurchaseOrders { get; set; } = new();
+        [NotMapped]
+        public List<PurchaseOrder> CapitalPurchaseOrders=> PurchaseOrders == null || PurchaseOrders.Count == 0 ? new() :
+            PurchaseOrders.Where(x => !x.IsAlteration).ToList();
+        [NotMapped]
+        public List<PurchaseOrder> AlterationPurchaseOrders => PurchaseOrders == null || PurchaseOrders.Count == 0 ? new() :
+            PurchaseOrders.Where(x => x.IsAlteration).ToList();
         public List<Acquisition> Acquisitions { get; set; } = new();
         public List<StakeHolder> StakeHolders { get; } = [];
         public List<MonitoringLog> MonitoringLogs { get; set; } = new();

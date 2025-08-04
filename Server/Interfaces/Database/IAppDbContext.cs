@@ -1,8 +1,6 @@
-﻿using Server.Database.Entities.BudgetItems;
-using Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.EngineeringItems;
-using Server.Database.Entities.ProjectManagements;
+﻿using Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.EngineeringItems;
 using Server.Database.Entities.PurchaseOrders;
-using static Shared.StaticClasses.StaticClass;
+using Server.Database.FinishlinLines;
 
 namespace Server.Interfaces.Database
 {
@@ -83,7 +81,26 @@ namespace Server.Interfaces.Database
         DbSet<BasicPipeItem> BasicPipeItems { get; set; }
         DbSet<MonitoringLog> MonitoringLogs { get; set; }
         DbSet<OtherTask> OtherTasks { get; set; }
+        DbSet<SKU> SKUs { get; set; }
+      
+        DbSet<Backbone> Backbones { get; set; }
 
+        DbSet<ProductionLine> ProductionLines { get; set; }
+        DbSet<LineSpeed> LineSpeeds { get; set; }
+        DbSet<Mixer> Mixers { get; set; }
+        DbSet<MixerBackbone> MixerBackbones { get; set; }
+
+        DbSet<ProductionPlan> ProductionPlans { get; set; }
+        DbSet<ProductionLineAssignment> ProductionLineAssignments { get; set; }
+
+        DbSet<ProductionScheduleItem> ProductionScheduleItems { get; set; }
+
+        DbSet<WIPTankLine> WIPTankLines { get; set; }
+        DbSet<BIGWIPTank> BIGWIPTanks { get; set; }
+        DbSet<InitialLevelWip> InitialLevelWips { get; set; }
+        DbSet<InitialLevelBigWip> InitialLevelBigWips { get; set; }
+        DbSet<Product> Products { get; set; } 
+        DbSet<ProductComponent> ProductComponents { get; set; }
         Task<int> SaveChangesAndRemoveCacheAsync(params string[] cacheKeys);
         Task<T> GetOrAddCacheAsync<T>(string key, Func<Task<T>> addItemFactory);
     }

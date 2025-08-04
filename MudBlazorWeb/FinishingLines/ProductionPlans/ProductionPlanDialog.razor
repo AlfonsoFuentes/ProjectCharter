@@ -1,0 +1,36 @@
+﻿
+
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <TextField @bind-Value="@Model.Name"
+                       Label="Name"
+                       ValidateAsync="ValidateAsync"
+                       For="()=>Model.Name">
+            </TextField>
+
+            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1" @bind-ActivePanelIndex=@activeIndex>
+                <MudTabPanel Text="Lines">
+                    <ProductionLineAssignmentTable @bind-Items=@Model.LineAssignments GetAll="GetById" PlanId="@Model.Id" ValidateAsync="ValidateAsync"></ProductionLineAssignmentTable>
+                    <ValidationMessage For="() => Model.LineAssignments.Count" style="color:red; font-size:x-small;" />
+                </MudTabPanel>
+                <MudTabPanel Text="BigWips">
+                    <InitialLevelBigWipTable @bind-Items=@Model.InitialLevelBigWips GetAll="GetById" PlanId="@Model.Id" ValidateAsync="ValidateAsync"></InitialLevelBigWipTable>
+                </MudTabPanel>
+            </MudTabs>
+
+            
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+    int activeIndex;
+}

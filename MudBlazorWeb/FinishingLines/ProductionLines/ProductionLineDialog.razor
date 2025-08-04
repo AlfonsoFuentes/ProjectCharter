@@ -1,0 +1,67 @@
+﻿
+
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <TextField @bind-Value="@Model.Name"
+                       Label="Name"
+                       ValidateAsync="ValidateAsync"
+                       For="()=>Model.Name">
+            </TextField>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Format change"
+                                    @bind-Value="@Model.FormatChangeTimeValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.FormatChangeTimeValue"></DoubleNumericField>
+                <Field Label="Units">@Model.FormatChangeTime.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Cleaining time"
+                                    @bind-Value="@Model.CleaningTimeValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.CleaningTimeValue"></DoubleNumericField>
+                <Field Label="Units">@Model.CleaningTime.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-1" @bind-ActivePanelIndex=@activeIndex>
+                <MudTabPanel Text="Wips" >
+                    <WIPTankLineTable @bind-Items=@Model.WIPTanks GetAll="GetById" ValidateAsync="ValidateAsync" LineId="@Model.Id"></WIPTankLineTable>
+                    <ValidationMessage For="() => Model.WIPTanks.Count" style="color:red; font-size:x-small;" />
+                </MudTabPanel>
+                <MudTabPanel Text="Sku velocities" >
+                    <LineSpeedTable @bind-Items=@Model.LineSpeeds GetAll="GetById" ValidateAsync="ValidateAsync" LineId="@Model.Id"></LineSpeedTable>
+                    <ValidationMessage For="() => Model.LineSpeeds.Count" style="color:red; font-size:x-small;" />
+                </MudTabPanel>
+            </MudTabs>
+
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+    int activeIndex = 0;
+    void ChangeTab(int index)
+    {
+        activeIndex = index;
+    }
+}

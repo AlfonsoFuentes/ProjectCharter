@@ -1,0 +1,40 @@
+﻿@using Shared.FinshingLines
+@code {
+    [Parameter] public MixerStatusDto Mixer { get; set; } = null!;
+}
+<MudCard Class="@GetBackboneClass(Mixer.CurrentBackboneName)">
+    <MudCardContent>
+        <MudStack>
+            <MudText>@Mixer.MixerName</MudText>
+            <MudText>@Mixer.CurrentBackboneName</MudText>
+
+            <!-- ✅ Estado del mezclador -->
+            <div class="@Mixer.StatusColorClass"><b>@Mixer.Status</b></div>
+            <MudText>Batch Size: @Mixer.BatchSizeKg Kg</MudText>
+            @if (Mixer.RemainingCleaningTime>0)
+            {
+                <MudText>Cleaning time: @Mixer.RemainingCleaningTime min</MudText>
+            }
+            else
+            {
+                <MudText>Remaining batch time: @Mixer.RemainingBatchTime min</MudText>
+            }
+
+            <MudText>Other Batchs Scheduled: @Mixer.BatchsScheduled</MudText>
+          
+           
+
+
+            <MudProgressLinear Value="@Mixer.UsagePercentage" Color="Color.Primary" />
+
+       
+        </MudStack>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private string GetBackboneClass(string backBoneName)
+    {
+        return $"backbone-{backBoneName.ToLower().Replace(" ", "-")}";
+    }
+}

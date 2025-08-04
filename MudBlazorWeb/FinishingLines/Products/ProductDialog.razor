@@ -1,0 +1,33 @@
+﻿@using MudBlazorWeb.FinishingLines.SKUComponents
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <TextField @bind-Value="@Model.Name"
+                       Label="Name"
+                       ValidateAsync="ValidateAsync"
+                       For="()=>Model.Name">
+            </TextField>
+            
+            <ProductComponentTable @bind-Items=@Model.Components ValidateAsync="ValidateAsync" ProductId="@Model.Id" GetAll="getById">
+
+                <Buttons>
+                    <IconButton Icon="@Icons.Material.Filled.Summarize" OnClick="Normalize" ToolTip="Normalize percentages"></IconButton>
+                </Buttons>
+            </ProductComponentTable>
+            <ValidationMessage For="() => Model.Components.Count" style="color:red; font-size:x-small;" />
+            <ValidationMessage For="() => Model.SumPorcentages" style="color:red; font-size:x-small;" />
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+
+@code {
+
+}

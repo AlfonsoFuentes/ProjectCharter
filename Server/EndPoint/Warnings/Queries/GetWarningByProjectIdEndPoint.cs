@@ -1,12 +1,13 @@
 ﻿using Server.Database.Entities.PurchaseOrders;
 using Server.EndPoint.MonitoringTasks.Queries;
 using Server.EndPoint.PurchaseOrders.Queries;
+using Server.EndPoint.Suppliers.Queries;
 using Shared.Enums.PurchaseOrderStatusEnums;
 using Shared.Enums.TaskStatus;
 using Shared.Models.Warnings.Records;
 using Shared.Models.Warnings.Responses;
 
-namespace Server.EndPoint.Suppliers.Queries
+namespace Server.EndPoint.Warnings.Queries
 {
     public static class GetWarningByProjectIdEndPoint
     {

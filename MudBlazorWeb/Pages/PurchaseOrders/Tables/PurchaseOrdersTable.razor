@@ -8,14 +8,20 @@
                TableTitle="@TableTitle"
                @bind-NameFilter=@nameFilter
                Items="FilteredItems">
-    <Buttons>
+    <OtherButtons>
         @if (!HideExpectedDate)
-        {   
-            
-            <MudSwitch @bind-Value="@ExpectedByDate" Label="Filter By Expeted Date" Color="Color.Info" />
+        {
+            <MudStack Row=true Spacing="2">
+                <MudSwitch @bind-Value="@ExpectedByDate" Label="Filter By Expeted Date" Color="Color.Info" />
+
+                <div style="width:200px"><DatePicker @bind-Value="@ExpectedDate" Label="Select Expected Date" /></div>
+            </MudStack>
           
-            <div style="width:200px"><DatePicker @bind-Value="@ExpectedDate" Label="Select Expected Date"  /></div>
+           
         }
+    </OtherButtons>
+    <Buttons>
+
 
 
 
@@ -61,15 +67,15 @@
                     }
                     else if (template.Item.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Closed.Id)
                     {
-                        if(template.Item.IsCapitalizedSalary)
+                        if (template.Item.IsCapitalizedSalary)
                         {
                             <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => EditPurchaseOrderSalary(template.Item))" />
                         }
-                        else 
+                        else
                         {
                             <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => EditPurchaseOrderClosed(template.Item))" />
                         }
-                    
+
 
                     }
                     <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />

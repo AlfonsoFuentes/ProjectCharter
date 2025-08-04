@@ -1,0 +1,131 @@
+﻿
+
+@page "/simulation-monitor"
+
+
+
+
+<MudCard>
+    <MudCardContent>
+        <MudText Typo="Typo.h5">Control de Simulación</MudText>
+        <MudDivider Class="my-4" />
+        <MudStack Row=true Spacing="8">
+            <MudButton OnClick="StartSimulation" Color="Color.Primary" Disabled="@(!canStart)">Iniciar</MudButton>
+            <MudButton OnClick="PauseSimulation" Color="Color.Secondary" Disabled="@(!canPause)">Pausar</MudButton>
+            <MudButton OnClick="ResumeSimulation" Color="Color.Success" Disabled="@(!canResume)">Reanudar</MudButton>
+            <MudButton OnClick="StopSimulation" Color="Color.Error">Detener</MudButton>
+        </MudStack>
+
+
+        <MudText Typo="Typo.subtitle2">Minuto actual: @Status.CurrentMinute</MudText>
+
+        <MudGrid>
+            <MudItem xs="12">
+                <MudStack Row=true>
+                    @foreach (var mixer in Status.Mixers)
+                    {
+                        <MixerStatusView Mixer="@mixer" />
+                    }
+                </MudStack>
+            </MudItem>
+
+            <MudItem xs="12">
+                <MudStack Row=true>
+                    @foreach (var tank in Status.BigWipTanks)
+                    {
+                        <BigWipTankStatusView Tank="@tank" />
+                    }
+                </MudStack>
+            </MudItem>
+
+            <MudItem xs="12">
+                @foreach (var line in Status.ProductionLines)
+                {
+                    <LineStatusView Line="@line" />
+                }
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+
+@code {
+    [Parameter]
+    public NewSimulationEngine Engine { get; set; } = null!;
+    [Parameter]
+    public NewSimulationServices StatusService { get; set; } = null!;
+
+    private SimulationStatusDto Status = new();
+    private bool canStart => !Engine.IsRunning;
+    private bool canPause => Engine.IsRunning && !Engine.IsPaused;
+    private bool canResume => Engine.IsRunning && Engine.IsPaused;
+
+    protected override void OnInitialized()
+    {
+        StatusService.OnStatusUpdated += () =>
+        {
+            Status = StatusService.Status;
+            StateHasChanged();
+        };
+    }
+
+    private void OnSimulationUpdated()
+    {
+        Status = StatusService.Status;
+        StateHasChanged();
+    }
+
+    private void StartSimulation()
+    {
+        Engine.Start();
+        StartSimulationTimer();
+    }
+
+    private void PauseSimulation()
+    {
+        Engine.Pause();
+        StopSimulationTimer();
+    }
+
+    private void ResumeSimulation()
+    {
+        Engine.Resume();
+        StartSimulationTimer();
+    }
+
+    private void StopSimulation()
+    {
+        Engine.Stop();
+    }
+
+    private Timer? simulationTimer = null;
+ 
+ 
+    private void StartSimulationTimer()
+    {
+
+        simulationTimer = new Timer(_ =>
+        {
+            Engine.SimulateOneMinute();
+
+            // ✅ Llama a StateHasChanged con Invoke para no bloquear el hilo
+            InvokeAsync(() =>
+            {
+                StateHasChanged(); // Refresca la UI
+            });
+        }, null, 0, 300); // 1000 ms = 1 segundo por minuto de simulación
+    }
+
+    private void StopSimulationTimer()
+    {
+        simulationTimer?.Change(Timeout.Infinite, 0);
+        simulationTimer?.Dispose();
+        simulationTimer = null;
+    }
+
+    public void Dispose()
+    {
+        Engine.SimulationUpdated -= OnSimulationUpdated;
+        StopSimulationTimer();
+    }
+}

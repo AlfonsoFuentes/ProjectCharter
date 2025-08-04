@@ -53,6 +53,8 @@ public partial class TableTemplate<TValue>
     [Parameter]
     public RenderFragment Buttons { get; set; } = null!;
     [Parameter]
+    public RenderFragment OtherButtons { get; set; } = null!;
+    [Parameter]
     public RenderFragment<CellContext<TValue>> ChildRowContent { get; set; } = null!;
     [Parameter]
     public EventCallback<TValue> OnRowClicked { get; set; }

@@ -182,3 +182,136 @@ line {
 .grid {
     overflow-y: auto;
 }
+.table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.table {
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+    .table th, .table td {
+        padding: 6px 10px;
+        border: 1px solid #eee;
+        text-align: center;
+        min-width: 100px;
+        height: 50px;
+        font-size: 12px;
+        transition: background-color 0.3s ease;
+    }
+
+    .table th {
+        background-color: #f0f0f0;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .table td:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+    }
+
+.batch-cell {
+    height: 60px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 10px;
+}
+
+.batch-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.batch-empty {
+    font-style: italic;
+    color: #aaa;
+}
+
+/* Colores por backbone */
+.backbone-triple-accion-blanco {
+    background-color: #d3d3d3;
+}
+
+.backbone-triple-accion-azul {
+    background-color: #add8e6;
+}
+
+.backbone-triple-accion-verde {
+    background-color: #90ee90;
+}
+
+.backbone-extrablancura-blanco {
+    background-color: #f5f5f5;
+}
+
+.backbone-extrablancura-azul-claro {
+    background-color: #cce4ff;
+}
+
+.backbone-extrablancura-azul-oscuro {
+    background-color: #66a3ff;
+}
+
+.backbone-menta {
+    background-color: #ccf2e6;
+}
+
+.backbone-kolynos {
+    background-color: #f2e7d5;
+}
+.wip-tank-card {
+    transition: background-color 0.3s ease;
+    border-radius: 6px;
+    padding: 8px;
+}
+.simulation-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+    .simulation-controls button {
+        min-width: 100px;
+    }
+.mixer-card {
+    transition: background-color 0.3s ease;
+    padding: 10px;
+    border-radius: 6px;
+}
+.status-producing {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.status-cleaning {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.status-available {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}

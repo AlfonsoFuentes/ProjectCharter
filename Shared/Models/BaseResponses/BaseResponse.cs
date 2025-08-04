@@ -5,7 +5,7 @@ namespace Shared.Models.BaseResponses
 {
     public abstract class BaseResponse : IResponse, IEqualityComparer<BaseResponse>
     {
-        public string Name { get; set; } = string.Empty;
+        public virtual string Name { get; set; } = string.Empty;
         public Guid Id { get; set; } = Guid.Empty;
 
         public int Order { get; set; }

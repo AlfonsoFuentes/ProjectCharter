@@ -64,6 +64,20 @@
 @using MudBlazorWeb.Pages.ProjectDependant.OtherTasks
 @using MudBlazorWeb.Pages.SteamTables
 @using MudBlazorWeb.Pages.ProjectDependant.ExecutionPlan
+@using MudBlazorWeb.FinishingLines.BIGWIPTanks
+@using MudBlazorWeb.FinishingLines.BackBones
+@using MudBlazorWeb.FinishingLines.Mixers
+@using MudBlazorWeb.FinishingLines.WIPTankLines
+@using MudBlazorWeb.FinishingLines.SKUs
+@using MudBlazorWeb.FinishingLines.ProductionLines
+@using MudBlazorWeb.FinishingLines.LineSpeeds
+@using MudBlazorWeb.FinishingLines.ProductionPlans
+@using MudBlazorWeb.FinishingLines.ProductionLineAssignments
+@using MudBlazorWeb.FinishingLines.ProductionScheduleItems
+@using MudBlazorWeb.FinishingLines.DynamicSimulation
+
+@using MudBlazorWeb.FinishingLines.Products
+@using MudBlazorWeb.FinishingLines.InitialLevelBigWips
 
 @using Shared.Models.BudgetItemNewGanttTasks.Responses
 @using Shared.Models.Objectives.Responses
@@ -115,6 +129,10 @@
 @using Shared.Models.Warnings.Responses
 @using Shared.Models.OtherTasks.Responses
 @using UnitSystem
+@using Shared.Models.FinishingLines.BackBones
+@using Shared.Models.FinishingLines.SKUs
+@using Shared.FinshingLines.DPSimulation
+@using Shared.FinshingLines
 
 @attribute [Authorize]
 @inject IBlazorDownloadFileService blazorDownloadFileService

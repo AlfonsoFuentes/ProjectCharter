@@ -1,5 +1,8 @@
-﻿using Shared.Commons;
-using System.Globalization;
+﻿using Polly;
+using Polly.Extensions.Http;
+using Polly.Retry;
+using System.Net;
+using System.Net.Http.Json;
 
 namespace MudBlazorWeb.Services.CurrencyServices
 {
@@ -10,7 +13,7 @@ namespace MudBlazorWeb.Services.CurrencyServices
     }
     public class NewCurrency : INewCurrency
     {
-        private readonly IHttpClientService _httpClient;
+        private HttpClient _httpClient;
         private readonly ILocalStorageService _localStorage;
         private const string CurrencyAPI_KEY = "api_key=fxr_live_0717d3622fa4420ae78842bc55544a8b97b9";
         private const string URL = $"https://api.fxratesapi.com/historical?{CurrencyAPI_KEY}";
@@ -22,9 +25,20 @@ namespace MudBlazorWeb.Services.CurrencyServices
         private string yearString => $"{CurrentDate.Year}";
         private string datestring => $"&date={yearString}-{monthstring}-{daystring}";
         private string URLHistorical => $"{URL}{datestring}{@base}";
-        public NewCurrency(IHttpClientService httpClient, ILocalStorageService _localStorage/*, ILogger<NewCurrency> logger*/)
+        private AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
+        public NewCurrency(IHttpClientFactory httpClientFactory, ILocalStorageService _localStorage/*, ILogger<NewCurrency> logger*/)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient("API2");
+            _retryPolicy = HttpPolicyExtensions.HandleTransientHttpError()
+                .WaitAndRetryAsync(retryCount: 1,
+                sleepDurationProvider: attempt => TimeSpan.FromSeconds(0.5 * attempt),
+                onRetry: (outcome, timeSpan, retryAttempt, context) =>
+                {
+                    if (outcome.Result == null || outcome.Result?.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        
+                    }
+                });
             this._localStorage = _localStorage;
             //_logger = logger;
         }
@@ -76,37 +90,7 @@ namespace MudBlazorWeb.Services.CurrencyServices
                 EUR = 1
             };
         }
-        public async Task<ConversionRate> GetRates2(DateTime date)
-        {
-            var cachedstring = $"cached_rate-{date.ToString("d", new CultureInfo("en-US"))}";
-            var cacherate = await _localStorage.ContainKeyAsync(cachedstring);
-            if (cacherate)
-            {
-                var cachedData = await _localStorage.GetItemAsync<CachedRate>(cachedstring);
-                if (cachedData!.Date.Date == date.Date)
-                {
-                    return cachedData.Rates;
-
-                }
-
-                await _localStorage.RemoveItemAsync(cachedstring);
-
-
-
-            }
-            var freshRates = await GetFromAPI(date);
-            var cacheEntry = new CachedRate
-            {
-                Date = date,
-                Rates = freshRates
-            };
-
-            await _localStorage.SetItemAsync(cachedstring, cacheEntry);
-
-
-
-            return freshRates;
-        }
+       
 
         public class CachedRate
         {
@@ -121,7 +105,7 @@ namespace MudBlazorWeb.Services.CurrencyServices
             {
                 //_logger.LogInformation("Consultando tasas desde API para la fecha {Date} en URL: {Url}", date, URLHistorical);
 
-                var response = await _httpClient.GetAsync(URLHistorical);
+                var response = await GetAsync(URLHistorical);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -153,37 +137,16 @@ namespace MudBlazorWeb.Services.CurrencyServices
                 return new ConversionRate { COP = 4000, EUR = 1 }; // Fallback
             }
         }
-        public async Task<ConversionRate> GetFromAPI2(DateTime date)
+        public async Task<HttpResponseMessage> GetAsync(string url, CancellationToken cancellationToken = default)
         {
-
-            CurrentDate = date;
-            try
-            {
-                var response = await _httpClient.GetAsync(URLHistorical);
-                if (response.IsSuccessStatusCode)
+            var HttpResponse = await _retryPolicy.ExecuteAsync(
+                async () =>
                 {
-                    var result = await response.ToObject<API_Obj>();
-                    if (!result.success) return new ConversionRate { COP = 4000, EUR = 1 };
-                    if (result.success)
-                    {
-                        return new ConversionRate()
-                        {
-                            COP = result.rates.COP,
-                            EUR = result.rates.EUR
-                        };
-
-                    }
-
-
-                }
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-
-            }
-
-            return new ConversionRate { COP = 4000, EUR = 1 }; // fallback
+                    var httpReponse = await _httpClient.GetAsync(url, cancellationToken);
+                    return httpReponse;
+                });
+            HttpResponse.EnsureSuccessStatusCode();
+            return HttpResponse;
 
         }
     }

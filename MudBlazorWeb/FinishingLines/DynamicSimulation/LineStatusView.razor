@@ -1,0 +1,37 @@
+﻿@using Shared.FinshingLines
+@code {
+    [Parameter] public ProductionLineStatusDto Line { get; set; } = null!;
+}
+
+<MudCard Class="line-card">
+    <MudCardContent>
+
+        <MudText>@Line.LineName</MudText>
+        <MudText>Status: @Line.Status</MudText>
+        <MudText>Current Product: @Line.CurrentProduct</MudText>
+        <MudText>Planned: @Line.MassPlanned kg</MudText>
+        <MudText>Produced: @Line.MassProduced kg</MudText>
+        @if (Line.PendingCleaningTime > 0)
+        {
+            <MudText>Pending cleaning time: @Line.PendingCleaningTime min</MudText>
+        }
+        else if (Line.PendingFormatChangeTime>0)
+        {
+            <MudText>Pending change format time: @Line.PendingFormatChangeTime min</MudText>
+        }
+        else
+        {
+            <MudText>Pending time: @Line.PendingTime min</MudText>
+        }
+
+        <MudProgressLinear Value="@Line.ProgressPercentage" Color="Color.Primary" />
+        <MudDivider Class="my-2" />
+        <MudText Typo="Typo.subtitle2">WIP Tanks</MudText>
+        <MudStack Row=true>
+            @foreach (var tank in Line.WipTanks)
+            {
+                <WipTankLineStatusView Tank="@tank" />
+            }
+        </MudStack>
+    </MudCardContent>
+</MudCard>

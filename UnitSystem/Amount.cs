@@ -18,7 +18,12 @@ namespace UnitSystem
         string name = "";
         string unitname = "";
         public delegate void ValueChanged();
-
+        public Amount()
+        {
+            dvalue = 0;
+            unit = UnitMeasure.None;
+            unitname = unit.Name;
+        }
 
         //public ValueChanged OnValueChanged;
 

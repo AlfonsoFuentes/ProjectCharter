@@ -23,7 +23,7 @@ namespace UnitSystem
         public static readonly UnitType UnitLess = new UnitType("UnitLess");
         public static readonly UnitType Currency = new UnitType("Currency");
         public static readonly UnitType VolumeFood = new UnitType("VolumeFood");
-        public static readonly UnitType LineSpeed = new UnitType("LineSpeed");
+        public static readonly UnitType LineVelocity = new UnitType("LineVelocity");
         public static readonly UnitType EA = new UnitType("EA");
         public static readonly UnitType Case = new UnitType("Case");
         public static readonly UnitType Day = new UnitType("day");
@@ -44,11 +44,11 @@ namespace UnitSystem
         public static readonly UnitMeasure mL = new UnitMeasure("mL", "mL", VolumeUnits.MilliLiter, "VolumeFood");
     }
     [UnitDefinitionClass]
-    public static class LineSpeedUnits
+    public static class LineVelocityUnits
     {
-        public static readonly UnitMeasure EA_min = new UnitMeasure("EA/min", "EA/min", EAUnits.EA / TimeUnits.Minute, "LineSpeed");
-        public static readonly UnitMeasure EA_hr = new UnitMeasure("EA/hr", "EA/hr", EA_min / 60, "LineSpeed");
-        public static readonly UnitMeasure EA_sg = new UnitMeasure("EA/sg", "EA/sg", EA_min * 60, "LineSpeed");
+        public static readonly UnitMeasure EA_min = new UnitMeasure("EA/min", "EA/min", EAUnits.EA / TimeUnits.Minute, "LineVelocity");
+        public static readonly UnitMeasure EA_hr = new UnitMeasure("EA/hr", "EA/hr", EA_min / 60, "LineVelocity");
+        public static readonly UnitMeasure EA_sg = new UnitMeasure("EA/sg", "EA/sg", EA_min * 60, "LineVelocity");
     }
     [UnitDefinitionClass]
     public static class EAUnits
@@ -197,8 +197,8 @@ namespace UnitSystem
         public static readonly UnitMeasure MilliGram = new UnitMeasure("milligram", "mg", 0.001 * Gram, "Mass");
         public static readonly UnitMeasure Ton = new UnitMeasure("ton", "ton", 1000.0 * KiloGram, "Mass");
 
-        public static readonly UnitMeasure Pound = new UnitMeasure("Pound", "lib", KiloGram / 2.2, "Mass");
-        public static readonly UnitMeasure Onze = new UnitMeasure("Onze", "Oz", KiloGram / 35.27394095, "Mass");
+        public static readonly UnitMeasure Pound = new UnitMeasure("Pound", "lib", KiloGram * 2.2, "Mass");
+        public static readonly UnitMeasure Onze = new UnitMeasure("Onze", "Oz", KiloGram * 35.27394095, "Mass");
     }
     [UnitDefinitionClass]
     public static class MolUnits

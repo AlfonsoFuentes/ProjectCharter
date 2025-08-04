@@ -1,12 +1,9 @@
-﻿using Server.Database.Entities.PurchaseOrders;
-using Server.EndPoint.PurchaseOrders.Queries;
+﻿using Server.EndPoint.PurchaseOrders.Queries;
 using Shared.Enums.PurchaseOrderStatusEnums;
 using Shared.Models.MonitoringExpendingTools.Responses;
-using Shared.Models.PurchaseOrders.Responses;
 using System.Globalization;
-using static MudBlazorWeb.Pages.ProjectDependant.ExecutionPlan.ExecutionPlanPage;
 
-namespace Server.EndPoint.MonitoringExpendingTools.Queries
+namespace Server.EndPoint.MonitoringExpendingToolAllProjects.Queries
 {
     public static class ProjectMonitoringReportDtoExtensions
     {
@@ -24,7 +21,7 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
             DateTime QueryDate = DateTime.Now;
             int currentYear = date.Year;
             int previousMonthsCount = date.Month - 1;
-            var OrdenesdeCompra = item.PurchaseOrders;
+            var OrdenesdeCompra = item.CapitalPurchaseOrders;
             for (int i = 1; i <= 12; i++)
             {
                 MonthlyMonitoringData monthData = new()
@@ -48,7 +45,7 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
                  .Any(z => z.CurrencyDate.HasValue && z.CurrencyDate.Value.Year == currentYear &&
                           z.CurrencyDate.Value.Month == i))).Select(selector => selector.Map()).ToList();
 
-        
+
                 if (i >= QueryDate.Month)
                 {
 
@@ -61,15 +58,15 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
 
                     monthData.Commitmments = OrdenesdeCompra
                         .Where(x => x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Closed.Id && x.ExpectedDate.HasValue &&
-                                     x.ExpectedDate.Value.Year == currentYear && x.ExpectedDate.Value.Month == i).Select(x => x.Map()).ToList();
-                  
+                                     x.ExpectedDate.Value.Year == currentYear && x.ExpectedDate.Value.Month == i ).Select(x => x.Map()).ToList();
+
                     monthData.ValueUSD += esperadasEsteMes;
                     if (esperadasEsteMesList.Count == 0)
                     {
                         var ganttTasksAssigned = dto.GanttItems.Where(x => x.EndDate.Year == currentYear && x.EndDate.Month == i).ToList();
                         monthData.ValueUSD += ganttTasksAssigned.Sum(x => x.TaskPendingBudgetUSD);
                     }
-                    
+
                 }
 
             }
@@ -82,7 +79,7 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
             int currentYear = currentDate.Year;
 
             // Solo se consideran las órdenes recibidas en años anteriores
-            var receivedPriorYears = project.PurchaseOrders.SelectMany(y => y.PurchaseOrderItems)
+            var receivedPriorYears = project.CapitalPurchaseOrders.SelectMany(y => y.PurchaseOrderItems)
                 .SelectMany(poi => poi.PurchaseOrderReceiveds)
                 .Where(r => r.CurrencyDate.HasValue && r.CurrencyDate.Value.Year < currentYear)
                 .Sum(r => Math.Round(r.ReceivedUSD, 2));
@@ -103,7 +100,7 @@ namespace Server.EndPoint.MonitoringExpendingTools.Queries
         {
             int currentYear = currentDate.Year;
 
-            var OrdenesdeCompra = Item.PurchaseOrders;
+            var OrdenesdeCompra = Item.CapitalPurchaseOrders;
 
             MonthlyMonitoringData nextYearData = new()
             {

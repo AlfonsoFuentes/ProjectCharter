@@ -1,0 +1,35 @@
+﻿@using Shared.Models.FinishingLines.InitialLevelWips
+
+
+
+<TableTemplate TValue="InitialLevelWipResponse"
+               ShowAdd=false
+               ShowDelete=false
+               @bind-NameFilter=@nameFilter
+               
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="Initial Level for BIG WIP Tanks">
+    <ColumnsTemplate>
+        <SelectColumn T="InitialLevelWipResponse" />
+       
+        <PropertyColumn Property="x => x.BigWipTankname" Title="Name" TProperty="string" T="InitialLevelWipResponse" />
+        <PropertyColumn Property="x => x.InitialLevel.ToString()" Title="Capacity" TProperty="string" T="InitialLevelWipResponse" />
+        
+        <TemplateColumn CellClass="d-flex justify-end" T="InitialLevelWipResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                  
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+
+
+}

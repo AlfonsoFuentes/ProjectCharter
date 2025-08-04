@@ -386,6 +386,10 @@ namespace UnitSystem
 
             public override int GetHashCode()
             {
+                if (fromType == null || toType == null)
+                {
+                    return -1;
+                }
                 return fromType.GetHashCode() ^ toType.GetHashCode();
             }
         }

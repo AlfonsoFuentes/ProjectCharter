@@ -1,0 +1,48 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <AutoCompleteIconButton @bind-Value="@Model.Sku"
+                                    TValue="SKUResponse"
+                                    Label="SKU"
+                                    ValidateAsync="ValidateAsync"
+                                    For="()=>Model.Sku"
+                                    Clearable="true"
+                                    SearchFunc="SearchSKU"
+                                    ToStringFunc="@(e=> e==null?null : $"{e.Name}  ")"
+                                    Icon="@Icons.Material.Filled.Add"
+                                    ButtonClick="AddSku"
+                                    ToolTip="Add new SKU">
+
+            </AutoCompleteIconButton>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Max Speed"
+                                    @bind-Value="@Model.MaxSpeedValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.MaxSpeedValue"></DoubleNumericField>
+                <Field Label="Units">@Model.MaxSpeed.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <DoubleNumericField Label="AU%"
+                                @bind-Value="@Model.PercentageAU"
+                                ValidateAsync="ValidateAsync"
+                                For="() => Model.PercentageAU"></DoubleNumericField>
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

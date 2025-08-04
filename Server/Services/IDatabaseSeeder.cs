@@ -31,7 +31,7 @@ namespace Server.Services
 
         public void Initialize()
         {
-            AddAdministrator();
+            //AddAdministrator();
 
             _db.SaveChanges();
         }

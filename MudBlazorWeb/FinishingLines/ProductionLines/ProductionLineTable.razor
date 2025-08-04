@@ -1,0 +1,33 @@
+﻿@using Shared.Models.FinishingLines.ProductionLines
+
+
+
+<TableTemplate TValue="ProductionLineResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="ProductionLines List">
+    <ColumnsTemplate>
+        <SelectColumn T="ProductionLineResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" TProperty="string" T="ProductionLineResponse" />
+        <PropertyColumn Property="x => x.FormatChangeTime.ToString()" Title="Format change" TProperty="string" T="ProductionLineResponse" />
+        <PropertyColumn Property="x => x.CleaningTime.ToString()" Title="Cleaning time" TProperty="string" T="ProductionLineResponse" />
+        <TemplateColumn CellClass="d-flex justify-end" T="ProductionLineResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Remove" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+
+
+}

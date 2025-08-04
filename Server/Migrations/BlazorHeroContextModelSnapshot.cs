@@ -17,7 +17,7 @@ namespace Server.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -2652,6 +2652,743 @@ namespace Server.Migrations
                     b.ToTable("Suppliers");
                 });
 
+            modelBuilder.Entity("Server.Database.FinishlinLines.BIGWIPTank", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BackboneId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Capacity")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CapacityUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("CleaningTime")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CleaningTimeUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("InletMassFlow")
+                        .HasColumnType("float");
+
+                    b.Property<string>("InletMassFlowUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("MinimumTransferLevelKgPercentage")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<double>("OutletMassFlow")
+                        .HasColumnType("float");
+
+                    b.Property<string>("OutletMassFlowUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BackboneId");
+
+                    b.ToTable("BIGWIPTanks");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.Backbone", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Backbones");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.InitialLevelBigWip", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BIGWIPTankId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("InitialLevel")
+                        .HasColumnType("float");
+
+                    b.Property<string>("InitialLevelUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ProductionPlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BIGWIPTankId");
+
+                    b.HasIndex("ProductionPlanId");
+
+                    b.ToTable("InitialLevelBigWips");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.InitialLevelWip", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("InitialLevel")
+                        .HasColumnType("float");
+
+                    b.Property<string>("InitialLevelUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ProductionLineAssignmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("WIPTankLineId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductionLineAssignmentId");
+
+                    b.HasIndex("WIPTankLineId");
+
+                    b.ToTable("InitialLevelWips");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.LineSpeed", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("LineId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("MaxSpeed")
+                        .HasColumnType("float");
+
+                    b.Property<string>("MaxSpeedUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PercentageAU")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("SkuId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LineId");
+
+                    b.HasIndex("SkuId");
+
+                    b.ToTable("LineSpeeds");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.Mixer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("CleaningTime")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CleaningTimeUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Mixers");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.MixerBackbone", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BackboneId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("BatchTime")
+                        .HasColumnType("float");
+
+                    b.Property<string>("BatchTimeUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Capacity")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CapacityUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MixerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BackboneId");
+
+                    b.HasIndex("MixerId");
+
+                    b.ToTable("MixerBackbones");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductComponent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BackboneId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Percentage")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BackboneId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductComponents");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductionLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("CleaningTime")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CleaningTimeUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("FormatChangeTime")
+                        .HasColumnType("float");
+
+                    b.Property<string>("FormatChangeTimeUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductionLines");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductionLineAssignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("LineId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ProductionLineId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LineId");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("ProductionLineId");
+
+                    b.ToTable("ProductionLineAssignments");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductionPlan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductionPlans");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductionScheduleItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PlannedMass")
+                        .HasColumnType("float");
+
+                    b.Property<string>("PlannedMassUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductionLineAssignmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SkuId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductionLineAssignmentId");
+
+                    b.HasIndex("SkuId");
+
+                    b.ToTable("ProductionScheduleItems");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.SKU", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("MassPerEA")
+                        .HasColumnType("float");
+
+                    b.Property<string>("MassPerEAUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("VolumePerEA")
+                        .HasColumnType("float");
+
+                    b.Property<string>("VolumePerEAUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("SKUs");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.WIPTankLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Capacity")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CapacityUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("CleaningTime")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CleaningTimeUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("LineId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("MinimumLevelPercentage")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LineId");
+
+                    b.ToTable("WIPTankLines");
+                });
+
             modelBuilder.Entity("Server.Database.Identity.BlazorHeroUser", b =>
                 {
                     b.Property<string>("Id")
@@ -3729,6 +4466,175 @@ namespace Server.Migrations
                     b.Navigation("PurchaseOrderItem");
                 });
 
+            modelBuilder.Entity("Server.Database.FinishlinLines.BIGWIPTank", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.Backbone", "Backbone")
+                        .WithMany("BIGWIPTanks")
+                        .HasForeignKey("BackboneId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Backbone");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.InitialLevelBigWip", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.BIGWIPTank", "BIGWIPTank")
+                        .WithMany("InitialLevelBigWips")
+                        .HasForeignKey("BIGWIPTankId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Server.Database.FinishlinLines.ProductionPlan", "ProductionPlan")
+                        .WithMany("InitialLevelBigWips")
+                        .HasForeignKey("ProductionPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BIGWIPTank");
+
+                    b.Navigation("ProductionPlan");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.InitialLevelWip", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.ProductionLineAssignment", "ProductionLineAssignment")
+                        .WithMany("InitialLevelWips")
+                        .HasForeignKey("ProductionLineAssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Server.Database.FinishlinLines.WIPTankLine", "WIPTankLine")
+                        .WithMany("InitialLevelWips")
+                        .HasForeignKey("WIPTankLineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProductionLineAssignment");
+
+                    b.Navigation("WIPTankLine");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.LineSpeed", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.ProductionLine", "ProductionLine")
+                        .WithMany("LineSpeeds")
+                        .HasForeignKey("LineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Server.Database.FinishlinLines.SKU", "Sku")
+                        .WithMany("LineSpeeds")
+                        .HasForeignKey("SkuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductionLine");
+
+                    b.Navigation("Sku");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.MixerBackbone", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.Backbone", "Backbone")
+                        .WithMany("MixerBackbones")
+                        .HasForeignKey("BackboneId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Server.Database.FinishlinLines.Mixer", "Mixer")
+                        .WithMany("Capabilities")
+                        .HasForeignKey("MixerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Backbone");
+
+                    b.Navigation("Mixer");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductComponent", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.Backbone", "Backbone")
+                        .WithMany("ProductComponents")
+                        .HasForeignKey("BackboneId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Server.Database.FinishlinLines.Product", "Product")
+                        .WithMany("Components")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Backbone");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductionLineAssignment", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.ProductionLine", "ProductionLine")
+                        .WithMany()
+                        .HasForeignKey("LineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Server.Database.FinishlinLines.ProductionPlan", "ProductionPlan")
+                        .WithMany("LineAssignments")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Server.Database.FinishlinLines.ProductionLine", null)
+                        .WithMany("ProductionLineAssignments")
+                        .HasForeignKey("ProductionLineId");
+
+                    b.Navigation("ProductionLine");
+
+                    b.Navigation("ProductionPlan");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductionScheduleItem", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.ProductionLineAssignment", "ProductionLineAssignment")
+                        .WithMany("ProductionScheduleItems")
+                        .HasForeignKey("ProductionLineAssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Server.Database.FinishlinLines.SKU", "SKU")
+                        .WithMany("ProductionScheduleItems")
+                        .HasForeignKey("SkuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProductionLineAssignment");
+
+                    b.Navigation("SKU");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.SKU", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.Product", "Product")
+                        .WithMany("SKUs")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.WIPTankLine", b =>
+                {
+                    b.HasOne("Server.Database.FinishlinLines.ProductionLine", "Line")
+                        .WithMany("WIPTanks")
+                        .HasForeignKey("LineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Line");
+                });
+
             modelBuilder.Entity("Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.EngineeringItems.BasicEquipmentItem", b =>
                 {
                     b.HasOne("Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.Equipments.EquipmentTemplate", "EquipmentTemplate")
@@ -3951,6 +4857,67 @@ namespace Server.Migrations
             modelBuilder.Entity("Server.Database.Entities.PurchaseOrders.Supplier", b =>
                 {
                     b.Navigation("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.BIGWIPTank", b =>
+                {
+                    b.Navigation("InitialLevelBigWips");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.Backbone", b =>
+                {
+                    b.Navigation("BIGWIPTanks");
+
+                    b.Navigation("MixerBackbones");
+
+                    b.Navigation("ProductComponents");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.Mixer", b =>
+                {
+                    b.Navigation("Capabilities");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.Product", b =>
+                {
+                    b.Navigation("Components");
+
+                    b.Navigation("SKUs");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductionLine", b =>
+                {
+                    b.Navigation("LineSpeeds");
+
+                    b.Navigation("ProductionLineAssignments");
+
+                    b.Navigation("WIPTanks");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductionLineAssignment", b =>
+                {
+                    b.Navigation("InitialLevelWips");
+
+                    b.Navigation("ProductionScheduleItems");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.ProductionPlan", b =>
+                {
+                    b.Navigation("InitialLevelBigWips");
+
+                    b.Navigation("LineAssignments");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.SKU", b =>
+                {
+                    b.Navigation("LineSpeeds");
+
+                    b.Navigation("ProductionScheduleItems");
+                });
+
+            modelBuilder.Entity("Server.Database.FinishlinLines.WIPTankLine", b =>
+                {
+                    b.Navigation("InitialLevelWips");
                 });
 
             modelBuilder.Entity("Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.Equipments.Equipment", b =>

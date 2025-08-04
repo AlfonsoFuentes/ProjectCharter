@@ -1,0 +1,36 @@
+﻿@using Shared.Models.FinishingLines.ProductComponents
+
+
+
+<TableTemplate TValue="ProductComponentResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="Product component List">
+    <Buttons>
+        @Buttons
+    </Buttons>
+
+    <ColumnsTemplate>
+        <SelectColumn T="ProductComponentResponse" />
+        <PropertyColumn Property="x => x.BackboneName" Title="Backbone" TProperty="string" T="ProductComponentResponse" />
+        <PropertyColumn Property="x => x.Percentage" Title="Percentage" TProperty="double" T="ProductComponentResponse" />
+        <TemplateColumn CellClass="d-flex justify-end" T="ProductComponentResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Remove" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+
+
+}

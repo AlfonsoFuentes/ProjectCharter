@@ -1,0 +1,63 @@
+﻿@using Shared.Models.FinishingLines.Products
+<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <Field Label="Name" >@Model.Name</Field>
+         
+          
+            <MudStack Row=true>
+                <DoubleNumericField Label="Volume/EA"
+                                    @bind-Value="@Model.VolumePerEAValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.VolumePerEAValue"></DoubleNumericField>
+                <Field Label="Units">@Model.VolumePerEA.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Mass/EA"
+                                    @bind-Value="@Model.MassPerEAValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.MassPerEAValue"></DoubleNumericField>
+                <Field Label="Units">@Model.MassPerEA.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <AutoCompleteIconButton @bind-Value="@Model.Product"
+                                    TValue="ProductResponse"
+                                    Label="Product"
+                                    ValidateAsync="ValidateAsync"
+                                    For="()=>Model.Product"
+                                    Clearable="true"
+                                    SearchFunc="SearchProduct"
+                                    ToStringFunc="@(e=> e==null?null : $"{e.Name}  ")"
+                                    Icon="@Icons.Material.Filled.Add"
+                                    ButtonClick="AddProduct"
+                                    ToolTip="Add new Product">
+
+            </AutoCompleteIconButton>
+           
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

@@ -18,6 +18,7 @@ namespace Server.EndPoint.Projects.Queries
                 {
                     Func<IQueryable<Project>, IIncludableQueryable<Project, object>> Includes = x => x
                       .Include(x => x.PurchaseOrders).ThenInclude(po => po.PurchaseOrderItems).ThenInclude(poi => poi.PurchaseOrderReceiveds)
+                       .Include(x => x.PurchaseOrders).ThenInclude(po => po.Supplier!)
                      ;
 
                     Expression<Func<Project, bool>> Criteria = x => x.Id == request.Id;
@@ -38,7 +39,7 @@ namespace Server.EndPoint.Projects.Queries
 
 
                     };
-                    
+
                     var purchaseOrders = GetCombinedPurchaseOrders(row, request.Year, request.Month);
                     response.PurchaseOrders.AddRange(purchaseOrders);
                     return Result<ProjectWithPurchaseOrdersResponse>.Success(response);
@@ -58,7 +59,7 @@ namespace Server.EndPoint.Projects.Queries
             {
                 List<PurchaseOrderResponse> result = new();
 
-                var queryPurchaseOrders = row.PurchaseOrders
+                var queryPurchaseOrders = row.CapitalPurchaseOrders
                     .Where(x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id || x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Receiving.Id).ToList();
                 foreach (var purchaseOrder in queryPurchaseOrders)
                 {
@@ -88,13 +89,13 @@ namespace Server.EndPoint.Projects.Queries
 
                             }
                         }
-                        
+
                     }
                 }
 
                 return result;
             }
-            
+
             private List<PurchaseOrderResponse> GetExpectedOrders(Project row, int year, int month)
             {
                 DateTime QueryDate = DateTime.Now;
@@ -102,7 +103,7 @@ namespace Server.EndPoint.Projects.Queries
                 {
                     return new List<PurchaseOrderResponse>();
                 }
-                var query = row.PurchaseOrders.Where(x => x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Closed.Id)
+                var query = row.CapitalPurchaseOrders.Where(x => x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Closed.Id)
                     .SelectMany(po => po.PurchaseOrderItems)
                     .Where(poi => poi.PurchaseOrder != null &&
                                   poi.PurchaseOrder.ExpectedDate.HasValue &&

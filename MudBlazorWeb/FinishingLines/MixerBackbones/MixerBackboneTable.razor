@@ -1,0 +1,33 @@
+﻿@using Shared.Models.FinishingLines.MixerBackbones
+
+
+
+<TableTemplate TValue="MixerBackboneResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="MixerBackbones List">
+    <ColumnsTemplate>
+        <SelectColumn T="MixerBackboneResponse" />
+        <PropertyColumn Property="x => x.BackboneName" Title="Back bone" TProperty="string" T="MixerBackboneResponse" />
+        <PropertyColumn Property="x => x.BatchCycleTime.ToString()" Title="Batch cycle time" TProperty="string" T="MixerBackboneResponse" />
+        <PropertyColumn Property="x => x.Capacity.ToString()" Title="Capacity" TProperty="string" T="MixerBackboneResponse" />
+        <TemplateColumn CellClass="d-flex justify-end" T="MixerBackboneResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Remove" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+
+
+}

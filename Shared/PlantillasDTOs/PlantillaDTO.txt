@@ -1,0 +1,80 @@
+﻿
+
+
+    public class EntityNameResponse : BaseResponse, IMessageResponse, IRequest
+    {
+        public string EndPointName => StaticClass.EntityNames.EndPoint.CreateUpdate;
+
+        public string Legend => Name;
+
+        public string ActionType => Id == Guid.Empty ? "created" : "updated";
+
+        public string ClassName => StaticClass.EntityNames.ClassName;
+
+        public string Succesfully => StaticClass.ResponseMessages.ReponseSuccesfullyMessage(Legend, ClassName, ActionType);
+
+        public string Fail => StaticClass.ResponseMessages.ReponseFailMessage(Legend, ClassName, ActionType);
+
+        public string NotFound => StaticClass.ResponseMessages.ReponseNotFound(ClassName);
+
+        public Guid Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+    }
+
+    
+    public class DeleteEntityNameRequest : DeleteMessageResponse, IRequest
+    {
+        public string Name { get; set; } = string.Empty;
+
+        public override string Legend => Name;
+
+        public override string ClassName => StaticClass.EntityNames.ClassName;
+
+        public Guid Id { get; set; }
+
+        public string EndPointName => StaticClass.EntityNames.EndPoint.Delete;
+    }
+
+    public class GetEntityNameByIdRequest : GetByIdMessageResponse, IGetById
+    {
+        public Guid Id { get; set; }
+
+        public string EndPointName => StaticClass.EntityNames.EndPoint.GetById;
+
+        public override string ClassName => StaticClass.EntityNames.ClassName;
+    }
+
+    public class EntityNameGetAll : IGetAll
+    {
+        public string EndPointName => StaticClass.EntityNames.EndPoint.GetAll;
+    }
+
+    public class EntityNameResponseList : IResponseAll
+    {
+        public List<EntityNameResponse> Items { get; set; } = new();
+    }
+
+    public class ValidateEntityNameNameRequest : ValidateMessageResponse, IRequest
+    {
+        public Guid? Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public string EndPointName => StaticClass.EntityNames.EndPoint.Validate;
+
+        public override string Legend => Name;
+
+        public override string ClassName => StaticClass.EntityNames.ClassName;
+    }
+    public class DeleteGroupEntityNameRequest : DeleteMessageResponse, IRequest
+    {
+
+        public override string Legend => "Group of EntityName";
+
+        public override string ClassName => StaticClass.EntityNames.ClassName;
+
+        public HashSet<EntityNameResponse> SelecteItems { get; set; } = null!;
+
+        public string EndPointName => StaticClass.EntityNames.EndPoint.DeleteGroup;
+    }

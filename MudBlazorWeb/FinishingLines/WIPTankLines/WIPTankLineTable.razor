@@ -1,0 +1,34 @@
+﻿@using Shared.Models.FinishingLines.WIPTankLines
+
+
+
+<TableTemplate TValue="WIPTankLineResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="WIPTankLines List">
+    <ColumnsTemplate>
+        <SelectColumn T="WIPTankLineResponse" />
+        <PropertyColumn Property="x => x.Name" Title="Name" TProperty="string" T="WIPTankLineResponse" />
+        <PropertyColumn Property="x => x.Capacity.ToString()" Title="Capacity" TProperty="string" T="WIPTankLineResponse" />
+        <PropertyColumn Property="x => x.CleaningTime.ToString()" Title="C&S time" TProperty="string" T="WIPTankLineResponse" />
+        <PropertyColumn Property="x => x.MinimumLevelPercentage" Title="%Minimum Level" TProperty="double" T="WIPTankLineResponse" />
+        <TemplateColumn CellClass="d-flex justify-end" T="WIPTankLineResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Remove" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+
+
+}

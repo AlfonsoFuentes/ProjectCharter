@@ -1,0 +1,33 @@
+﻿@using Shared.Models.FinishingLines.LineSpeeds
+
+
+
+<TableTemplate TValue="LineSpeedResponse"
+               AddNew="AddNew"
+               @bind-NameFilter=@nameFilter
+               DeleteGroup="DeleteGroup"
+               Items="FilteredItems"
+               @bind-SelectedItems=@SelecteItems
+               TableTitle="LineSpeeds List">
+    <ColumnsTemplate>
+        <SelectColumn T="LineSpeedResponse" />
+        <PropertyColumn Property="x => x.Skuname" Title="Sku Name" TProperty="string" T="LineSpeedResponse" />
+        <PropertyColumn Property="x => x.MaxSpeed.ToString()" Title="Max speed by sku by line" TProperty="string" T="LineSpeedResponse" />
+        <PropertyColumn Property="x => x.PercentageAU" Title="AU%" TProperty="double" T="LineSpeedResponse" />
+        <TemplateColumn CellClass="d-flex justify-end" T="LineSpeedResponse">
+            <CellTemplate Context="template">
+                <MudStack Row=true Spacing="2">
+                    <IconButton ToolTip="@($"Edit {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Variant=Variant.Outlined OnClick="@(() => Edit(template.Item))" />
+                    <IconButton ToolTip="@($"Delete {template.Item.Name}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Remove" Variant=Variant.Outlined Color="Color.Surface" OnClick="@(() => Delete(template.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </ColumnsTemplate>
+</TableTemplate>
+
+
+@code {
+
+
+}

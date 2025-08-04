@@ -1,0 +1,113 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace Server.Migrations
+{
+    /// <inheritdoc />
+    public partial class RemoveFL : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "DentalCreamComponents");
+
+            migrationBuilder.DropTable(
+                name: "DentalCreamBackBones");
+
+            migrationBuilder.DropTable(
+                name: "SKUs");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "DentalCreamBackBones",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DentalCreamBackBones", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SKUs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    ProductType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UnitPerCase = table.Column<double>(type: "float", nullable: false),
+                    WeightPerUnit = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SKUs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DentalCreamComponents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BackBoneId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SKUId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    Percentage = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DentalCreamComponents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DentalCreamComponents_DentalCreamBackBones_BackBoneId",
+                        column: x => x.BackBoneId,
+                        principalTable: "DentalCreamBackBones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DentalCreamComponents_SKUs_SKUId",
+                        column: x => x.SKUId,
+                        principalTable: "SKUs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DentalCreamComponents_BackBoneId",
+                table: "DentalCreamComponents",
+                column: "BackBoneId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DentalCreamComponents_SKUId",
+                table: "DentalCreamComponents",
+                column: "SKUId");
+        }
+    }
+}

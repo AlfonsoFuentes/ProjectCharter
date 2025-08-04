@@ -32,10 +32,15 @@
     <Folder Include="Models\BudgetItemNewGanttTasks\Records\" />
     <Folder Include="Models\StakeHolderInsideProjects\Exports\" />
     <Folder Include="Models\StakeHolders\Mappers\" />
+    <Folder Include="OCSimulation\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\UnitSystem\UnitSystem.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

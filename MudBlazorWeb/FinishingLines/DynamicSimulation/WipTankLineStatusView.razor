@@ -1,0 +1,33 @@
+﻿@using Shared.FinshingLines
+@code {
+    [Parameter] public WipTankStatusDto Tank { get; set; } = null!;
+}
+<MudCard Class="@GetBackboneClass(Tank.BackBoneName)" Style="margin: 4px 0;">
+    <MudCardContent>
+        <MudText>@Tank.TankName</MudText>
+        <MudText>@Tank.BackBoneName</MudText>
+        <MudText>@Tank.CurrentLevelKg kg/ @Tank.CapacityKg kg</MudText>
+        <MudProgressLinear Color="Color.Primary" Value="@Tank.UsagePercentage" />
+
+        <MudText>Planned @Tank.MassPlanned kg</MudText>
+        @if(Tank.PendingToCleaning>0)
+        {
+            <MudText>Cleaning pending @Tank.PendingToCleaning min</MudText>
+        }
+        else
+        {
+            <MudText>Produced @Tank.ProducedMass kg</MudText>
+            <MudText>Received @Tank.ReceivedMass kg</MudText>
+            <MudText>To Receive @Tank.PendingToReceivedMass kg</MudText>
+        }
+        
+      
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private string GetBackboneClass(string backBoneName)
+    {
+        return $"wip-tank-card backbone-{backBoneName.ToLower().Replace(" ", "-")}";
+    }
+}

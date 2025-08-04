@@ -1,0 +1,47 @@
+﻿@using Shared.FinshingLines
+@code {
+    [Parameter] public ScheduledBatchTable Table { get; set; } = null!;
+}
+<div class="table-wrapper">
+    <table class="table table-bordered table-sm table-hover">
+        <thead class="table-header">
+            <tr>
+                <th>Time, min</th>
+                @foreach (var mixer in Table.Mixers)
+                {
+                    <th>@mixer</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in Table.Rows)
+            {
+                <tr>
+                    <td class="time-column">@row.StartTimeMinute</td>
+                    @foreach (var mixer in Table.Mixers)
+                    {
+                        string cellClass = ScheduledBatchTableRowExtensions.GetBackboneClass(row, mixer);
+                        string backboneName = ScheduledBatchTableRowExtensions.GetBackboneName(row, mixer);
+                        double amountKg = ScheduledBatchTableRowExtensions.GetAmountKg(row, mixer);
+                        double batchTime = ScheduledBatchTableRowExtensions.GetBatchTime(row, mixer);
+
+                        <td class="batch-cell @cellClass">
+                            @if (!string.IsNullOrEmpty(backboneName))
+                            {
+                                <div class="batch-info">
+                                    <div>@backboneName</div>
+                                    <div>BS: @amountKg kg</div>
+                                    <div><small>BCT: @batchTime: min</small></div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="batch-empty">-</div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

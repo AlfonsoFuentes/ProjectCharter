@@ -1,0 +1,45 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <AutoCompleteIconButton @bind-Value="@Model.Sku"
+                                    TValue="SKUResponse"
+                                    Label="SKU"
+                                    ValidateAsync="ValidateAsync"
+                                    For="()=>Model.Sku"
+                                    Clearable="true"
+                                    SearchFunc="SearchSKU"
+                                    ToStringFunc="@(e=> e==null?null : $"{e.Name}  ")"
+                                    Icon="@Icons.Material.Filled.Add"
+                                    ButtonClick="AddSku"
+                                    ToolTip="Add new SKU">
+
+            </AutoCompleteIconButton>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Max Planned"
+                                    @bind-Value="@Model.MassPlannedValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.MassPlannedValue"></DoubleNumericField>
+                <Field Label="Units">@Model.MassPlannedUnit</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+         
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+
+}

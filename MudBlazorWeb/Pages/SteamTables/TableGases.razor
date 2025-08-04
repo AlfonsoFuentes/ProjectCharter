@@ -30,7 +30,7 @@
             <PropertyColumn Property="x => Math.Round(x.Molar_Percentage * 100, 2)" Title="%v/v" T="Compound" TProperty="double" />
             <PropertyColumn Property="x => Math.Round(x.Mass_Percentage * 100, 2)" Title="%v/v" T="Compound" TProperty="double" />
             <PropertyColumn Property="x => Math.Round(x.MolarFlow.GetValue(MolarFlowUnits.Kgmol_hr), 3)" Title="Molar flow,kgmol/hr" T="Compound" TProperty="double" />
-            <PropertyColumn Property="x => Math.Round(x.MassFlow.GetValue(MassFlowUnits.Kg_hr), 3)" Title="Mass flow, Kg/hr" T="Compound" TProperty="double" />
+            <PropertyColumn Property="x => Math.Round(x.MassFlow.GetValue(UnitSystem.MassFlowUnits.Kg_hr), 3)" Title="Mass flow, Kg/hr" T="Compound" TProperty="double" />
             <PropertyColumn Property="x => Math.Round(x.SpecificHeat.GetValue(MassEntropyUnits.KJ_Kg_C), 3)" Title="kgmol/hr" T="Compound" TProperty="double" />
             <PropertyColumn Property="x => Math.Round(x.MassEntalpy.GetValue(MassEnergyUnits.KJ_Kg), 1)" Title="Kg/hr" T="Compound" TProperty="double" />
         </Columns>

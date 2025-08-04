@@ -1,0 +1,109 @@
+﻿<EditForm Model="@Model" OnValidSubmit="Submit">
+    <MudCard>
+        <MudCardContent>
+
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+          
+            <Field Label="Name">
+                @Model.Name
+            </Field>
+            <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+        @*     <Select @bind-Value="@Model.Backbone"
+                    TValue="BackBoneResponse"
+                    Label="Back bone"
+                    ValidateAsync="ValidateAsync"
+                    For="()=>Model.Backbone"
+                    Property="@(p=>p.Name)"
+                    Items="@BackBoneResponseList.Items"
+                    Change="ChangeBackBone"></Select> *@
+            <AutoCompleteIconButton @bind-Value="@Model.Backbone"
+                                    TValue="BackBoneResponse"
+                                    Label="BackBone"
+                                    ValidateAsync="ValidateAsync"
+                                    For="()=>Model.Backbone"
+                                    Clearable="true"
+                                    SearchFunc="SearchBackBone"
+                                    ToStringFunc="@(e=> e==null?null : $"{e.Name} ")"
+                                    Icon="@Icons.Material.Filled.Add"
+                                    ButtonClick="AddBackBone"
+                                    ToolTip="Add new Backbone"
+                                    Change="ChangeBackBone">
+
+            </AutoCompleteIconButton>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Capacity"
+                              
+                                 @bind-Value="@Model.CapacityValue"
+                                 ValidateAsync="ValidateAsync"
+                         
+                                 For="() => Model.CapacityValue"></DoubleNumericField>
+                <Field Label="Units">@Model.Capacity.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Cleaning Time"
+                                    @bind-Value="@Model.CleaningTimeValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.CleaningTimeValue"></DoubleNumericField>
+                <Field Label="Units">@Model.CleaningTime.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Inlet flow"
+                                    @bind-Value="@Model.InletFlowValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.InletFlowValue"></DoubleNumericField>
+                <Field Label="Units">@Model.InletFlow.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <MudStack Row=true>
+                <DoubleNumericField Label="Outlet flow"
+                                    @bind-Value="@Model.OutletFlowValue"
+                                    ValidateAsync="ValidateAsync"
+                                    For="() => Model.OutletFlowValue"></DoubleNumericField>
+                <Field Label="Units">@Model.OutletFlow.UnitName</Field>
+                @*  <Select @bind-Value="@Model.CapacityUnit"
+                        TValue="string"
+                        Label="Unit"
+                        ValidateAsync="ValidateAsync"
+                        Items="Model.Capacity.UnitsList.Select(x=>x.Name).ToList()"
+                     > 
+                </Select>*@
+            </MudStack>
+            <DoubleNumericField Label="%Minimum Level"
+                                @bind-Value="@Model.MinimumLevelPercentage"
+                                ValidateAsync="ValidateAsync"
+                                For="() => Model.MinimumLevelPercentage"></DoubleNumericField>
+        </MudCardContent>
+        <MudCardActions>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="Cancel" Color="Color.Transparent" Variant="Variant.Outlined"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Disabled=!Validated ButtonType="ButtonType.Submit" Variant="Variant.Outlined"></MudIconButton>
+
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+@code {
+    void ChangeBackBone()
+    {
+        Model.Name = $"WIP {Model.BackBoneName}";
+    }
+}

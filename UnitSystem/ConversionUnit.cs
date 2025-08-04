@@ -184,7 +184,7 @@ namespace UnitSystem
     }
     public class Mass : Amount
     {
-        public Mass() : this(0)
+        public Mass() : base()
         {
 
         }
@@ -762,6 +762,28 @@ namespace UnitSystem
 
         }
     }
+    public class LineVelocity : Amount
+    {
+        public LineVelocity() : this(0)
+        {
 
+        }
+        public LineVelocity(double dvalue) : base(dvalue, LineVelocityUnits.EA_min)
+        {
+
+        }
+        public LineVelocity(double dvalue, UnitMeasure u) : base(dvalue, u)
+        {
+
+        }
+        public LineVelocity(UnitMeasure u) : this(0, u)
+        {
+
+        }
+        public LineVelocity(double dvalue, string u) : base(dvalue, u)
+        {
+
+        }
+    }
 }
 

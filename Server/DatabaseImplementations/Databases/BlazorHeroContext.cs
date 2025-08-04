@@ -1,6 +1,7 @@
 ﻿using Server.Database.Entities.BudgetItems.ProcessFlowDiagrams.EngineeringItems;
 using Server.Database.Entities.ProjectManagements;
 using Server.Database.Entities.PurchaseOrders;
+using Server.Database.FinishlinLines;
 
 namespace Server.DatabaseImplementations.Databases
 {
@@ -88,8 +89,25 @@ namespace Server.DatabaseImplementations.Databases
         public DbSet<BasicInstrumentItem> BasicInstrumentItems { get; set; } = null!;
         public DbSet<BasicValveItem> BasicValveItems { get; set; } = null!;
         public DbSet<BasicPipeItem> BasicPipeItems { get; set; } = null!;
+        public DbSet<SKU> SKUs { get; set; }
+     
+        public DbSet<Backbone> Backbones { get; set; }
+        public DbSet<ProductionLine> ProductionLines { get; set; }
+        public DbSet<LineSpeed> LineSpeeds { get; set; }
+        public DbSet<Mixer> Mixers { get; set; }
+        public DbSet<MixerBackbone> MixerBackbones { get; set; }
 
+        public DbSet<ProductionPlan> ProductionPlans { get; set; }
+        public DbSet<ProductionLineAssignment> ProductionLineAssignments { get; set; }
 
+        public DbSet<ProductionScheduleItem> ProductionScheduleItems { get; set; }
+
+        public DbSet<WIPTankLine> WIPTankLines { get; set; }
+        public DbSet<BIGWIPTank> BIGWIPTanks { get; set; }
+        public DbSet<InitialLevelWip> InitialLevelWips { get; set; }
+        public DbSet<InitialLevelBigWip> InitialLevelBigWips { get; set; }
+        public DbSet<Product> Products { get; set; } = null!;
+        public DbSet<ProductComponent> ProductComponents { get; set; }
         void ConfiguerQueryFilters(ModelBuilder builder)
         {
             builder.Entity<App>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);
@@ -129,10 +147,10 @@ namespace Server.DatabaseImplementations.Databases
             builder.Entity<Nozzle>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);
             builder.Entity<BudgetItem>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);
             builder.Entity<BasicEngineeringItem>().HasQueryFilter(p => p.IsDeleted == false && EF.Property<string>(p, "TenantId") == _tenantId);
-         
+
 
             builder.Entity<BudgetItem>().UseTpcMappingStrategy();
-        
+
             builder.Entity<BasicEngineeringItem>().UseTpcMappingStrategy();
             builder.Entity<Template>().UseTpcMappingStrategy();
 
@@ -151,6 +169,26 @@ namespace Server.DatabaseImplementations.Databases
             builder.Entity<PipingConnectionType>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<PipingAccesoryImage>().HasQueryFilter(p => p.IsDeleted == false);
 
+            builder.Entity<SKU>().HasQueryFilter(p => p.IsDeleted == false);
+        
+            builder.Entity<Backbone>().HasQueryFilter(p => p.IsDeleted == false);
+
+            builder.Entity<ProductionLine>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<LineSpeed>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Mixer>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<MixerBackbone>().HasQueryFilter(p => p.IsDeleted == false);
+
+            builder.Entity<ProductionPlan>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<ProductionLineAssignment>().HasQueryFilter(p => p.IsDeleted == false);
+            //builder.Entity<LineProductionSchedule>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<ProductionScheduleItem>().HasQueryFilter(p => p.IsDeleted == false);
+
+            builder.Entity<WIPTankLine>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<BIGWIPTank>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<InitialLevelWip>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<InitialLevelBigWip>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Product>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<ProductComponent>().HasQueryFilter(p => p.IsDeleted == false);
 
         }
 

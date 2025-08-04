@@ -6,6 +6,7 @@
     }
     @if (ShowToolbar)
     {
+       
         <MudStack Row=true Spacing="3">
 
             @if (ShowAdd)
@@ -42,6 +43,10 @@
 
         </MudStack>
 
+    }
+    @if (OtherButtons!=null)
+    {
+        @OtherButtons
     }
 
     <MudDataGrid T="TValue"
